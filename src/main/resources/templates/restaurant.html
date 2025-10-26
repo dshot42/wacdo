@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Carte — Restaurants à Lyon</title>
+
+    <!-- CSS Leaflet (sans integrity pour éviter mismatch) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+
+<body>
+
+<div class="search-container">
+    <input type="text" id="searchInput" placeholder="Rechercher un restaurant...">
+    <div id="searchWrapper">
+        <img src="https://img.icons8.com/sf-black/100/ffffff/search.png">
+    </div>
+</div>
+
+<div id="container">
+    <div id="tableWrapper">
+        <table id="tableEntity">
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Ville</th>
+                <th>adresse</th>
+                <th>code postal</th>
+            </tr>
+            </thead>
+            <tbody id="tableRow">
+            </tbody>
+        </table>
+        <div id="pagination"></div>
+    </div>
+
+    <div id="map"></div>
+</div>
+</body>
+
+</html>
+
+
+<style>
+    #container {
+        margin: 30px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        justify-content: space-around;
+        margin-top: 20px;
+    }
+
+    #map {
+        margin-top: 20px;
+        margin-left: 20px
+    }
+
+    #tableWrapper{
+       grid-column: 1 / 3;
+    }
+
+    #tableEntity {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: Arial, sans-serif;
+        margin-top: 20px;
+    }
+
+    .search-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 50px;
+    }
+
+    #searchInput {
+        padding: 10px;
+        font-size: 12px;
+        width: 300px;
+    }
+
+    #searchInput:focus {
+        outline: none;
+        border: 2px solid #3b5998;
+        background-color: #f2f2f2;
+    }
+
+    /* Search */
+
+    #searchWrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #3b5998;
+    }
+
+    #searchWrapper img {
+        width: 30px;
+        height: 30px;
+        margin: auto;
+    }
+
+    #pagination button{
+        margin: 10px;
+        font-size: 20px;
+        border-radius: 2px;
+        border: 1px solid black;
+    }
+
+    #pagination .page-active{
+        color : white;
+        background-color: #3b5998;
+        font-size: 20px;
+        border-radius: 2px;
+        border: 2px solid #3b5998;
+    }
+
+    /* Array */
+
+    td,
+    th {
+        text-align: left;
+        padding: 10px;
+    }
+
+    th {
+        background-color: #3b5998;
+        color: white;
+    }
+
+    tr {
+        border: 1px solid #ddd;
+        padding: 8px;
+        padding: 10px;
+        grid-row: 1;
+    }
+
+    #tableEntity tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    #tableEntity tr:hover {
+        background-color: #ddd;
+    }
+
+</style>
+
+<!-- JS Leaflet (sans integrity) -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+    let limit = 10; // 10 results par page
+    let pageNumber = 1;
+
+    // --- Création de la carte ---
+    const map = L.map('map', { zoomControl: true })
+    // --- Tuiles OpenStreetMap ---
+    const tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+    tileLayer.addTo(map);
+
+
+    document.getElementById("searchInput").addEventListener("input", (event) => {
+        pageNumber = 1; // Reset to first page on new search
+        searchRestaurants(event.target.value);
+    });
+
+    function searchRestaurants(query) {
+        countRestaurants(query)
+
+        console.log("Searching restaurants with query:", query);
+        const xhr = new XMLHttpRequest();
+        const params = new URLSearchParams({ query: query, limit: limit, offset: pageNumber - 1 });
+        xhr.open("GET", "http://localhost:8080/restaurant/search?" + params.toString(), true);
+
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) { // 4 = DONE
+                if (xhr.status === 200) {
+                    const restaurants = JSON.parse(xhr.responseText);
+
+                    // Array //
+                    const container = document.getElementById('tableRow');
+                    container.innerHTML = "";
+                    container.innerHTML = restaurants.map(r => `
+                        <tr>
+                        <td>${r.name}</td>
+                        <td>${r.restaurantAddress.city}</td>
+                        <td>${r.restaurantAddress.address}</td>
+                        <td>${r.restaurantAddress.postalCode}</td>
+                        </tr
+                        `).join('');
+
+                    // MAP //
+
+                    const markers = L.featureGroup();
+                    restaurants.forEach(r => {
+                        const m = L.marker([r.restaurantAddress.cordX, r.restaurantAddress.cordY]);
+                        m.bindPopup(`<strong>${r.name}</strong><br>${r.restaurantAddress.address}<br> ${r.restaurantAddress.postalCode}  ${r.restaurantAddress.city}`);
+                        markers.addLayer(m);
+                    });
+                    markers.addTo(map);
+
+                    // Click pour ajouter un marker test
+                    map.on('click', e => {
+                        L.marker([e.restaurantAddress.cordX, e.restaurantAddress.cordY]).addTo(map)
+                            .bindPopup(`Lat: ${e.restaurantAddress.cordX.toFixed(6)}<br>Lon: ${e.restaurantAddress.cordY.toFixed(6)}`).openPopup();
+                    });
+
+                    // Fit bounds (si au moins 1 marker)
+                    if (markers.getLayers().length) {
+                        map.fitBounds(markers.getBounds(), { padding: [40, 40] });
+                    }
+
+                } else {
+                    console.error("Request failed with status:", xhr.status);
+                }
+            }
+        }
+
+        xhr.send();
+    }
+
+
+    /* Count restaurants for pagination */
+    function countRestaurants(query) {
+        const xhr = new XMLHttpRequest();
+        const params = new URLSearchParams({ query: query });
+        xhr.open("GET", "http://localhost:8080/restaurant/count?" + params.toString(), true);
+
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) { // 4 = DONE
+                if (xhr.status === 200) {
+
+                    console.log(xhr.responseText)
+                    const restaurants = JSON.parse(xhr.responseText);
+
+                    // Pagination //
+                    const pagination = document.getElementById('pagination');
+                    pagination.innerHTML = "";
+                    for(let i = 1; i <= Math.ceil(restaurants / limit); i++) {
+                        const pageLink = document.createElement('button');
+                        pageLink.innerText = i;
+                        if (i == pageNumber) pageLink.classList.add("page-active");
+                        pageLink.addEventListener('click', () => {
+                            pageNumber = i;
+                            searchRestaurants(document.getElementById("searchInput").value, limit, this.textContent-1);
+                        });
+                        pagination.appendChild(pageLink);
+                    }
+
+
+                } else {
+                    console.error("Request failed with status:", xhr.status);
+                }
+            }
+        }
+
+        xhr.send();
+    }
+
+
+    searchRestaurants("", limit,  pageNumber-1)
+</script>
