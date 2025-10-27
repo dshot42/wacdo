@@ -2,6 +2,7 @@ package com.gdu.wacdo.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -11,20 +12,19 @@ import java.time.LocalDate;
 @Table(name = "assignement") // nom de la table
 public class Assignement {
 
+
     @EmbeddedId
     private AssignementId id;
 
-    @MapsId("employeeId")
-    @ManyToOne
-    @JoinColumn(name = "employee_id")
-    @JsonBackReference
-    private Employee employee;
-
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("restaurantId")
-    @ManyToOne
     @JoinColumn(name = "restaurant_id")
-    @JsonBackReference
     private Restaurant restaurant;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @MapsId("employeeId")
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 
     @Column(nullable = false)
     public LocalDate assignementDate;

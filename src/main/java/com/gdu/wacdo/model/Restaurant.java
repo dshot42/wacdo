@@ -1,12 +1,21 @@
 package com.gdu.wacdo.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+
+
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id"
+)
 @Entity
 @Table(name = "restaurant") // nom de la table
 public class Restaurant {
@@ -30,9 +39,9 @@ public class Restaurant {
     public RestaurantAddress restaurantAddress;
 
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<Assignement> assignements;
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference // gère le côté Restaurant -> Assignement
+    private List<Assignement> assignements = new ArrayList<>();
 
 
     public Long getId() {

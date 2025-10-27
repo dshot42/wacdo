@@ -1,8 +1,6 @@
 package com.gdu.wacdo.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -10,7 +8,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id"
+)
 @Entity
 @Table(name = "employee") // nom de la table
 public class Employee {
@@ -38,8 +39,9 @@ public class Employee {
     @JoinColumn(name = "responsability_id")
     public Responsability responsability;
 
-    @OneToMany(mappedBy = "employee")
-    private List<Assignement> assignements;
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Assignement> assignements = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "role_id")
