@@ -1,5 +1,7 @@
 package com.gdu.wacdo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.LinkedList;
@@ -23,12 +25,14 @@ public class Restaurant {
     @Column(nullable = false)
     public String name;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST})
     @JoinColumn(name = "address_id")
     public RestaurantAddress restaurantAddress;
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Assignement> assignements = new LinkedList<>();
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Assignement> assignements;
 
 
     public Long getId() {
@@ -53,5 +57,13 @@ public class Restaurant {
 
     public void setRestaurantAddress(RestaurantAddress restaurantAddress) {
         this.restaurantAddress = restaurantAddress;
+    }
+
+    public List<Assignement> getAssignements() {
+        return assignements;
+    }
+
+    public void setAssignements(List<Assignement> assignements) {
+        this.assignements = assignements;
     }
 }

@@ -25,4 +25,27 @@ public class Role {
     )
     private List<Access> accesses = new LinkedList<>();
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public List<Access> getAccesses() {
+        return accesses;
+    }
+
+    public void setAccesses(List<Access> accesses) {
+        this.accesses = accesses;
+    }
 }

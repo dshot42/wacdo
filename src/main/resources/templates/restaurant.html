@@ -191,6 +191,12 @@
                         </tr
                         `).join('');
 
+                   restaurants.forEach(r => {
+                      r.assignements.forEach(a => {
+                          console.log(`Restaurant: ${r.employee.name} `);
+                      });
+                    });
+
                     // MAP //
 
                     const markers = L.featureGroup();

@@ -3,7 +3,6 @@ package com.gdu.wacdo.repository;
 import com.gdu.wacdo.model.Restaurant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.RepositoryDefinition;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
