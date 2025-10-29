@@ -1,0 +1,49 @@
+
+<div id="myModal" class="modal">
+    <div class="modal-content" >
+        <span class="close" id="modal-close">&times;</span>
+        <div id="modal-content"><h2>Titre de la modale</h2>
+        <p>Contenu de votre modale ici.</p>
+        </div>
+    </div>
+</div>
+
+<style>
+.modal {
+  display: none; /* cachée par défaut */
+  position: fixed;
+  z-index: 1001;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; /* scroll si contenu trop grand */
+  background-color: rgba(0,0,0,0.5); /* fond semi-transparent */
+}
+
+/* Contenu de la modale */
+.modal-content {
+  background-color: #fefefe;
+  margin: 10% auto; /* centrer verticalement et horizontalement */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;       /* largeur de la modale */
+  max-width: 500px;
+  border-radius: 8px;
+  position: relative;
+}
+
+/* Bouton fermer */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+}
+</style>

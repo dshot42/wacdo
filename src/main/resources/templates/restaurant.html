@@ -1,16 +1,21 @@
 <!doctype html>
 <html lang="fr">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Carte — Restaurants à Lyon</title>
+    <script src="@{/js/modal.js}" defer></script>
 
+    <!-- JS Leaflet (sans integrity) -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <!-- CSS Leaflet (sans integrity pour éviter mismatch) -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title> Restaurants - Page</title>
 </head>
 
-<body>
+<body id="body">
+<div id="navbar"></div>
+<div id="modalContainer"></div>
 
 <div class="search-container">
     <input type="text" id="searchInput" placeholder="Rechercher un restaurant...">
@@ -26,8 +31,9 @@
             <tr>
                 <th>Nom</th>
                 <th>Ville</th>
-                <th>adresse</th>
-                <th>code postal</th>
+                <th>Adresse</th>
+                <th>Code postal</th>
+                <th>Options</th>
             </tr>
             </thead>
             <tbody id="tableRow">
@@ -39,9 +45,7 @@
     <div id="map"></div>
 </div>
 </body>
-
 </html>
-
 
 <style>
     #container {
@@ -144,128 +148,240 @@
         background-color: #ddd;
     }
 
+    /* Buttons */
+
+    .restaurantDetails, .restaurantEdit, .restaurantRemove {
+        color: white;
+        border: none;
+        padding:  10px;
+        text-align: center;
+        text-decoration: none;
+        margin: 2px 1px;
+        cursor: pointer;
+        border-radius: 4px;
+        display: inline-block;
+    }
+
+    .restaurantDetails{
+        background-color: #4CAF50; /* Green */
+    }
+
+    .restaurantEdit{
+        background-color: #008CBA; /* Blue */
+         background-image: url('https://example.com/image.png');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .restaurantRemove{
+        background-color: #f44336; /* Red */
+    }
+
 </style>
 
-<!-- JS Leaflet (sans integrity) -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <script>
-    let limit = 10; // 10 results par page
-    let pageNumber = 1;
 
-    // --- Création de la carte ---
-    const map = L.map('map', { zoomControl: true })
-    // --- Tuiles OpenStreetMap ---
-    const tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
-    tileLayer.addTo(map);
+let limit = 10; // 10 results par page
+let pageNumber = 1;
+
+let restaurants= [];
+
+/* include navbar and modal dependencies */
+  async function loadNavbar() {
+      try {
+          const response = await fetch('/navbar');
+          if (!response.ok) throw new Error(response.statusText);
+          const html = await response.text();
+          document.getElementById("navbar").innerHTML = html;
+      } catch (err) {
+          console.error("Failed to load navbar:", err);
+      }
+  }
+ loadNavbar();
+
+async function loadModal() {
+  try {
+      const response = await fetch('/modal');
+      if (!response.ok) throw new Error(response.statusText);
+      const html = await response.text();
+      document.getElementById("modalContainer").innerHTML = html;
+  } catch (err) {
+      console.error("Failed to load modal:", err);
+  }
+}
+loadModal();
+
+/*********************************/
+
+ / * function Handle restaurant  */
 
 
-    document.getElementById("searchInput").addEventListener("input", (event) => {
-        pageNumber = 1; // Reset to first page on new search
-        searchRestaurants(event.target.value);
+function restaurantDetails(event) {
+console.log(event)
+    const id = parseInt(event.target.getAttribute("attr-id"));
+   const modal = document.getElementById("myModal").style.display = "block";
+   console.log(id)
+   const result = restaurants.find(item => {
+        return item.id === id
+    });
+   console.log(result)
+   document.getElementById("modal-content").innerHTML = `
+       <h2>Détails du restaurant</h2>
+       <p><strong>Nom:</strong> ${result.name}</p>
+       <p><strong>Adresse:</strong> ${result.restaurantAddress.address}, ${result.restaurantAddress.postalCode} ${result.restaurantAddress.city}</p>
+       <h3>Employees:</h3>
+       <ul>
+           ${result.assignements.map(a => `<li>${a.employee.name} - ${a.employee.responsability.function}</li>`).join('')}
+       </ul>
+   `;
+}
+
+function restaurantEdit() {
+    const id = event.target.getAttribute("attr-id");
+    window.location.href = `/restaurant/details/${id}`;
+}
+
+ function restaurantRemove() {
+    const id = event.target.getAttribute("attr-id");
+    window.location.href = `/restaurant/details/${id}`;
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+
+document.getElementById("searchInput").addEventListener("input", (event) => {
+    pageNumber = 1; // Reset to first page on new search
+    searchRestaurants(event.target.value);
+});
+
+function searchRestaurants(query) {
+    countRestaurants(query)
+
+    console.log("Searching restaurants with query:", query);
+    const xhr = new XMLHttpRequest();
+    const params = new URLSearchParams({ query: query, limit: limit, offset: pageNumber - 1 });
+    xhr.open("GET", "http://localhost:8080/restaurant/search?" + params.toString(), true);
+
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) { // 4 = DONE
+            if (xhr.status === 200) {
+                restaurants = JSON.parse(xhr.responseText);
+
+                // Array //
+                let container = document.getElementById('tableRow');
+                container.innerHTML = "";
+                container.innerHTML = restaurants.map(r => `
+                    <tr attr-id="${r.id}">
+                    <td>${r.name}</td>
+                    <td>${r.restaurantAddress.city}</td>
+                    <td>${r.restaurantAddress.address}</td>
+                    <td>${r.restaurantAddress.postalCode}</td>
+                    <td style="display: flex; flex-wrap: nowrap">
+                        <button attr-id="${r.id}" class="restaurantDetails" onclick="restaurantDetails(event)"><i class="fas fa-eye"></i></button>
+                        <button attr-id="${r.id}" class="restaurantEdit edit-btn" onclick="restaurantEdit(event)"><i class="fas fa-pen"></i></button>
+                        <button attr-id="${r.id}" class="restaurantRemove remove-btn" onclick="restaurantRemove(event)"><i class="fas fa-trash"></i></button>
+                    </td>
+                    </tr
+                    `).join('');
+
+                // MAP //
+
+                const markers = L.featureGroup();
+                restaurants.forEach(r => {
+                    const m = L.marker([r.restaurantAddress.cordX, r.restaurantAddress.cordY]);
+                    m.bindPopup(`<strong>${r.name}</strong><br>${r.restaurantAddress.address}<br> ${r.restaurantAddress.postalCode}  ${r.restaurantAddress.city}`);
+                    markers.addLayer(m);
+                });
+                markers.addTo(map);
+
+                // Click pour ajouter un marker test
+                map.on('click', e => {
+                    L.marker([e.restaurantAddress.cordX, e.restaurantAddress.cordY]).addTo(map)
+                        .bindPopup(`Lat: ${e.restaurantAddress.cordX.toFixed(6)}<br>Lon: ${e.restaurantAddress.cordY.toFixed(6)}`).openPopup();
+                });
+
+                // Fit bounds (si au moins 1 marker)
+                if (markers.getLayers().length) {
+                    map.fitBounds(markers.getBounds(), { padding: [40, 40] });
+                }
+
+            } else {
+                console.error("Request failed with status:", xhr.status);
+            }
+        }
+    }
+
+    xhr.send();
+}
+
+
+
+
+/* Count restaurants for pagination */
+function countRestaurants(query) {
+    const xhr = new XMLHttpRequest();
+    const params = new URLSearchParams({ query: query });
+    xhr.open("GET", "http://localhost:8080/restaurant/count?" + params.toString(), true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) { // 4 = DONE
+            if (xhr.status === 200) {
+
+                console.log(xhr.responseText)
+                const count = JSON.parse(xhr.responseText);
+
+                // Pagination //
+                let pagination = document.getElementById('pagination');
+                pagination.innerHTML = "";
+                for(let i = 1; i <= Math.ceil(count / limit); i++) {
+                    const pageLink = document.createElement('button');
+                    pageLink.innerText = i;
+                    if (i == pageNumber) pageLink.classList.add("page-active");
+                    pageLink.addEventListener('click', () => {
+                        pageNumber = i;
+                        searchRestaurants(document.getElementById("searchInput").value, limit, this.textContent-1);
+                    });
+                    pagination.appendChild(pageLink);
+                }
+
+
+            } else {
+                console.error("Request failed with status:", xhr.status);
+            }
+        }
+    }
+
+    xhr.send();
+}
+
+/* Init */
+
+// --- Création de la carte ---
+const map = L.map('map', { zoomControl: true })
+// --- Tuiles OpenStreetMap ---
+const tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+tileLayer.addTo(map);
+
+let init = function () {
+searchRestaurants("", limit,  pageNumber-1)
+}
+
+init();
+
+/* Modal handling */
+    const modal = document.getElementById("myModal");
+   const closeBtn = document.getElementById("modal-close");
+
+    closeBtn.addEventListener("click", () => {
+      modal.style.display = "none";
     });
 
-    function searchRestaurants(query) {
-        countRestaurants(query)
+    // Fermer la modale en cliquant en dehors du contenu
+    window.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.style.display = "none";
+      }
+    });
 
-        console.log("Searching restaurants with query:", query);
-        const xhr = new XMLHttpRequest();
-        const params = new URLSearchParams({ query: query, limit: limit, offset: pageNumber - 1 });
-        xhr.open("GET", "http://localhost:8080/restaurant/search?" + params.toString(), true);
-
-
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) { // 4 = DONE
-                if (xhr.status === 200) {
-                    const restaurants = JSON.parse(xhr.responseText);
-
-                    // Array //
-                    const container = document.getElementById('tableRow');
-                    container.innerHTML = "";
-                    container.innerHTML = restaurants.map(r => `
-                        <tr>
-                        <td>${r.name}</td>
-                        <td>${r.restaurantAddress.city}</td>
-                        <td>${r.restaurantAddress.address}</td>
-                        <td>${r.restaurantAddress.postalCode}</td>
-                        </tr
-                        `).join('');
-
-                   restaurants.forEach(r => {
-                      r.assignements.forEach(a => {
-                          console.log(`Employee: ${a.employee.name} `);
-                      });
-                    });
-
-                    // MAP //
-
-                    const markers = L.featureGroup();
-                    restaurants.forEach(r => {
-                        const m = L.marker([r.restaurantAddress.cordX, r.restaurantAddress.cordY]);
-                        m.bindPopup(`<strong>${r.name}</strong><br>${r.restaurantAddress.address}<br> ${r.restaurantAddress.postalCode}  ${r.restaurantAddress.city}`);
-                        markers.addLayer(m);
-                    });
-                    markers.addTo(map);
-
-                    // Click pour ajouter un marker test
-                    map.on('click', e => {
-                        L.marker([e.restaurantAddress.cordX, e.restaurantAddress.cordY]).addTo(map)
-                            .bindPopup(`Lat: ${e.restaurantAddress.cordX.toFixed(6)}<br>Lon: ${e.restaurantAddress.cordY.toFixed(6)}`).openPopup();
-                    });
-
-                    // Fit bounds (si au moins 1 marker)
-                    if (markers.getLayers().length) {
-                        map.fitBounds(markers.getBounds(), { padding: [40, 40] });
-                    }
-
-                } else {
-                    console.error("Request failed with status:", xhr.status);
-                }
-            }
-        }
-
-        xhr.send();
-    }
-
-
-    /* Count restaurants for pagination */
-    function countRestaurants(query) {
-        const xhr = new XMLHttpRequest();
-        const params = new URLSearchParams({ query: query });
-        xhr.open("GET", "http://localhost:8080/restaurant/count?" + params.toString(), true);
-
-
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) { // 4 = DONE
-                if (xhr.status === 200) {
-
-                    console.log(xhr.responseText)
-                    const restaurants = JSON.parse(xhr.responseText);
-
-                    // Pagination //
-                    const pagination = document.getElementById('pagination');
-                    pagination.innerHTML = "";
-                    for(let i = 1; i <= Math.ceil(restaurants / limit); i++) {
-                        const pageLink = document.createElement('button');
-                        pageLink.innerText = i;
-                        if (i == pageNumber) pageLink.classList.add("page-active");
-                        pageLink.addEventListener('click', () => {
-                            pageNumber = i;
-                            searchRestaurants(document.getElementById("searchInput").value, limit, this.textContent-1);
-                        });
-                        pagination.appendChild(pageLink);
-                    }
-
-
-                } else {
-                    console.error("Request failed with status:", xhr.status);
-                }
-            }
-        }
-
-        xhr.send();
-    }
-
-
-    searchRestaurants("", limit,  pageNumber-1)
+});
 </script>
+

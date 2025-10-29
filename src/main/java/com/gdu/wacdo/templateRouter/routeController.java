@@ -18,5 +18,15 @@ public class routeController {
         return "restaurant"; // correspond à home.html
     }
 
+    @GetMapping("/modal")
+    public String modal() {
+        return "modal"; // recherche modal.html dans templates/
+    }
+
+    @GetMapping("/navbar")
+    public String navbar() {
+        return "navbar"; // recherche modal.html dans templates/
+    }
+
 
 }
