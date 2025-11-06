@@ -33,13 +33,11 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-ui:1.8.0'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     //   implementation 'org.springframework.boot:spring-boot-starter-security'
-
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 }
 
 
-
 tasks.named('test') {
- //   useJUnitPlatform()
+    //   useJUnitPlatform()
 }

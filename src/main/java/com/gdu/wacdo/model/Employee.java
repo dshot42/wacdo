@@ -35,9 +35,6 @@ public class Employee {
     @Column(nullable = false)
     public String phone;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "responsability_id")
-    public Responsability responsability;
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
@@ -47,6 +44,8 @@ public class Employee {
     @JoinColumn(name = "role_id")
     public Role role;
 
+    @Column(columnDefinition = "text", nullable = true)
+    private String image;
 
     public Long getId() {
         return id;
@@ -96,14 +95,6 @@ public class Employee {
         this.phone = phone;
     }
 
-    public Responsability getResponsability() {
-        return responsability;
-    }
-
-    public void setResponsability(Responsability responsability) {
-        this.responsability = responsability;
-    }
-
     public List<Assignement> getAssignements() {
         return assignements;
     }
@@ -118,5 +109,13 @@ public class Employee {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

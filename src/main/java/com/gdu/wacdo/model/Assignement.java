@@ -27,8 +27,25 @@ public class Assignement {
     private Employee employee;
 
     @Column(nullable = false)
-    public LocalDate assignementDate;
+    public LocalDate startDate;
 
+    @Column(nullable = true)
+    public LocalDate endDate;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "responsability_id")
+    public Responsability responsability;
+
+
+
+
+    public Responsability getResponsability() {
+        return responsability;
+    }
+
+    public void setResponsability(Responsability responsability) {
+        this.responsability = responsability;
+    }
 
     public AssignementId getId() {
         return id;
@@ -54,12 +71,18 @@ public class Assignement {
         this.restaurant = restaurant;
     }
 
-    public LocalDate getAssignementDate() {
-        return assignementDate;
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+    public LocalDate getEndDate() {
+        return endDate;
     }
 
-    public void setAssignementDate(LocalDate assignementDate) {
-        this.assignementDate = assignementDate;
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 }
 

@@ -1,6 +1,7 @@
 package com.gdu.wacdo.controller;
 
 import com.gdu.wacdo.model.Restaurant;
+import com.gdu.wacdo.model.RestaurantAddress;
 import com.gdu.wacdo.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -38,5 +39,12 @@ public class RestaurantController {
             return restaurantService.countAll();
         }
         return restaurantService.count(query);
+    }
+
+    @PostMapping("/save")
+    public String saveRestaurant(@ModelAttribute Restaurant restaurant, Model model) {
+        restaurantService.save(restaurant);
+        model.addAttribute("restaurant", restaurant);
+        return "home :: restaurant"; // <-- Thymeleaf fragment
     }
 }

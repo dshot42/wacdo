@@ -23,6 +23,15 @@ public class wacdoController {
     private EmployeeRepository employeeRepository;
 
 
+    @GetMapping("/insertRequired")
+    public String insertRequired() {
+        insertTest.insertResponsability();
+        insertTest.insertRole();
+        // access
+        // permission
+        return "[SUCCESS] insert 3 role roles in db!";
+    }
+
     @GetMapping("/insertRestaurant")
     public String insertRestaurant() {
         insertTest.insertRestaurant();
@@ -39,17 +48,6 @@ public class wacdoController {
     public String insertAssignement() {
         insertTest.assignementEmployeeRestaurant();
         return "[SUCCESS] insert Assignement in db!";
-    }
-
-
-
-    @GetMapping("/insertRequired")
-    public String insertRequired() {
-        insertTest.insertResponsability();
-        insertTest.insertRole();
-        // access
-        // permission
-        return "[SUCCESS] insert 3 role roles in db!";
     }
 
     // clean db

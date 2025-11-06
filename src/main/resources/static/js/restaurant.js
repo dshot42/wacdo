@@ -1,0 +1,133 @@
+let limit = 10; // 10 results par page
+let pageNumber = 1;
+
+let restaurants = [];
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+
+
+
+    /*********************************/
+
+    document.getElementById("addRestaurant").addEventListener("input", (event) => {
+        const modal = document.getElementById("myModal-edit").style.display = "block";
+    });
+
+    / * function Handle restaurant  */
+
+
+    /*****************************************/
+
+    document.getElementById("searchInput").addEventListener("input", (event) => {
+        pageNumber = 1; // Reset to first page on new search
+        searchRestaurants(event.target.value);
+    });
+
+    function searchRestaurants(query) {
+        countRestaurants(query)
+
+        console.log("Searching restaurants with query:", query);
+        const xhr = new XMLHttpRequest();
+        const params = new URLSearchParams({ query: query, limit: limit, offset: pageNumber - 1 });
+        xhr.open("GET", "http://localhost:8080/restaurant/search?" + params.toString(), true);
+
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) { // 4 = DONE
+                if (xhr.status === 200) {
+                    restaurants = JSON.parse(xhr.responseText);
+
+                    // Array //
+                    let container = document.getElementById('tableRow');
+                    container.innerHTML = "";
+                    container.innerHTML = restaurants.map(r => `
+                    <tr attr-id="${r.id}">
+                    <td><img class="image_list" src="data:image/png;base64,${r.image}"></td>
+                    <td>${r.name}</td>
+                    <td>${r.restaurantAddress.city}</td>
+                    <td>${r.restaurantAddress.address}</td>
+                    <td>${r.restaurantAddress.postalCode}</td>
+                    <td style="display: flex; flex-wrap: nowrap">
+                        <button attr-id="${r.id}" class="restaurantDetails fas fa-eye" onclick="restaurantDetails(event,restaurants)"></button>
+                        <button attr-id="${r.id}" class="restaurantEdit edit-btn fas fa-pen" onclick="restaurantEdit(event,restaurants)"></button>
+                        <button attr-id="${r.id}" class="restaurantRemove remove-btn fas fa-trash" onclick="restaurantRemove(event)"></button>
+                    </td>
+                    </tr>
+                    `).join('');
+
+                    // MAP //
+
+                    const markers = L.featureGroup();
+                    restaurants.forEach(r => {
+                        const m = L.marker([r.restaurantAddress.cordX, r.restaurantAddress.cordY]);
+                        m.bindPopup(`<strong>${r.name}</strong><br>${r.restaurantAddress.address}<br> ${r.restaurantAddress.postalCode}  ${r.restaurantAddress.city}`);
+                        markers.addLayer(m);
+                    });
+                    markers.addTo(map);
+
+                    // Click pour ajouter un marker test
+                    map.on('click', e => {
+                        L.marker([e.restaurantAddress.cordX, e.restaurantAddress.cordY]).addTo(map)
+                            .bindPopup(`Lat: ${e.restaurantAddress.cordX.toFixed(6)}<br>Lon: ${e.restaurantAddress.cordY.toFixed(6)}`).openPopup();
+                    });
+
+                    // Fit bounds (si au moins 1 marker)
+                    if (markers.getLayers().length) {
+                        map.fitBounds(markers.getBounds(), { padding: [40, 40] });
+                    }
+
+                } else {
+                    console.error("Request failed with status:", xhr.status);
+                }
+            }
+        }
+
+        xhr.send();
+    }
+
+    /* Count restaurants for pagination */
+    function countRestaurants(query) {
+        const xhr = new XMLHttpRequest();
+        const params = new URLSearchParams({ query: query });
+        xhr.open("GET", "http://localhost:8080/restaurant/count?" + params.toString(), true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) { // 4 = DONE
+                if (xhr.status === 200) {
+                    console.log(xhr.responseText)
+                    const count = JSON.parse(xhr.responseText);
+
+                    // Pagination //
+                    let pagination = document.getElementById('pagination');
+                    pagination.innerHTML = "";
+                    for (let i = 1; i <= Math.ceil(count / limit); i++) {
+                        const pageLink = document.createElement('button');
+                        pageLink.innerText = i;
+                        if (i == pageNumber) pageLink.classList.add("page-active");
+                        pageLink.addEventListener('click', () => {
+                            pageNumber = i;
+                            searchRestaurants(document.getElementById("searchInput").value, limit, this.textContent - 1);
+                        });
+                        pagination.appendChild(pageLink);
+                    }
+                } else {
+                    console.error("Request failed with status:", xhr.status);
+                }
+            }
+        }
+        xhr.send();
+    }
+
+    // --- Création de la carte ---
+    const map = L.map('map', { zoomControl: true })
+    // --- Tuiles OpenStreetMap ---
+    const tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+    tileLayer.addTo(map);
+
+    function init() {
+        searchRestaurants("", limit, pageNumber - 1)
+    }
+    init();
+
+});

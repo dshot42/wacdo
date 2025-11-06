@@ -79,12 +79,11 @@ public class InsertTest {
 
     public void insertResponsability() {
         List<String> metiers = new ArrayList<>();
-
+        metiers.add("Gérant de restaurant");
         metiers.add("Chef cuisinier");
         metiers.add("Serveur");
         metiers.add("Barman");
         metiers.add("Plongeur");
-        metiers.add("Gérant de restaurant");
 
         metiers.forEach(e -> {
             Responsability res = new Responsability();
@@ -148,7 +147,6 @@ public class InsertTest {
             empl.setMail((String) e.get(3));
             empl.setPhone((String) e.get(4));
             empl.setRole((Role) e.get(5));
-            empl.setResponsability((Responsability) e.get(6));
             employeeRepository.save(empl);
         });
     }
@@ -162,13 +160,42 @@ public class InsertTest {
         int i = 0;
         for (Employee e : employees) {
             Assignement assignement = new Assignement();
-            assignement.setAssignementDate(LocalDate.now());
             assignement.setEmployee(e);
             assignement.setRestaurant(restaurants.get(i));
-            assignement.setId(new AssignementId(e.getId(), restaurants.get(i).getId()));
+            try {
+                assignement.setId(new AssignementId(e.getId(), restaurants.get(i).getId()));
+            } catch (Exception ex) {
+                System.out.println("No more restaurant available");
+                 return ;
+            }
+
+
+            assignement.setStartDate(LocalDate.now());
+
+            List<Responsability> responsabilitys = responsabilityRepository.findAll();
+            Responsability responsability = getResponsability(i, responsabilitys);
+
+            assignement.setResponsability(responsability);
             assignementRepository.save(assignement);
-            if (e.getResponsability().getFunction().equals("Gérant de restaurant")) i++;
+            i++;
+
         }
+    }
+
+    private static Responsability getResponsability(int i, List<Responsability> responsabilitys) {
+        Responsability responsability;
+        // todo tous les 5 employees on change de restaurant
+        if (i % 5 == 0)
+            responsability = responsabilitys.get(0);
+        else if (i % 5 == 1)
+            responsability = responsabilitys.get(1);
+        else if (i % 5 == 2)
+            responsability = responsabilitys.get(2);
+        else if (i % 5 == 3)
+            responsability = responsabilitys.get(3);
+        else
+            responsability = responsabilitys.get(4);
+        return responsability;
     }
 
 }

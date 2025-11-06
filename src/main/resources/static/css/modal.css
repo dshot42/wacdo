@@ -1,16 +1,5 @@
-
-<div id="myModal" class="modal">
-    <div class="modal-content" >
-        <span class="close" id="modal-close">&times;</span>
-        <div id="modal-content"><h2>Titre de la modale</h2>
-        <p>Contenu de votre modale ici.</p>
-        </div>
-    </div>
-</div>
-
-<style>
 .modal {
-  display: none; /* cachée par défaut */
+  display: none;
   position: fixed;
   z-index: 1001;
   left: 0;
@@ -46,4 +35,3 @@
 .close:focus {
   color: black;
 }
-</style>

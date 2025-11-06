@@ -1,15 +1,12 @@
 package com.gdu.wacdo.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-
 
 
 @JsonIdentityInfo(
@@ -34,7 +31,7 @@ public class Restaurant {
     @Column(nullable = false)
     public String name;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST})
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "address_id")
     public RestaurantAddress restaurantAddress;
 
@@ -42,6 +39,9 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference // gère le côté Restaurant -> Assignement
     private List<Assignement> assignements = new ArrayList<>();
+
+    @Column(columnDefinition = "text", nullable = true) // longtext pour MySQL , 1go pour PostgreSQL par default
+    private String image;
 
 
     public Long getId() {
@@ -74,5 +74,13 @@ public class Restaurant {
 
     public void setAssignements(List<Assignement> assignements) {
         this.assignements = assignements;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
