@@ -14,7 +14,7 @@ function restaurantDetails(event, restaurants) {
        <p><strong>Adresse:</strong> ${result.restaurantAddress.address}, ${result.restaurantAddress.postalCode} ${result.restaurantAddress.city}</p>
        <h3>Employees:</h3>
        <ul>
-           ${result.assignements.map(a => `<li>${a.employee.name} - ${a.employee.responsability.function}</li>`).join('')}
+           ${result.assignements.map(a => `<li>${a.employee.name} - ${a.responsability.role}</li>`).join('')}
        </ul>
    `;
 }
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     /* Modal handling */
-    document.getElementById("addRestaurant").addEventListener("click", () => {
+    document.getElementById("addButton").addEventListener("click", () => {
         document.getElementById("myModal-edit").style.display = "block";
     });
 

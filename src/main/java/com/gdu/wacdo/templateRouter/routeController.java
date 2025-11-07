@@ -1,7 +1,6 @@
 package com.gdu.wacdo.templateRouter;
 
-import com.gdu.wacdo.model.Restaurant;
-import com.gdu.wacdo.model.RestaurantAddress;
+import com.gdu.wacdo.model.*;
 import com.gdu.wacdo.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,12 +13,26 @@ public class routeController {
     @Autowired
     private RestaurantService restaurantService;
 
-    @GetMapping("/home")
-    public String homeView(Model model) {
-        Restaurant r = new Restaurant();
-        r.setRestaurantAddress(new RestaurantAddress()); // très important si tu as des champs imbriqués
-        model.addAttribute("restaurant", r);  // <-- nécessaire pour th:object
-        return "restaurant"; // correspond à home.html
+
+    @GetMapping("/employee")
+    public String employeeView(Model model) {
+        Employee e = new Employee();
+        model.addAttribute("employee", e);  // <-- nécessaire pour th:object
+        return "employee"; // correspond à home.html
+    }
+
+    @GetMapping("/responsability")
+    public String responsabilityView(Model model) {
+        Responsability r = new Responsability();
+        model.addAttribute("responsability", r);  // <-- nécessaire pour th:object
+        return "responsability"; // correspond à home.html
+    }
+
+    @GetMapping("/role")
+    public String roleView(Model model) {
+        Role r = new Role();
+        model.addAttribute("role", r);  // <-- nécessaire pour th:object
+        return "role"; // correspond à home.html
     }
 
     @GetMapping("/restaurant")
@@ -32,22 +45,26 @@ public class routeController {
 
     @GetMapping("/modalDetails")
     public String modalDetails() {
-        return "fragments/modals/modalDetails :: modalDetails";  //return "/modals/modal-edit"; // recherche modal.html dans templates/
-         //return "/modals/modal-details"; // recherche modal.html dans templates/
+        return "fragments/modals/modalDetails :: modalDetails";
     }
 
-    @GetMapping("/modalEdit")
-    public String modalEdit(Model model) {
+    @GetMapping("/modalRestaurantEdit")
+    public String modalRestaurantEdit(Model model) {
         Restaurant restaurant = new Restaurant();
         restaurant.setRestaurantAddress(new RestaurantAddress()); // ⚠️ obligatoire
         model.addAttribute("restaurant", restaurant);
-        return "fragments/modals/modalEdit :: modalEdit";
+        return "fragments/modals/modalRestaurantEdit :: modalRestaurantEdit";
     }
 
+    @GetMapping("/modalEmployeeEdit")
+    public String modalEmployeeEdit(Model model) {
+        Employee employee = new Employee();
+        model.addAttribute("employee", employee);
+        return "fragments/modals/modalEmployeeEdit :: modalEmployeeEdit";
+    }
     @GetMapping("/navbar")
     public String navbar() {
-        return "navbar"; // recherche modal.html dans templates/
+        return "fragments/navbar :: navbar";
     }
-
 
 }

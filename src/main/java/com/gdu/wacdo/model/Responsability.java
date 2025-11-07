@@ -14,7 +14,7 @@ public class Responsability {
     private Long id;
 
     @Column(nullable = false)
-    public String function;
+    public String role;
 
 
     public Long getId() {
@@ -25,11 +25,11 @@ public class Responsability {
         this.id = id;
     }
 
-    public String getFunction() {
-        return function;
+    public String getRole() {
+        return role;
     }
 
-    public void setFunction(String function) {
-        this.function = function;
+    public void setRole(String role) {
+        this.role = role;
     }
 }

@@ -27,11 +27,9 @@ public class RestaurantService {
     @Autowired
     private AssignementRepository assignementRepository;
 
-    public final RestaurantRepository repository;
+    @Autowired
+    public RestaurantRepository repository;
 
-    public RestaurantService(RestaurantRepository repository) {
-        this.repository = repository;
-    }
 
     public Restaurant save(Restaurant restaurant) {
         return repository.save(restaurant);

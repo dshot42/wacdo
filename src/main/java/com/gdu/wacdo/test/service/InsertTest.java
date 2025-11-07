@@ -87,7 +87,7 @@ public class InsertTest {
 
         metiers.forEach(e -> {
             Responsability res = new Responsability();
-            res.setFunction(e);
+            res.setRole(e);
             responsabilityRepository.save(res);
         });
     }
