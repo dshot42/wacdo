@@ -1,17 +1,13 @@
 package com.gdu.wacdo.model;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id"
-)
+
 @Entity
 @Table(name = "employee") // nom de la table
 public class Employee {
@@ -21,32 +17,39 @@ public class Employee {
     private Long id;
 
     @Column(nullable = false)
-    public String name;
+    private String name;
 
     @Column(nullable = false)
-    public String surname;
+    private String surname;
 
     @Column(nullable = false)
-    public LocalDate hireDate;
+    private LocalDate hireDate;
 
     @Column(nullable = false)
-    public String mail;
+    private String mail;
 
     @Column(nullable = false)
-    public String phone;
+    private String phone;
+
+    @Column(nullable = false)
+    private String password;
 
 
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Assignement> assignements = new ArrayList<>();
+    @OneToMany(mappedBy = "employee")
+    @JsonIgnore
+    private List<Assignement> assignements;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "role_id")
-    public Role role;
+    private Role role;
 
     @Column(columnDefinition = "text", nullable = true)
     private String image;
 
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean admin;
+
+    // getters/setters
     public Long getId() {
         return id;
     }
@@ -118,4 +121,20 @@ public class Employee {
     public void setImage(String image) {
         this.image = image;
     }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 }

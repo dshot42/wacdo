@@ -1,4 +1,4 @@
-function restaurantDetails(event, restaurants) {
+function employeeDetails(event, restaurants) {
     const id = parseInt(event.target.getAttribute("attr-id"));
     const modal = document.getElementById("myModal-details")
     modal.style.display = "block";
@@ -8,18 +8,21 @@ function restaurantDetails(event, restaurants) {
     });
 
     document.querySelector("#myModal-details #modal-details-content").innerHTML = `
-       <h2>Détails du restaurant</h2>
-       <img class="image_list" src="data:image/png;base64,${result.image}">
-       <p><strong>Nom:</strong> ${result.name}</p>
-       <p><strong>Adresse:</strong> ${result.restaurantAddress.address}, ${result.restaurantAddress.postalCode} ${result.restaurantAddress.city}</p>
-       <h3>Employees:</h3>
+       <h2>Détails de l'employé</h2>
+       <img class="image_details" src="data:image/png;base64,${result.image}">
+       <p><strong>Nom:</strong> ${result.name}  ${result.surname}</p>
+       <p><strong>Téléphone:</strong> ${result.phone}  </p>
+       <p><strong>Mail:</strong> ${result.mail} </p>
+       <p><strong>Date Embauche:</strong> ${result.hireDate}  </p>
+
+       <h3>Restaurant :</h3>
        <ul>
-           ${result.assignements.map(a => `<li>${a.employee.name} - ${a.employee.responsability.role}</li>`).join('')}
+           ${result.assignements.map(a => `<li>${a.restaurant.name} - ${a.responsability.role}</li>`).join('')}
        </ul>
    `;
 }
 
-function restaurantEdit(event, restaurants) {
+function employeeEdit(event, restaurants) {
     console.log("Edit restaurant called");
     const id = parseInt(event.target.getAttribute("attr-id"));
     const modal = document.getElementById("myModal-edit")
@@ -28,19 +31,20 @@ function restaurantEdit(event, restaurants) {
         return item.id === id
     });
     console.log(result)
+   modal.querySelector('input[name="id"]').value = result.id;
     modal.querySelector('input[name="name"]').value = result.name;
-    modal.querySelector('input[name="restaurantAddress.id"]').value = result.restaurantAddress.id;
-    modal.querySelector('input[name="restaurantAddress.address"]').value = result.restaurantAddress.address;
-    modal.querySelector('input[name="restaurantAddress.city"]').value = result.restaurantAddress.city;
-    modal.querySelector('input[name="restaurantAddress.postalCode"]').value = result.restaurantAddress.postalCode;
-    modal.querySelector('input[name="id"]').value = result.id;
+    modal.querySelector('input[name="surname"]').value = result.surname;
+    modal.querySelector('input[name="mail"]').value = result.mail;
+    modal.querySelector('input[name="phone"]').value = result.phone;
+    modal.querySelector('input[name="hireDate"]').value = result.hireDate;
+
     document.querySelector("#myModal-edit #image_details").src = `data:image/png;base64,${result.image}`;
      document.querySelector("#myModal-edit #imageBase64").value = result.image;
 }
 
 
-function restaurantRemove() {
-   // todo 
+function employeeRemove() {
+   // todo
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -56,7 +60,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 modal.style.display = "none";
             });
         });
-
     });
 
     /* Modal handling */
@@ -84,24 +87,21 @@ document.addEventListener("DOMContentLoaded", function () {
         reader.readAsDataURL(file);
     });
 
-document.querySelector('input[name="restaurantAddress.address"]').addEventListener('input', (event) => {
-    const modal = document.getElementById("myModal-edit")
-    const address = event.target.value + ', ' +
-        modal.querySelector('input[name="restaurantAddress.postalCode"]').value + ' ' +
-        modal.querySelector('input[name="restaurantAddress.city"]').value;
-    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.length > 0) {
-                 modal.querySelector('input[name="restaurantAddress.cordX"]').value = data[0].lat;
-                 modal.querySelector('input[name="restaurantAddress.cordY"]').value =  data[0].lon;
-                console.log(`Latitude: ${lat}, Longitude: ${lon}`);
-            } else {
-                console.log("Address not found");
-                alert("Adresse non trouvée. Veuillez vérifier l'adresse saisie.");
-            }
+
+    document.getElementById("formAddEntity").addEventListener("submit", function(e) {
+        e.preventDefault(); // empêche le submit classique
+
+        const formData = new FormData(document.getElementById("formAddEntity"));
+
+        fetch("/employee/save", {
+            method: "POST",
+            body: formData
         })
-        .catch(error => console.error(error));
+        .then(res => res.text())
+        .then(html => {
+               document.getElementsByClassName("modal-close")[0].click()
+              document.getElementById("searchInput").dispatchEvent(new Event("input", { bubbles: true }));
+        });
     });
 
 });

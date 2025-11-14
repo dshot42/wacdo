@@ -45,7 +45,7 @@ public class wacdoController {
     }
 
     @GetMapping("/insertAssignement")
-    public String insertAssignement() {
+    public String insertAssignement() throws Exception {
         insertTest.assignementEmployeeRestaurant();
         return "[SUCCESS] insert Assignement in db!";
     }

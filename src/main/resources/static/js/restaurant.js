@@ -7,8 +7,6 @@ let restaurants = [];
 
 document.addEventListener("DOMContentLoaded", function () {
 
-
-
     /*********************************/
 
     document.getElementById("addButton").addEventListener("input", (event) => {
@@ -22,15 +20,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("searchInput").addEventListener("input", (event) => {
         pageNumber = 1; // Reset to first page on new search
-        searchRestaurants(event.target.value);
+        searchRestaurants();
+    });
+     document.getElementById("filterWrapper").addEventListener("change", (event) => {
+        pageNumber = 1; // Reset to first page on new search
+        searchRestaurants();
     });
 
-    function searchRestaurants(query) {
-        countRestaurants(query)
-
-        console.log("Searching restaurants with query:", query);
+    function searchRestaurants() {
+        const filter = document.getElementById("filterWrapper").value;
+        const query = document.getElementById("searchInput").value;
+        countRestaurants(filter, query)
+        console.log("Searching restaurants with query:", query, " and filter:", filter);
         const xhr = new XMLHttpRequest();
-        const params = new URLSearchParams({ query: query, limit: limit, offset: pageNumber - 1 });
+        const params = new URLSearchParams({ filter:filter, query: query, limit: limit, offset: pageNumber - 1 });
         xhr.open("GET", "http://localhost:8080/restaurant/search?" + params.toString(), true);
 
 
@@ -44,7 +47,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     container.innerHTML = "";
                     container.innerHTML = restaurants.map(r => `
                     <tr attr-id="${r.id}">
-                    <td><img class="image_list" src="data:image/png;base64,${r.image}"></td>
+                    <td> ${
+                           r.image
+                             ? `<img class="image_list" src="data:image/png;base64,${r.image}"  alt="image">`
+                             : `<img class="image_list" src="/images/store2.png"  alt="Wacdo logo">`
+                         }</td>
                     <td>${r.name}</td>
                     <td>${r.restaurantAddress.city}</td>
                     <td>${r.restaurantAddress.address}</td>
@@ -88,9 +95,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     /* Count restaurants for pagination */
-    function countRestaurants(query) {
+    function countRestaurants(filter, query) {
+
         const xhr = new XMLHttpRequest();
-        const params = new URLSearchParams({ query: query });
+        const params = new URLSearchParams({ filter :filter,query: query });
         xhr.open("GET", "http://localhost:8080/restaurant/count?" + params.toString(), true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) { // 4 = DONE
@@ -124,6 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // --- Tuiles OpenStreetMap ---
     const tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
     tileLayer.addTo(map);
+
 
     function init() {
         searchRestaurants("", limit, pageNumber - 1)

@@ -9,7 +9,7 @@ function restaurantDetails(event, restaurants) {
 
     document.querySelector("#myModal-details #modal-details-content").innerHTML = `
        <h2>Détails du restaurant</h2>
-       <img class="image_list" src="data:image/png;base64,${result.image}">
+       <img class="image_details" src="data:image/png;base64,${result.image}">
        <p><strong>Nom:</strong> ${result.name}</p>
        <p><strong>Adresse:</strong> ${result.restaurantAddress.address}, ${result.restaurantAddress.postalCode} ${result.restaurantAddress.city}</p>
        <h3>Employees:</h3>
@@ -56,7 +56,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 modal.style.display = "none";
             });
         });
-
     });
 
     /* Modal handling */
@@ -104,4 +103,21 @@ document.querySelector('input[name="restaurantAddress.address"]').addEventListen
         .catch(error => console.error(error));
     });
 
+
+
+    document.getElementById("formAddEntity").addEventListener("submit", function(e) {
+        e.preventDefault(); // empêche le submit classique
+
+        const formData = new FormData(document.getElementById("formAddEntity"));
+
+        fetch("/restaurant/save", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.text())
+        .then(html => {
+             document.getElementsByClassName("modal-close")[0].click()
+            document.getElementById("searchInput").dispatchEvent(new Event("input", { bubbles: true }));
+        });
+    });
 });

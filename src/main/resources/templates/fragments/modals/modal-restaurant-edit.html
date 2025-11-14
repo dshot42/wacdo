@@ -4,7 +4,7 @@
             <span class="close modal-close" id="modal-edit-close">&times;</span>
             <div id="edit-modal-content">
                 <h2>Ajouter un Restaurant</h2>
-                <form th:action="@{/restaurant/save}" th:object="${restaurant}" method="post" enctype="multipart/form-data" id="restaurantForm">
+                <form id="formAddEntity" th:action="@{/restaurant/save}" th:object="${restaurant}" method="post" enctype="multipart/form-data">
                     <input type="text" style="display:none"  th:field="*{id}" >
                     <label>Nom :</label>
                     <input type="text" th:field="*{name}"  placeholder="Nom du restaurant"><br><br>
@@ -17,13 +17,12 @@
                     <input type="text" th:field="*{restaurantAddress.city}"  placeholder="Ville"><br><br>
 
                     <label>Code postal :</label>
-                    <input type="number" th:field="*{restaurantAddress.postalCode}" placeholder="Code postal"><br><br>
+                    <input type="text" th:field="*{restaurantAddress.postalCode}" placeholder="Code postal" pattern="\d{5}" maxlength="5"><br><br>
 
                     <label>Adresse :</label>
                     <input type="text" th:field="*{restaurantAddress.address}"  placeholder="Adresse complète"><br><br>
 
-
-                    <label>Image :</label>
+                    <label>Photo :</label>
                     <input type="file" id="imageInput" accept="image/*" >
                     <img id="image_details" style="width: 200px; height: 200px; display:block; object-fit: contain; margin-top:10px;">
                     <input type="text" style="display:none" th:field="*{image}" id="imageBase64">

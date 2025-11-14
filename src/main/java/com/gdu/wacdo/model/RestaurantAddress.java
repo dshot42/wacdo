@@ -17,7 +17,7 @@ public class RestaurantAddress {
     public String city;
 
     @Column(nullable = false)
-    public int postalCode;
+    public String postalCode;
 
     @Column(nullable = false)
     public String address;
@@ -27,7 +27,6 @@ public class RestaurantAddress {
 
     @Column(nullable = true)
     public float cordY;
-
 
     public Long getId() {
         return id;
@@ -45,11 +44,11 @@ public class RestaurantAddress {
         this.city = city;
     }
 
-    public int getPostalCode() {
+    public String getPostalCode() {
         return postalCode;
     }
 
-    public void setPostalCode(int postalCode) {
+    public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
 

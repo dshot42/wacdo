@@ -29,9 +29,42 @@
   font-size: 28px;
   font-weight: bold;
   cursor: pointer;
+  text-align: right;
+  border-bottom: black solid 1px;
 }
 
 .close:hover,
 .close:focus {
   color: black;
+}
+
+
+.modal-content  h2 {
+    margin-bottom: 20px;
+}
+
+.modal-content  button[type="submit"], .modal-content  input[type="file"] {
+     background-color :  #3b5998;
+     color : white;
+     float : right;
+     border: none;
+     border-radius: 5px;
+     padding: 5px;
+}
+
+.modal-content label,.modal-content input,.modal-content label  {
+    width:45%;
+    display:inline-block;
+}
+
+.image_list {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+#image_details, .image_details{
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
 }

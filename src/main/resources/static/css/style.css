@@ -4,3 +4,122 @@
         font-weight: bold;
     }
 
+/* search */
+
+   .search-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 50px;
+    }
+
+    #searchInput {
+        padding: 10px;
+        font-size: 12px;
+        width: 300px;
+    }
+
+    #searchInput:focus {
+        outline: none;
+        border: 2px solid #3b5998;
+        background-color: #f2f2f2;
+    }
+
+
+
+    /* Search */
+
+    #searchWrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #3b5998;
+    }
+
+    #addButton {
+        width: 35px;
+        font-size: 25px;
+        border: none;
+        font-weight: bold;
+        color : white;
+        margin-left: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #3b5998;
+    }
+
+    #filterWrapper {
+       padding: 10px;
+        font-size: 12px;
+        margin-left: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #searchWrapper img {
+        width: 30px;
+        height: 30px;
+        margin: auto;
+    }
+
+/* Pagination */
+
+    #pagination button{
+        margin: 10px;
+        font-size: 20px;
+        border-radius: 2px;
+        border: 1px solid black;
+    }
+
+    #pagination .page-active{
+        color : white;
+        background-color: #3b5998;
+        font-size: 20px;
+        border-radius: 2px;
+        border: 2px solid #3b5998;
+    }
+
+
+    /* Array */
+
+
+
+        #tableWrapper{
+        }
+
+        #tableEntity {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+            margin-top: 20px;
+        }
+
+
+        /* Array */
+
+        td,
+        th {
+            text-align: left;
+            padding: 10px;
+        }
+
+        th {
+            background-color: #3b5998;
+            color: white;
+        }
+
+        tr {
+            border: 1px solid #ddd;
+            padding: 8px;
+            padding: 10px;
+            grid-row: 1;
+        }
+
+        #tableEntity tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #tableEntity tr:hover {
+            background-color: #ddd;
+        }

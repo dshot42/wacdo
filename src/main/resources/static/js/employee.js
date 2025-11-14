@@ -15,17 +15,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("searchInput").addEventListener("input", (event) => {
         pageNumber = 1; // Reset to first page on new search
-        searchEmployees(event.target.value);
+        searchEmployees()
     });
 
-    function searchEmployees(query) {
-        countEmployees(query)
+    document.getElementById("filterWrapper").addEventListener("change", (event) => {
+        pageNumber = 1; // Reset to first page on new search
+        searchEmployees()
+    });
 
+    function searchEmployees() {
+        const filter = document.getElementById("filterWrapper").value;
+        const query = document.getElementById("searchInput").value;
+        countEmployees(filter,query)
         console.log("Searching employees with query:", query);
         const xhr = new XMLHttpRequest();
-        const params = new URLSearchParams({ query: query, limit: limit, offset: pageNumber - 1 });
+        const params = new URLSearchParams({ filter,filter, query: query, limit: limit, offset: pageNumber - 1 });
         xhr.open("GET", "http://localhost:8080/employee/search?" + params.toString(), true);
-
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) { // 4 = DONE
@@ -37,7 +42,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     container.innerHTML = "";
                     container.innerHTML = employees.map(r => `
                     <tr attr-id="${r.id}">
-                    <td><img class="image_list" src="data:image/png;base64,${r.image}"></td>
+                    <td> ${
+                        r.image
+                          ? `<img class="image_list" src="data:image/png;base64,${r.image}"  alt="image">`
+                          : `<img class="image_list" src="/images/profile.png"  alt="Wacdo logo">`
+                      }</td>
                     <td>${r.surname} ${r.name}</td>
                     <td>${r.assignements.map(a => `<div>${a.responsability.role}</div>`).join('')}</td>
                     <td>${r.assignements.map(a => `<div>${a.restaurant.name} </div>`).join('')}</td>
@@ -57,14 +66,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
         }
-
         xhr.send();
     }
 
     /* Count employees for pagination */
-    function countEmployees(query) {
+    function countEmployees(filter,query) {
         const xhr = new XMLHttpRequest();
-        const params = new URLSearchParams({ query: query });
+        const params = new URLSearchParams({ filter, filter, query: query });
         xhr.open("GET", "http://localhost:8080/employee/count?" + params.toString(), true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) { // 4 = DONE

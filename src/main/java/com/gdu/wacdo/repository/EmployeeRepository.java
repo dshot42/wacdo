@@ -4,8 +4,12 @@ import com.gdu.wacdo.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.RepositoryDefinition;
 
+import java.util.Optional;
+
 
 @RepositoryDefinition(domainClass = Employee.class, idClass = Long.class)
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+
+     Optional<Employee> findByMail(String mail);
 
 }

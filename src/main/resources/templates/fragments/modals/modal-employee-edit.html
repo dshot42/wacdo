@@ -4,6 +4,31 @@
             <span class="close modal-close" id="modal-edit-close">&times;</span>
             <div id="edit-modal-content">
                 <h2>Ajouter un Employee</h2>
+
+                <form id="formAddEntity" th:action="@{/employee/save}" th:object="${employee}" method="post" enctype="multipart/form-data">
+                    <input type="text" style="display:none"  th:field="*{id}" >
+                    <label>Nom :</label>
+                    <input type="text" th:field="*{name}"  placeholder="Nom"><br><br>
+                    <label>Prénom :</label>
+                    <input type="text" th:field="*{surname}"  placeholder="Prénom"><br><br>
+                    <label>Mail :</label>
+                    <input type="email"  th:field="*{mail}" > <br><br>
+                    <label>Téléphone :</label>
+                    <input type="tel"  th:field="*{phone}" > <br><br>
+                    <label>Date embauche :</label>
+                    <input type="date"   th:field="*{hireDate}" > <br><br>
+                    <label>Admin :</label>
+                    <input type="checkbox"  th:field="*{admin}" /><br><br>
+                    <label>Mot de passe :</label>
+                    <input type="text"  th:field="*{password}" /><br><br>
+
+                    <label>Photo :</label>
+                    <input type="file" id="imageInput" accept="image/*" >
+                    <img id="image_details" style="width: 200px; height: 200px; display:block; object-fit: contain; margin-top:10px;">
+                    <input type="text" style="display:none" th:field="*{image}" id="imageBase64">
+
+                    <button type="submit">Enregistrer</button>
+                </form>
             </div>
         </div>
     </div>

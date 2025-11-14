@@ -1,49 +1,35 @@
 package com.gdu.wacdo.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id"
-)
 @Entity
-@Table(name = "restaurant") // nom de la table
+@Table(name = "restaurant")
 public class Restaurant {
 
-    public Restaurant() {
-    }
-
-    public Restaurant(String name) {
-        this.name = name;
-    }
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto-incrément
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    public String name;
+    private String name;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "address_id")
     public RestaurantAddress restaurantAddress;
 
+    @OneToMany(mappedBy = "restaurant")
+    @JsonIgnore
+    private List<Assignement> assignements;
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference // gère le côté Restaurant -> Assignement
-    private List<Assignement> assignements = new ArrayList<>();
-
-    @Column(columnDefinition = "text", nullable = true) // longtext pour MySQL , 1go pour PostgreSQL par default
+    @Column(columnDefinition = "text", nullable = true)
     private String image;
 
-
+    // getters/setters
     public Long getId() {
         return id;
     }

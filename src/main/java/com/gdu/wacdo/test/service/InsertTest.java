@@ -7,11 +7,13 @@ import com.gdu.wacdo.repository.ResponsabilityRepository;
 import com.gdu.wacdo.repository.RoleRepository;
 import com.gdu.wacdo.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class InsertTest {
@@ -30,6 +32,9 @@ public class InsertTest {
 
     @Autowired
     private AssignementRepository assignementRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public void deleteAll() {
         employeeRepository.deleteAll();
@@ -63,10 +68,11 @@ public class InsertTest {
         );
 
         restaurants.forEach(e -> {
-            Restaurant restaurant = new Restaurant(e.get(0).toString());
+            Restaurant restaurant = new Restaurant();
+            restaurant.setName(e.get(0).toString());
             RestaurantAddress address = new RestaurantAddress();
             address.setAddress(e.get(1).toString());
-            address.setPostalCode(Integer.parseInt(e.get(2).toString()));
+            address.setPostalCode(e.get(2).toString());
             address.setCity(e.get(3).toString());
             address.setCordX(Float.parseFloat(e.get(4).toString()));
             address.setCordY(Float.parseFloat(e.get(5).toString()));
@@ -147,36 +153,40 @@ public class InsertTest {
             empl.setMail((String) e.get(3));
             empl.setPhone((String) e.get(4));
             empl.setRole((Role) e.get(5));
+            String encodedPassword = passwordEncoder.encode("123");
+            empl.setPassword(encodedPassword);
             employeeRepository.save(empl);
         });
     }
 
     // assignement employee restau  + drag drop
 
-    public void assignementEmployeeRestaurant() {
+    public void assignementEmployeeRestaurant() throws Exception {
         List<Employee> employees = employeeRepository.findAll();
         List<Restaurant> restaurants = restaurantService.getAll();
+        List<Responsability> responsabilitys = responsabilityRepository.findAll();
+        Random rand = new Random();
 
         int i = 0;
-        for (Employee e : employees) {
-            Assignement assignement = new Assignement();
-            assignement.setEmployee(e);
-            assignement.setRestaurant(restaurants.get(i));
-            try {
-                assignement.setId(new AssignementId(e.getId(), restaurants.get(i).getId()));
-            } catch (Exception ex) {
-                System.out.println("No more restaurant available");
-                 return ;
+        for (Restaurant r : restaurants) {
+            for (int j = 0; j < 4; j++) {
+
+                try {
+                    Assignement assignement = new Assignement();
+                    Employee randomEmployee = employees.get(rand.nextInt(employees.size() - 1));
+                    assignement.setEmployee(randomEmployee);
+                    assignement.setRestaurant(restaurants.get(i));
+                    assignement.setStartDate(LocalDate.now());
+
+                    Responsability responsability = getResponsability(j, responsabilitys);
+                    assignement.setId(new AssignementId(randomEmployee.getId(), r.getId()));
+                    assignement.setResponsability(responsability);
+                    assignementRepository.save(assignement);
+                } catch (Exception ex) {
+                    throw new Exception("No more restaurant available ", ex);
+                }
+
             }
-
-
-            assignement.setStartDate(LocalDate.now());
-
-            List<Responsability> responsabilitys = responsabilityRepository.findAll();
-            Responsability responsability = getResponsability(i, responsabilitys);
-
-            assignement.setResponsability(responsability);
-            assignementRepository.save(assignement);
             i++;
 
         }

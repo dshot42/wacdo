@@ -16,22 +16,12 @@
 </head>
 
 <body id="body">
-<div id="navbar"></div>
 <div id="navbar-container" th:replace="fragments/navbar :: navbar"></div>
 <div id="modalContainer-details"  th:replace="fragments/modals/modal-details :: modalDetails"></div>
 <div id="modalContainer-edit"  th:replace="fragments/modals/modal-employee-edit :: modalEmployeeEdit"></div>
 
 <div id="container">
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Rechercher un employee...">
-        <div id="searchWrapper">
-            <img src="https://img.icons8.com/sf-black/100/ffffff/search.png">
-        </div>
-
-        <button id="addButton" title="Ajouter un employé">
-            +
-        </button>
-    </div>
+    <div id="search-container" th:replace="fragments/searchbar :: searchbar"></div>
 
     <div id="tableWrapper">
         <table id="tableEntity">
@@ -60,108 +50,12 @@
     #container {
         margin: 100px 20px 30px 30px;
         display: block;
-        grid-template-columns: repeat(3, 1fr);
         justify-content: space-around;
     }
 
     #tableWrapper{
     }
 
-    #tableEntity {
-        width: 100%;
-        border-collapse: collapse;
-        font-family: Arial, sans-serif;
-        margin-top: 20px;
-    }
-
-    .search-container {
-        display: flex;
-        justify-content: center;
-        margin-top: 50px;
-    }
-
-    #searchInput {
-        padding: 10px;
-        font-size: 12px;
-        width: 300px;
-    }
-
-    #searchInput:focus {
-        outline: none;
-        border: 2px solid #3b5998;
-        background-color: #f2f2f2;
-    }
-
-    /* Search */
-
-    #searchWrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #3b5998;
-    }
-
-    #addButton {
-        width: 35px;
-        font-size: 30px;
-        border: none;
-        font-weight: bold;
-        color : white;
-        margin-left: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #3b5998;
-    }
-
-    #searchWrapper img {
-        width: 30px;
-        height: 30px;
-        margin: auto;
-    }
-
-    #pagination button{
-        margin: 10px;
-        font-size: 20px;
-        border-radius: 2px;
-        border: 1px solid black;
-    }
-
-    #pagination .page-active{
-        color : white;
-        background-color: #3b5998;
-        font-size: 20px;
-        border-radius: 2px;
-        border: 2px solid #3b5998;
-    }
-
-    /* Array */
-
-    td,
-    th {
-        text-align: left;
-        padding: 10px;
-    }
-
-    th {
-        background-color: #3b5998;
-        color: white;
-    }
-
-    tr {
-        border: 1px solid #ddd;
-        padding: 8px;
-        padding: 10px;
-        grid-row: 1;
-    }
-
-    #tableEntity tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
-
-    #tableEntity tr:hover {
-        background-color: #ddd;
-    }
 
     /* Buttons */
 
@@ -192,19 +86,9 @@
         background-color: #f44336; /* Red */
     }
 
-    .image_list {
-        width: 50px;
-        height: 50px;
-        object-fit: contain;
-    }
-
-   #image_details{
-        width: 50px;
-        height: 50px;
-        object-fit: contain;
-    }
 
 </style>
 
 <script src="/js/modal_employee.js"></script>
 <script src="/js/employee.js"></script>
+<script src="/js/utils.js"></script>

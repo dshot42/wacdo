@@ -1,34 +1,43 @@
 package com.gdu.wacdo.service;
 
-import com.gdu.wacdo.model.Assignement;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gdu.wacdo.model.Restaurant;
 import com.gdu.wacdo.model.RestaurantAddress;
 import com.gdu.wacdo.repository.AssignementRepository;
+import com.gdu.wacdo.repository.EmployeeRepository;
 import com.gdu.wacdo.repository.RestaurantRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class RestaurantService {
 
     @Autowired
-    private EntityManager entityManager;
+    private ObjectMapper objectMapper;
 
     @Autowired
-    private AssignementRepository assignementRepository;
+    public EntityManager entityManager;
 
     @Autowired
     public RestaurantRepository repository;
+
+    @Autowired
+    public EmployeeRepository employeeRepository;
+
+    @Autowired
+    public AssignementRepository assignementRepository;
 
 
     public Restaurant save(Restaurant restaurant) {
@@ -39,63 +48,92 @@ public class RestaurantService {
         return repository.findAll();
     }
 
-    public List<Restaurant> getAll( int limit, int offset) {
-        Pageable pageable = PageRequest.of(offset, limit);
+    public List<Object> getAll(int limit, int offset) {
         Page<Restaurant> page = repository.findAll(PageRequest.of(offset, limit));
-        return page.getContent();
+        return mapRestaurants(page.getContent());
     }
+
 
     public Long countAll() {
         return repository.count();
     }
 
-    public List<Restaurant> find(String query, int limit, int offset) {
-            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Restaurant> req = cb.createQuery(Restaurant.class);
-            Root<Restaurant> restaurant = req.from(Restaurant.class);
-            Join<Restaurant, RestaurantAddress> address = restaurant.join("restaurantAddress");
-            String pattern = "%" + query.toLowerCase() + "%";
+    public List<Object> find(String filter, String query, int limit, int offset) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Restaurant> req = cb.createQuery(Restaurant.class);
+        Root<Restaurant> restaurant = req.from(Restaurant.class);
+        Join<Restaurant, RestaurantAddress> address = restaurant.join("restaurantAddress");
+        String pattern = "%" + query.toLowerCase() + "%";
 
-              if ( query.matches("\\d+")) {
-                Predicate postalPredicate = cb.equal(address.get("postalCode"), Integer.parseInt(query));
-                req.where(cb.or(postalPredicate));
-            } else {
-                  Predicate namePredicate = cb.like(cb.lower(restaurant.get("name")), pattern);
-                  Predicate addrPredicate = cb.like(cb.lower(address.get("address")), pattern);
-                  Predicate cityPredicate = cb.like(cb.lower(address.get("city")), pattern);
-                  req.where(cb.or(namePredicate, addrPredicate, cityPredicate));
-            }
+        req.select(restaurant).distinct(true);
 
-            TypedQuery<Restaurant> typedQuery = entityManager.createQuery(req);
-            typedQuery.setFirstResult(offset*limit);  // OFFSET
-            typedQuery.setMaxResults(limit);    // LIMIT
+        Predicate postalPredicate = cb.like(cb.lower(address.get("postalCode")), pattern);
+        Predicate namePredicate = cb.like(cb.lower(restaurant.get("name")), pattern);
+        Predicate addrPredicate = cb.like(cb.lower(address.get("address")), pattern);
+        Predicate cityPredicate = cb.like(cb.lower(address.get("city")), pattern);
 
-            return typedQuery.getResultList();
+        if (filter.equals("name")) {
+            req.where(namePredicate);
+        } else if (filter.equals("city")) {
+            req.where(cityPredicate);
+        } else if (filter.equals("postalCode")) {
+            req.where(postalPredicate);
+        } else {
+            req.where(cb.or(namePredicate, addrPredicate, cityPredicate, postalPredicate));
+        }
+
+        req.orderBy(cb.asc(restaurant.get("name")));
+        TypedQuery<Restaurant> typedQuery = entityManager.createQuery(req);
+        typedQuery.setFirstResult(offset * limit);  // OFFSET
+        typedQuery.setMaxResults(limit);    // LIMIT
+        return mapRestaurants(typedQuery.getResultList());
     }
 
-    public Long count(String query) {
+    public Long count(String filter, String query) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> req = cb.createQuery(Long.class);
         Root<Restaurant> restaurant = req.from(Restaurant.class);
         Join<Restaurant, RestaurantAddress> address = restaurant.join("restaurantAddress");
         String pattern = "%" + query.toLowerCase() + "%";
 
-        Predicate predicate;
-        if (query.matches("\\d+")) {
-            predicate = cb.equal(address.get("postalCode"), Integer.parseInt(query));
+        req.select(cb.countDistinct(restaurant));
+
+        Predicate postalPredicate = cb.like(cb.lower(address.get("postalCode")), pattern);
+        Predicate namePredicate = cb.like(cb.lower(restaurant.get("name")), pattern);
+        Predicate addrPredicate = cb.like(cb.lower(address.get("address")), pattern);
+        Predicate cityPredicate = cb.like(cb.lower(address.get("city")), pattern);
+
+        if (filter.equals("name")) {
+            req.where(namePredicate);
+        } else if (filter.equals("city")) {
+            req.where(cityPredicate);
+        } else if (filter.equals("postalCode")) {
+            req.where(postalPredicate);
         } else {
-            Predicate namePredicate = cb.like(cb.lower(restaurant.get("name")), pattern);
-            Predicate addrPredicate = cb.like(cb.lower(address.get("address")), pattern);
-            Predicate cityPredicate = cb.like(cb.lower(address.get("city")), pattern);
-            predicate = cb.or(namePredicate, addrPredicate, cityPredicate);
+            req.where(cb.or(namePredicate, addrPredicate, cityPredicate, postalPredicate));
         }
 
-        req.select(cb.count(restaurant));
-        req.where(predicate);
         TypedQuery<Long> typedQuery = entityManager.createQuery(req);
-
         return typedQuery.getSingleResult();
     }
 
+
+    public List<Object> mapRestaurants(List<Restaurant> restaurants) {
+        try {
+            return restaurants.stream().map(r -> {
+                try {
+                    String json = objectMapper.writeValueAsString(r);
+                    Map<String, Object> map = objectMapper.readValue(json, new TypeReference<>() {
+                    });
+                    map.put("assignements", assignementRepository.findByRestaurantId(r.getId()));
+                    return map;
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            }).collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

@@ -1,7 +1,13 @@
 package com.gdu.wacdo.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id"
+)
 @Entity
 @Table(name = "responsability") // nom de la table
 public class Responsability {
