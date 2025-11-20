@@ -1,7 +1,57 @@
-<select id="choix" name="choix"  th:field="*{responsability.name}" >
-    <option value="*">-- Sélectionnez --</option>
-    <option th:each="res : ${responsabilities}"
-            th:value="${res.id}"
-            th:text="${res.role}">
-    </option>
-</select>
+<div xmlns:th="http://www.thymeleaf.org" id="myModal-edit" class="modal" th:fragment="modalAssignementEdit">
+    <div class="modal-content">
+        <span class="close modal-close">&times;</span>
+
+        <div id="edit-modal-content">
+
+            <h2>Ajouter un Assignement</h2>
+
+            <form id="formAddEntity" th:action="@{/assignement/save}" th:object="${assignement}" method="post"
+                enctype="multipart/form-data">
+
+                <!-- champs hidden pour stocker les IDs -->
+                <input type="hidden" th:field="*{id.restaurantId}" required>
+                <input type="hidden" th:field="*{id.employeeId}" required>
+
+                <div id="searchAssignementBlock">
+
+                    <!-- RESTAURANT DROPDOWN -->
+                    <div class="dropdown">
+                        <label>Employee</label><br>
+
+                        <input type="text" style="width:90%" class="form-control" placeholder="Rechercher..."
+                            id="searchEmployeeInput" data-bs-toggle="dropdown" aria-expanded="false">
+
+                        <ul class="dropdown-menu" id="searchEmployeeDropdown">
+                            <li th:each="e : ${employee}" th:attr="data-id=${e.id}"
+                                th:text="${e.name} + ' ' + ${e.surname}" class="dropdown-item">
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="dropdown">
+                        <label>Restaurant</label><br>
+
+                        <input type="text" style="width:90%" class="form-control" placeholder="Rechercher..."
+                            id="searchRestaurantInput" data-bs-toggle="dropdown" aria-expanded="false">
+
+                        <ul class="dropdown-menu" id="searchRestaurantDropdown">
+                            <li th:each="e : ${restaurant}" th:attr="data-id=${e.id}" th:text="${e.name}"
+                                class="dropdown-item">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <span>Reponsabilité</span><br>
+                <select class="selectItem" th:field="*{responsability.id}">
+                    <option th:each="f : ${responsability}" th:value="${f.id}" th:text="${f.role}">
+                    </option>
+                </select>
+                <label>Date début du contrat :</label>
+                <input type="date" th:field="*{startDate}"> <br><br>
+
+                <button type="submit">Enregistrer</button>
+            </form>
+        </div>
+    </div>
+</div>

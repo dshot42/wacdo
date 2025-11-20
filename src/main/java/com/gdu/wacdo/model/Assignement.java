@@ -1,12 +1,6 @@
 package com.gdu.wacdo.model;
-
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
-
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 
 @Entity
 @Table(name = "assignement")
@@ -32,7 +26,7 @@ public class Assignement {
     @Column(nullable = true)
     public LocalDate endDate;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "responsability_id")
     public Responsability responsability;
 

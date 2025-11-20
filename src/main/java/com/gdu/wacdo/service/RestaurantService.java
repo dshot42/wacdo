@@ -3,6 +3,7 @@ package com.gdu.wacdo.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gdu.wacdo.model.Assignement;
 import com.gdu.wacdo.model.Restaurant;
 import com.gdu.wacdo.model.RestaurantAddress;
 import com.gdu.wacdo.repository.AssignementRepository;
@@ -14,11 +15,13 @@ import jakarta.persistence.criteria.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,7 +37,7 @@ public class RestaurantService {
     public RestaurantRepository repository;
 
     @Autowired
-    public EmployeeRepository employeeRepository;
+    public EmployeeService employeeService;
 
     @Autowired
     public AssignementRepository assignementRepository;
@@ -58,6 +61,7 @@ public class RestaurantService {
         return repository.count();
     }
 
+
     public List<Object> find(String filter, String query, int limit, int offset) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Restaurant> req = cb.createQuery(Restaurant.class);
@@ -72,14 +76,17 @@ public class RestaurantService {
         Predicate addrPredicate = cb.like(cb.lower(address.get("address")), pattern);
         Predicate cityPredicate = cb.like(cb.lower(address.get("city")), pattern);
 
-        if (filter.equals("name")) {
-            req.where(namePredicate);
-        } else if (filter.equals("city")) {
-            req.where(cityPredicate);
-        } else if (filter.equals("postalCode")) {
-            req.where(postalPredicate);
-        } else {
-            req.where(cb.or(namePredicate, addrPredicate, cityPredicate, postalPredicate));
+        switch (filter) {
+            case "name" -> {
+                req.where(namePredicate);
+                req.orderBy(cb.asc(restaurant.get("name")));
+            }
+            case "city" -> {
+                req.where(cityPredicate);
+                req.orderBy(cb.asc(address.get("city")));
+            }
+            case "postalCode" -> req.where(postalPredicate);
+            default -> req.where(cb.or(namePredicate, addrPredicate, cityPredicate, postalPredicate));
         }
 
         req.orderBy(cb.asc(restaurant.get("name")));
@@ -103,14 +110,11 @@ public class RestaurantService {
         Predicate addrPredicate = cb.like(cb.lower(address.get("address")), pattern);
         Predicate cityPredicate = cb.like(cb.lower(address.get("city")), pattern);
 
-        if (filter.equals("name")) {
-            req.where(namePredicate);
-        } else if (filter.equals("city")) {
-            req.where(cityPredicate);
-        } else if (filter.equals("postalCode")) {
-            req.where(postalPredicate);
-        } else {
-            req.where(cb.or(namePredicate, addrPredicate, cityPredicate, postalPredicate));
+        switch (filter) {
+            case "name" -> req.where(namePredicate);
+            case "city" -> req.where(cityPredicate);
+            case "postalCode" -> req.where(postalPredicate);
+            default -> req.where(cb.or(namePredicate, addrPredicate, cityPredicate, postalPredicate));
         }
 
         TypedQuery<Long> typedQuery = entityManager.createQuery(req);
@@ -125,7 +129,14 @@ public class RestaurantService {
                     String json = objectMapper.writeValueAsString(r);
                     Map<String, Object> map = objectMapper.readValue(json, new TypeReference<>() {
                     });
-                    map.put("assignements", assignementRepository.findByRestaurantId(r.getId()));
+
+                    List<Assignement> assignements = assignementRepository.findByRestaurantId(r.getId());
+                    List<Assignement> oldAssignements = assignementRepository.findByRestaurantIdAndEndDateBefore(r.getId(), LocalDate.now());
+                    assignements.removeAll(oldAssignements);
+
+                    map.put("assignements", assignements);
+                    map.put("oldAssignements", oldAssignements);
+
                     return map;
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);

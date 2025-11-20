@@ -1,5 +1,53 @@
+
+let selectRestaurantId = 0;
+
+function searchEmployee() {
+    const filter = document.getElementById("filterWrapperModalDetails").value;
+    const query = document.getElementById("searchInputModalDetails").value;
+    const xhr = new XMLHttpRequest();
+    const params = new URLSearchParams({ filter: filter, query: query });
+    xhr.open("GET", "http://localhost:8080/assignement/search/employee/restaurant-id/" +selectRestaurantId + "?" + params.toString(), true);
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) { // 4 = DONE
+            if (xhr.status === 200) {
+                result = JSON.parse(xhr.responseText);
+                document.getElementById("modal-details-assignement-content").innerHTML = `
+                           <h4>Employees:</h4>
+                                <ul>
+                                    ${result.assignements.map(a => `<li>${a.employee.name} ${a.employee.surname} -> ${a.responsability.role}
+                                     , date de début de contrat : ${displayDate(a.startDate)}</li>`).join('')}
+                                </ul>
+                           <h4>Ancien Employees:</h4>
+                           <ul>
+                               ${!result.oldAssignements.length ? "Aucun" : ""}
+                               ${result.oldAssignements.map(a => `<li>${a.employee.name} ${a.employee.surname} -> ${a.responsability.role}
+                               , date de début de contrat : ${displayDate(a.startDate)}, date de fin de contrat : ${displayDate(a.startDate)}</li>`).join('')}
+                           </ul>
+                         `;
+            } else {
+                console.error("Request failed with status:", xhr.status);
+            }
+        }
+    }
+    xhr.send();
+}
+
+function searchEmployeeEvent() {
+    document.getElementById("searchInputModalDetails").addEventListener("input", (event) => {
+        searchEmployee()
+    })
+    document.getElementById("filterWrapperModalDetails").addEventListener("change", (event) => {
+            searchEmployee();
+    });
+}
+
+searchEmployeeEvent();
+
 function restaurantDetails(event, restaurants) {
     const id = parseInt(event.target.getAttribute("attr-id"));
+    selectRestaurantId = id;
+
     const modal = document.getElementById("myModal-details")
     modal.style.display = "block";
     console.log(id)
@@ -7,16 +55,19 @@ function restaurantDetails(event, restaurants) {
         return item.id === id
     });
 
+    document.querySelector("#modal-details-header h2").textContent = "Détails du restaurant";
     document.querySelector("#myModal-details #modal-details-content").innerHTML = `
-       <h2>Détails du restaurant</h2>
-       <img class="image_details" src="data:image/png;base64,${result.image}">
+        <img class="image_details" style="float: right;" src="${result.image ?
+            `data:image/png;base64,${result.image}`
+            : "/images/store2.png"}" alt="image resutant">
        <p><strong>Nom:</strong> ${result.name}</p>
        <p><strong>Adresse:</strong> ${result.restaurantAddress.address}, ${result.restaurantAddress.postalCode} ${result.restaurantAddress.city}</p>
-       <h3>Employees:</h3>
-       <ul>
-           ${result.assignements.map(a => `<li>${a.employee.name} - ${a.responsability.role}</li>`).join('')}
-       </ul>
    `;
+
+    document.getElementById("modal-details-search-title").innerHTML = `Rechercher un salarié`;
+
+
+    searchEmployee()
 }
 
 function restaurantEdit(event, restaurants) {
@@ -35,12 +86,12 @@ function restaurantEdit(event, restaurants) {
     modal.querySelector('input[name="restaurantAddress.postalCode"]').value = result.restaurantAddress.postalCode;
     modal.querySelector('input[name="id"]').value = result.id;
     document.querySelector("#myModal-edit #image_details").src = `data:image/png;base64,${result.image}`;
-     document.querySelector("#myModal-edit #imageBase64").value = result.image;
+    document.querySelector("#myModal-edit #imageBase64").value = result.image;
 }
 
 
 function restaurantRemove() {
-   // todo 
+    // todo 
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -83,29 +134,29 @@ document.addEventListener("DOMContentLoaded", function () {
         reader.readAsDataURL(file);
     });
 
-document.querySelector('input[name="restaurantAddress.address"]').addEventListener('input', (event) => {
-    const modal = document.getElementById("myModal-edit")
-    const address = event.target.value + ', ' +
-        modal.querySelector('input[name="restaurantAddress.postalCode"]').value + ' ' +
-        modal.querySelector('input[name="restaurantAddress.city"]').value;
-    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.length > 0) {
-                 modal.querySelector('input[name="restaurantAddress.cordX"]').value = data[0].lat;
-                 modal.querySelector('input[name="restaurantAddress.cordY"]').value =  data[0].lon;
-                console.log(`Latitude: ${lat}, Longitude: ${lon}`);
-            } else {
-                console.log("Address not found");
-                alert("Adresse non trouvée. Veuillez vérifier l'adresse saisie.");
-            }
-        })
-        .catch(error => console.error(error));
+    document.querySelector('input[name="restaurantAddress.address"]').addEventListener('input', (event) => {
+        const modal = document.getElementById("myModal-edit")
+        const address = event.target.value + ', ' +
+            modal.querySelector('input[name="restaurantAddress.postalCode"]').value + ' ' +
+            modal.querySelector('input[name="restaurantAddress.city"]').value;
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    modal.querySelector('input[name="restaurantAddress.cordX"]').value = data[0].lat;
+                    modal.querySelector('input[name="restaurantAddress.cordY"]').value = data[0].lon;
+                    console.log(`Latitude: ${lat}, Longitude: ${lon}`);
+                } else {
+                    console.log("Address not found");
+                    alert("Adresse non trouvée. Veuillez vérifier l'adresse saisie.");
+                }
+            })
+            .catch(error => console.error(error));
     });
 
 
 
-    document.getElementById("formAddEntity").addEventListener("submit", function(e) {
+    document.getElementById("formAddEntity").addEventListener("submit", function (e) {
         e.preventDefault(); // empêche le submit classique
 
         const formData = new FormData(document.getElementById("formAddEntity"));
@@ -114,10 +165,12 @@ document.querySelector('input[name="restaurantAddress.address"]').addEventListen
             method: "POST",
             body: formData
         })
-        .then(res => res.text())
-        .then(html => {
-             document.getElementsByClassName("modal-close")[0].click()
-            document.getElementById("searchInput").dispatchEvent(new Event("input", { bubbles: true }));
-        });
+            .then(res => res.text())
+            .then(html => {
+                document.getElementsByClassName("modal-close")[0].click()
+                document.getElementById("searchInput").dispatchEvent(new Event("input", { bubbles: true }));
+            });
     });
+
+
 });

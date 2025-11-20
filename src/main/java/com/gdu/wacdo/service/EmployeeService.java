@@ -56,6 +56,18 @@ public class EmployeeService {
     }
 
     public List<Object> find(String filter, String query, int limit, int offset) {
+        TypedQuery<Employee> typedQuery = getEmployeeTypedQuery(filter, query);
+        typedQuery.setFirstResult(offset * limit);
+        typedQuery.setMaxResults(limit);
+        return mapEmployee(typedQuery.getResultList());
+    }
+
+    public List<Employee> find(String filter, String query) {
+        TypedQuery<Employee> typedQuery = getEmployeeTypedQuery(filter, query);
+        return typedQuery.getResultList();
+    }
+
+    private TypedQuery<Employee> getEmployeeTypedQuery(String filter, String query) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Employee> req = cb.createQuery(Employee.class);
         Root<Employee> employee = req.from(Employee.class);
@@ -74,32 +86,39 @@ public class EmployeeService {
         ), pattern);
         Predicate responsabilityPredicate = cb.like(cb.lower(responsability.get("role")), pattern);
         Predicate restaurantPredicate = cb.like(cb.lower(restaurant.get("name")), pattern);
-        Predicate queryPredicate = cb.or(namePredicate1, namePredicate2, restaurantPredicate, responsabilityPredicate);
+        Predicate mailPredicate = cb.like(cb.lower(employee.get("mail")), pattern);
+
+        Predicate queryPredicate = null;
 
         req.select(employee).distinct(true);
 
-        if (filter.equals("name")) {
-            req.where(cb.like(cb.lower(employee.get("name")), pattern));
-            req.orderBy(cb.asc(employee.get("name")));
-        } else if (filter.equals("surname")) {
-            req.where(cb.like(cb.lower(employee.get("surname")), pattern));
-            req.orderBy(cb.asc(employee.get("surname")));
-        } else if (filter.equals("name+surname")) {
-            req.where(cb.or(namePredicate1, namePredicate2));
-            req.orderBy(cb.asc(employee.get("name")));
-        } else if (filter.equals("mail")) {
-            req.where(cb.like(cb.lower(employee.get("mail")), pattern));
-            req.orderBy(cb.asc(employee.get("mail")));
-        } else {
-            req.where(queryPredicate);
-            req.orderBy(cb.asc(employee.get("name")));
+        switch (filter) {
+            case "name" -> {
+                queryPredicate = cb.like(cb.lower(employee.get("name")), pattern);
+                req.orderBy(cb.asc(employee.get("name")));
+            }
+            case "surname" -> {
+                queryPredicate = cb.like(cb.lower(employee.get("surname")), pattern);
+                req.orderBy(cb.asc(employee.get("surname")));
+            }
+            case "name+surname" -> {
+                queryPredicate = cb.or(namePredicate1, namePredicate2);
+                req.orderBy(cb.asc(employee.get("name")));
+            }
+            case "mail" -> {
+                queryPredicate = mailPredicate;
+                req.orderBy(cb.asc(employee.get("mail")));
+            }
+            default -> {
+                queryPredicate = cb.or(namePredicate1, namePredicate2, mailPredicate, restaurantPredicate, responsabilityPredicate);
+                req.orderBy(cb.asc(employee.get("name")));
+            }
         }
 
-        TypedQuery<Employee> typedQuery = entityManager.createQuery(req);
-        typedQuery.setFirstResult(offset * limit);
-        typedQuery.setMaxResults(limit);
-
-        return mapEmployee(typedQuery.getResultList());
+        TypedQuery<Employee> typedQuery = null;
+        req.where(queryPredicate);
+        typedQuery = entityManager.createQuery(req);
+        return typedQuery;
     }
 
     public Long count(String filter, String query) {
@@ -124,16 +143,12 @@ public class EmployeeService {
         Predicate restaurantPredicate = cb.like(cb.lower(restaurant.get("name")), pattern);
         //  Predicate hireDatePredicate = cb.equal(cb.lower(employee.get("hireDate")), pattern);
 
-        if (filter.equals("name")) {
-            req.where(cb.like(cb.lower(employee.get("name")), pattern));
-        } else if (filter.equals("surname")) {
-            req.where(cb.like(cb.lower(employee.get("surname")), pattern));
-        } else if (filter.equals("name+surname")) {
-            req.where(cb.or(namePredicate1, namePredicate2));
-        } else if (filter.equals("mail")) {
-            req.where(cb.like(cb.lower(employee.get("mail")), pattern));
-        } else {
-            req.where(cb.or(namePredicate1, namePredicate2, restaurantPredicate, responsabilityPredicate));
+        switch (filter) {
+            case "name" -> req.where(cb.like(cb.lower(employee.get("name")), pattern));
+            case "surname" -> req.where(cb.like(cb.lower(employee.get("surname")), pattern));
+            case "name+surname" -> req.where(cb.or(namePredicate1, namePredicate2));
+            case "mail" -> req.where(cb.like(cb.lower(employee.get("mail")), pattern));
+            default -> req.where(cb.or(namePredicate1, namePredicate2, restaurantPredicate, responsabilityPredicate));
         }
         TypedQuery<Long> typedQuery = entityManager.createQuery(req);
         return typedQuery.getSingleResult();

@@ -3,6 +3,8 @@ package com.gdu.wacdo.controller;
 import com.gdu.wacdo.model.Employee;
 import com.gdu.wacdo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -57,4 +59,5 @@ public class EmployeeController {
         model.addAttribute("employee", employee);
         return "home :: employee"; // <-- Thymeleaf fragment
     }
+
 }

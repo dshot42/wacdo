@@ -1,19 +1,16 @@
-<div class="search-container"  xmlns:th="http://www.thymeleaf.org"
-     th:fragment="searchbar">
-    <input type="text" id="searchInput" placeholder="Rechercher un restaurant...">
+<div class="search-container" xmlns:th="http://www.thymeleaf.org" th:fragment="searchbar">
+    <input type="text" id="searchInput" placeholder="Rechercher ...">
     <div id="searchWrapper">
         <img src="https://img.icons8.com/sf-black/100/ffffff/search.png">
     </div>
 
     <select id="filterWrapper" name="choix">
         <option value="*" selected>-- Toutes catégories --</option>
-        <option th:each="f : ${filter}"
-                th:value="${f.key}"
-                th:text="${f.value}">
+        <option th:each="f : ${filter}" th:value="${f.key}" th:text="${f.value}">
         </option>
     </select>
 
-    <button id="addButton"  title="Ajouter un restaurant">
+    <button id="addButton" title="Ajouter un restaurant">
         +
     </button>
 </div>

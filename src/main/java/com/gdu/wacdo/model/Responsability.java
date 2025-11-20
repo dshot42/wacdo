@@ -1,13 +1,11 @@
 package com.gdu.wacdo.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id"
-)
+import java.util.List;
+
+
 @Entity
 @Table(name = "responsability") // nom de la table
 public class Responsability {
@@ -21,6 +19,10 @@ public class Responsability {
 
     @Column(nullable = false)
     public String role;
+
+    @OneToMany(mappedBy = "responsability")
+    @JsonIgnore
+    List<Assignement> assignements;
 
 
     public Long getId() {

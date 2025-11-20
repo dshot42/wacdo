@@ -1,0 +1,7 @@
+<select id="choix" name="choix"  th:field="*{responsability.name}" >
+    <option value="*">-- Sélectionnez --</option>
+    <option th:each="res : ${responsability}"
+            th:value="${res.id}"
+            th:text="${res.role}">
+    </option>
+</select>

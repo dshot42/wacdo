@@ -1,9 +1,25 @@
-<div xmlns:th="http://www.thymeleaf.org"  id="myModal-details" class="modal" th:fragment="modalDetails">
+<div xmlns:th="http://www.thymeleaf.org" id="myModal-details" class="modal" th:fragment="modalDetails">
     <div class="modal-content">
-        <span class="close modal-close" id="modal-details-close">&times;</span>
-        <div id="modal-details-content">
-            <h2>Titre de la modale</h2>
-        <p>Contenu de votre modale ici.</p>
+        <div id="modal-details-header" style="  border-bottom: black solid 1px; margin-bottom:10px">
+            <h2 id="modal-details-title" style="display: inline-block;"></h2>
+            <span class="close modal-close" id="modal-details-close">&times;</span>
         </div>
+        <div id="modal-details-content"></div>
+        <div>
+            <h4 id="modal-details-search-title">Rechercher </h4><br>
+            <div id="modal-search-assignement" style=" margin-top: 5px !important; margin-bottom: 10px;">
+                <input type="text" id="searchInputModalDetails" placeholder="Rechercher ...">
+                <div id="searchWrapperModal">
+                    <img src="https://img.icons8.com/sf-black/100/ffffff/search.png">
+                </div>
+
+                <select id="filterWrapperModalDetails" style="margin-left: 20px;" name="choix">
+                    <option value="*" selected>-- Toutes catégories --</option>
+                    <option th:each="f : ${modalDetailsFilter}" th:value="${f.key}" th:text="${f.value}">
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div id="modal-details-assignement-content"></div>
     </div>
 </div>

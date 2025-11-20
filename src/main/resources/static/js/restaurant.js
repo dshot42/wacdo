@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
         pageNumber = 1; // Reset to first page on new search
         searchRestaurants();
     });
-     document.getElementById("filterWrapper").addEventListener("change", (event) => {
+    document.getElementById("filterWrapper").addEventListener("change", (event) => {
         pageNumber = 1; // Reset to first page on new search
         searchRestaurants();
     });
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
         countRestaurants(filter, query)
         console.log("Searching restaurants with query:", query, " and filter:", filter);
         const xhr = new XMLHttpRequest();
-        const params = new URLSearchParams({ filter:filter, query: query, limit: limit, offset: pageNumber - 1 });
+        const params = new URLSearchParams({ filter: filter, query: query, limit: limit, offset: pageNumber - 1 });
         xhr.open("GET", "http://localhost:8080/restaurant/search?" + params.toString(), true);
 
 
@@ -47,12 +47,27 @@ document.addEventListener("DOMContentLoaded", function () {
                     container.innerHTML = "";
                     container.innerHTML = restaurants.map(r => `
                     <tr attr-id="${r.id}">
-                    <td> ${
-                           r.image
-                             ? `<img class="image_list" src="data:image/png;base64,${r.image}"  alt="image">`
-                             : `<img class="image_list" src="/images/store2.png"  alt="Wacdo logo">`
-                         }</td>
+                    <td> ${r.image
+                            ? `<img class="image_list" src="data:image/png;base64,${r.image}"  alt="image">`
+                            : `<img class="image_list" src="/images/store2.png"  alt="Wacdo logo">`
+                        }</td>
                     <td>${r.name}</td>
+                     <td>
+                      <div class="dropdown">
+                        <button class="btn btn-color-blue dropdown-toggle"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                          ${r.assignements.length} Assignement(s)
+                        </button>
+
+                        <ul class="dropdown-menu">
+                          ${r.assignements.map(a => `
+                            <li><a class="dropdown-item">${a.responsability.role} => ${a.employee.name} ${a.employee.surname}</a></li>
+                          `).join('')}
+                        </ul>
+                      </div>
+                    </td>
                     <td>${r.restaurantAddress.city}</td>
                     <td>${r.restaurantAddress.address}</td>
                     <td>${r.restaurantAddress.postalCode}</td>
@@ -65,7 +80,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     `).join('');
 
                     // MAP //
-
                     const markers = L.featureGroup();
                     restaurants.forEach(r => {
                         const m = L.marker([r.restaurantAddress.cordX, r.restaurantAddress.cordY]);
@@ -98,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function countRestaurants(filter, query) {
 
         const xhr = new XMLHttpRequest();
-        const params = new URLSearchParams({ filter :filter,query: query });
+        const params = new URLSearchParams({ filter: filter, query: query });
         xhr.open("GET", "http://localhost:8080/restaurant/count?" + params.toString(), true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) { // 4 = DONE

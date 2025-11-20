@@ -169,7 +169,7 @@ public class InsertTest {
 
         int i = 0;
         for (Restaurant r : restaurants) {
-            for (int j = 0; j < 4; j++) {
+            for (int j = 0; j < 4; j++) { // 4 empl par restau
 
                 try {
                     Assignement assignement = new Assignement();
@@ -195,16 +195,15 @@ public class InsertTest {
     private static Responsability getResponsability(int i, List<Responsability> responsabilitys) {
         Responsability responsability;
         // todo tous les 5 employees on change de restaurant
-        if (i % 5 == 0)
+
+        if (i == 0)
             responsability = responsabilitys.get(0);
-        else if (i % 5 == 1)
+        else if (i == 1)
             responsability = responsabilitys.get(1);
-        else if (i % 5 == 2)
+        else if (i == 2)
             responsability = responsabilitys.get(2);
-        else if (i % 5 == 3)
-            responsability = responsabilitys.get(3);
         else
-            responsability = responsabilitys.get(4);
+            responsability = responsabilitys.get(3);
         return responsability;
     }
 

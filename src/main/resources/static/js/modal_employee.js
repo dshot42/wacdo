@@ -7,9 +7,14 @@ function employeeDetails(event, restaurants) {
         return item.id === id
     });
 
+    document.querySelector("#modal-search-assignements h4").innerHTML = `Rechercher un salarié`;
+
     document.querySelector("#myModal-details #modal-details-content").innerHTML = `
-       <h2>Détails de l'employé</h2>
-       <img class="image_details" src="data:image/png;base64,${result.image}">
+       <h3>Détails de l'employé</h3>
+      ${result.image
+            ? `<img class="image_details" src="data:image/png;base64,${result.image}"  alt="image">`
+            : `<img class="image_details" src="/images/profile.png"  alt="Wacdo logo">`
+        }
        <p><strong>Nom:</strong> ${result.name}  ${result.surname}</p>
        <p><strong>Téléphone:</strong> ${result.phone}  </p>
        <p><strong>Mail:</strong> ${result.mail} </p>
@@ -20,6 +25,7 @@ function employeeDetails(event, restaurants) {
            ${result.assignements.map(a => `<li>${a.restaurant.name} - ${a.responsability.role}</li>`).join('')}
        </ul>
    `;
+
 }
 
 function employeeEdit(event, restaurants) {
@@ -30,8 +36,8 @@ function employeeEdit(event, restaurants) {
     const result = restaurants.find(item => {
         return item.id === id
     });
-    console.log(result)
-   modal.querySelector('input[name="id"]').value = result.id;
+
+    modal.querySelector('input[name="id"]').value = result.id;
     modal.querySelector('input[name="name"]').value = result.name;
     modal.querySelector('input[name="surname"]').value = result.surname;
     modal.querySelector('input[name="mail"]').value = result.mail;
@@ -39,12 +45,12 @@ function employeeEdit(event, restaurants) {
     modal.querySelector('input[name="hireDate"]').value = result.hireDate;
 
     document.querySelector("#myModal-edit #image_details").src = `data:image/png;base64,${result.image}`;
-     document.querySelector("#myModal-edit #imageBase64").value = result.image;
+    document.querySelector("#myModal-edit #imageBase64").value = result.image;
 }
 
 
 function employeeRemove() {
-   // todo
+    // todo
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -88,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-    document.getElementById("formAddEntity").addEventListener("submit", function(e) {
+    document.getElementById("formAddEntity").addEventListener("submit", function (e) {
         e.preventDefault(); // empêche le submit classique
 
         const formData = new FormData(document.getElementById("formAddEntity"));
@@ -97,11 +103,11 @@ document.addEventListener("DOMContentLoaded", function () {
             method: "POST",
             body: formData
         })
-        .then(res => res.text())
-        .then(html => {
-               document.getElementsByClassName("modal-close")[0].click()
-              document.getElementById("searchInput").dispatchEvent(new Event("input", { bubbles: true }));
-        });
+            .then(res => res.text())
+            .then(html => {
+                document.getElementsByClassName("modal-close")[0].click()
+                document.getElementById("searchInput").dispatchEvent(new Event("input", { bubbles: true }));
+            });
     });
 
 });

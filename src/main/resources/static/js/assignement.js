@@ -1,7 +1,7 @@
 let limit = 10; // 10 results par page
 let pageNumber = 1;
 
-let employee = [];
+let assignement = [];
 
 document.addEventListener("DOMContentLoaded", function () {
     /*********************************/
@@ -10,70 +10,50 @@ document.addEventListener("DOMContentLoaded", function () {
         const modal = document.getElementById("myModal-edit").style.display = "block";
     });
 
-    / * function Handle employee  */
+    / * function Handle assignement  */
 
 
     document.getElementById("searchInput").addEventListener("input", (event) => {
         pageNumber = 1; // Reset to first page on new search
-        searchEmployees()
+        searchAssignements()
     });
 
     document.getElementById("filterWrapper").addEventListener("change", (event) => {
         pageNumber = 1; // Reset to first page on new search
-        searchEmployees()
+        searchAssignements()
     });
 
-    function searchEmployees() {
+    function searchAssignements() {
         const filter = document.getElementById("filterWrapper").value;
         const query = document.getElementById("searchInput").value;
-        countEmployees(filter, query)
-        console.log("Searching employees with query:", query);
+        countAssignements(filter, query)
+        console.log("Searching assignements with query:", query);
         const xhr = new XMLHttpRequest();
         const params = new URLSearchParams({ filter, filter, query: query, limit: limit, offset: pageNumber - 1 });
-        xhr.open("GET", "http://localhost:8080/employee/search?" + params.toString(), true);
+        xhr.open("GET", "http://localhost:8080/assignement/search?" + params.toString(), true);
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) { // 4 = DONE
                 if (xhr.status === 200) {
-                    employees = JSON.parse(xhr.responseText);
+                    assignements = JSON.parse(xhr.responseText);
 
                     // Array //
                     let container = document.getElementById('tableRow');
                     container.innerHTML = "";
-                    container.innerHTML = employees.map(r => `
-                    <tr attr-id="${r.id}">
-                    <td> ${r.image
-                            ? `<img class="image_list" src="data:image/png;base64,${r.image}"  alt="image">`
-                            : `<img class="image_list" src="/images/profile.png"  alt="Wacdo logo">`
-                        }</td>
-                    <td>${r.surname} ${r.name}</td>
+                    container.innerHTML = assignements.map(a => `
+                    <tr attr-id="${a.id}">
+                    <td>${a.employee.name} ${a.employee.surname}</td>
+                    <td>${a.responsability.role}</td>
+                    <td>${a.restaurant.name}</td>
+                    <td>${displayDate(a.startDate)}</td>
+                    <td>${displayDate(a.startDate) == undefined ? "X" : displayDate(a.startDate)}</td>
                     <td>
-                      <div class="dropdown">
-                        <button class="btn btn-color-blue dropdown-toggle"
-                                type="button"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                          ${r.assignements.length} Assignement(s)
-                        </button>
-
-                        <ul class="dropdown-menu">
-                          ${r.assignements.map(a => `
-                            <li><a class="dropdown-item">${a.responsability.role} => ${a.restaurant.name}</a></li>
-                          `).join('')}
-                        </ul>
-                      </div>
-                    </td>
-                    <td>${r.mail}</td>
-                    <td>${phoneFormatter(r.phone)}</td>
-                      <td>${displayDate(r.hireDate)}</td>
-                    <td>
-                        <button attr-id="${r.id}" class="employeeDetails fas fa-eye" onclick="employeeDetails(event,employees)"></button>
-                        <button attr-id="${r.id}" class="employeeEdit edit-btn fas fa-pen" onclick="employeeEdit(event,employees)"></button>
-                        <button attr-id="${r.id}" class="employeeRemove remove-btn fas fa-trash" onclick="employeeRemove(event)"></button>
+                        <button attr-id="${a.id}" class="assignementDetails fas fa-eye" onclick="assignementDetails(event,assignements)"></button>
+                        <button attr-id="${a.id}" class="assignementEdit edit-btn fas fa-pen" onclick="assignementEdit(event,assignements)"></button>
+                        <button attr-id="${a.id}" class="assignementRemove remove-btn fas fa-trash" onclick="assignementRemove(event)"></button>
                     </td>
                     </tr>
                     `).join('');
-
                 } else {
                     console.error("Request failed with status:", xhr.status);
                 }
@@ -82,11 +62,11 @@ document.addEventListener("DOMContentLoaded", function () {
         xhr.send();
     }
 
-    /* Count employees for pagination */
-    function countEmployees(filter, query) {
+    /* Count assignements for pagination */
+    function countAssignements(filter, query) {
         const xhr = new XMLHttpRequest();
         const params = new URLSearchParams({ filter, filter, query: query });
-        xhr.open("GET", "http://localhost:8080/employee/count?" + params.toString(), true);
+        xhr.open("GET", "http://localhost:8080/assignement/count?" + params.toString(), true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) { // 4 = DONE
                 if (xhr.status === 200) {
@@ -102,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         if (i == pageNumber) pageLink.classList.add("page-active");
                         pageLink.addEventListener('click', () => {
                             pageNumber = i;
-                            searchEmployees(document.getElementById("searchInput").value, limit, this.textContent - 1);
+                            searchAssignements(document.getElementById("searchInput").value, limit, this.textContent - 1);
                         });
                         pagination.appendChild(pageLink);
                     }
@@ -116,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     function init() {
-        searchEmployees("", limit, pageNumber - 1)
+        searchAssignements("", limit, pageNumber - 1)
     }
     init();
 

@@ -3,6 +3,8 @@ package com.gdu.wacdo.controller;
 import com.gdu.wacdo.model.Restaurant;
 import com.gdu.wacdo.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,11 +26,16 @@ public class RestaurantController {
 
     @GetMapping("/search")
     @ResponseBody
-    public List<Object> search(@RequestParam String filter, @RequestParam String query, @RequestParam int limit, @RequestParam int offset) {
-        if (query == null || query.trim().isEmpty()) {
-            return restaurantService.getAll( limit, offset);
+    public ResponseEntity<?> search(@RequestParam String filter, @RequestParam String query, @RequestParam int limit, @RequestParam int offset) {
+        try {
+            if (query == null || query.trim().isEmpty()) {
+                return ResponseEntity.ok(restaurantService.getAll(limit, offset));
+            }
+            return ResponseEntity.ok(restaurantService.find(filter, query, limit, offset));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        return restaurantService.find(filter, query, limit, offset);
     }
 
     @GetMapping("/count")
@@ -46,4 +53,5 @@ public class RestaurantController {
         model.addAttribute("restaurant", restaurant);
         return "home :: restaurant"; // <-- Thymeleaf fragment
     }
+
 }
