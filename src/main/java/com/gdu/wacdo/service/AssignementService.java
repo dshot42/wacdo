@@ -152,32 +152,6 @@ public class AssignementService {
         return typedQuery.getSingleResult();
     }
 
-
-    public Map<String, Object> findEmployeeByRestaurant(String query, String filter, Long idRestaurant) {
-        Map<String, Object> map = new HashMap<>();
-        List<Assignement> resAssignements = new LinkedList<>();
-        List<Assignement> resOldAssignements = new LinkedList<>();
-
-        List<Assignement> restaurantAssignements = repository.findByRestaurantId(idRestaurant);
-        List<Employee> employees = employeeService.find(filter, query);
-
-        restaurantAssignements.forEach(ass -> {
-            if (employees.stream().anyMatch(employee -> employee.getId().equals(ass.getEmployee().getId()))) {
-                if (ass.getEndDate() == null || ass.getEndDate().isAfter(LocalDate.now())) {
-                    resAssignements.add(ass);
-                } else {
-                    resOldAssignements.add(ass);
-                }
-            }
-        });
-
-        map.put("assignements", resAssignements);
-        map.put("oldAssignements", resOldAssignements);
-
-        return map;
-    }
-
-
     public void save(Assignement assignement) throws Exception {
         Employee emp = employeeService.repository.findById(assignement.getId().getEmployeeId())
                 .orElseThrow(() -> new RuntimeException("Employee not found"));

@@ -56,13 +56,4 @@ public class AssignementController {
         }
     }
 
-    @GetMapping("/search/employee/restaurant-id/{idRestaurant}")
-    @ResponseBody
-    public ResponseEntity<?> findEmployeeByRestaurant(@RequestParam String filter, @RequestParam String query, @PathVariable Long idRestaurant) {
-        try {
-            return ResponseEntity.ok(assignementService.findEmployeeByRestaurant(query, filter, idRestaurant));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
 }

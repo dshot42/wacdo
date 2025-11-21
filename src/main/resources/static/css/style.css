@@ -6,7 +6,6 @@
 
    .search-container, #modal-search-assignement{
         display: flex;
-        justify-content: center;
         margin-top: 50px;
     }
 
@@ -29,12 +28,11 @@
     #searchWrapper, #searchWrapperModal {
         display: flex;
         align-items: center;
-        justify-content: center;
         background-color: #3b5998;
     }
 
 
-    #searchWrapper img, #searchWrapperModal img {
+    #searchWrapper img, #searchWrapperModal img, #searchWrapperEdit img {
         width: 30px;
         height: 30px;
         margin: auto;
@@ -98,12 +96,7 @@
 
     /* Array */
 
-
-
-        #tableWrapper{
-        }
-
-        #tableEntity {
+        #tableEntity, #tableEntityDetails {
             width: 100%;
             border-collapse: collapse;
             font-family: Arial, sans-serif;
@@ -131,10 +124,10 @@
             grid-row: 1;
         }
 
-        #tableEntity tr:nth-child(even) {
+        #tableEntity tr:nth-child(even),  #tableEntityDetails tr:nth-child(even){
             background-color: #f2f2f2;
         }
 
-        #tableEntity tr:hover {
+        #tableEntity tr:hover, #tableEntityDetails {
             background-color: #ddd;
         }

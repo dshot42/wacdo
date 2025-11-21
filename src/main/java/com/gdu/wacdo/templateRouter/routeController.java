@@ -88,7 +88,8 @@ public class routeController {
         model.addAttribute("modalDetailsFilter",
                 Map.of("name","nom",
                         "surname","prenom",
-                        "name+surname","nom et prenom",
+                        "name+surname","nom et prénom",
+                        "responsability","reponsabilité",
                         "mail","email"));
         //poste, par nom, par date de début d'affectation.
         return "restaurant"; // correspond à home.html

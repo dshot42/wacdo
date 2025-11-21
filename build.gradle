@@ -33,7 +33,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5-jakarta'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate6:2.19.1'
+    // la 5 pose probleme lors des jointures complexe
 }
 
 

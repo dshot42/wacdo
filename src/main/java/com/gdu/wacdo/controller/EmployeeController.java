@@ -5,7 +5,6 @@ import com.gdu.wacdo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,10 +17,6 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-
     @GetMapping("/getAll")
     @ResponseBody
     public List<Employee> listEmployees(Model model) {
@@ -30,11 +25,11 @@ public class EmployeeController {
 
     @GetMapping("/search")
     @ResponseBody
-    public List<Object> search(@RequestParam String filter, @RequestParam String query, @RequestParam int limit, @RequestParam int offset) {
+    public List<Object> search(@RequestParam String filter, @RequestParam String query, @RequestParam String order, @RequestParam int limit, @RequestParam int offset) {
         if (query == null || query.trim().isEmpty()) {
             return employeeService.getAll(limit, offset);
         }
-        return employeeService.find(filter, query, limit, offset);
+        return employeeService.findByRestaurant(filter, query, limit, offset, order);
     }
 
     @GetMapping("/count")
@@ -48,16 +43,20 @@ public class EmployeeController {
 
     @PostMapping("/save")
     public String saveEmployee(@ModelAttribute Employee employee, Model model) {
-        if (employee.getId() == null) {
-            employeeService.repository.findByMail(employee.getMail())
-                    .ifPresent(
-                            e -> employee.setId(e.getId())
-                    );
-        }
-        employee.setPassword(passwordEncoder.encode(employee.getPassword()));
-        employeeService.save(employee);
+        employeeService.saveEmployee(employee);
         model.addAttribute("employee", employee);
         return "home :: employee"; // <-- Thymeleaf fragment
+    }
+
+
+    @GetMapping("/search/restaurant-id/{idRestaurant}")
+    @ResponseBody
+    public ResponseEntity<?> findEmployeeByRestaurant(@RequestParam String filter, @RequestParam String query, @RequestParam String order, @PathVariable Long idRestaurant) {
+        try {
+            return ResponseEntity.ok(employeeService.findByRestaurant(filter, query, order, idRestaurant));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
 }

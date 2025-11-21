@@ -26,10 +26,11 @@ document.addEventListener("DOMContentLoaded", function () {
     function searchEmployees() {
         const filter = document.getElementById("filterWrapper").value;
         const query = document.getElementById("searchInput").value;
+        const order ="asc";
         countEmployees(filter, query)
         console.log("Searching employees with query:", query);
         const xhr = new XMLHttpRequest();
-        const params = new URLSearchParams({ filter, filter, query: query, limit: limit, offset: pageNumber - 1 });
+        const params = new URLSearchParams({ filter, filter, query: query, order:order, limit: limit, offset: pageNumber - 1 });
         xhr.open("GET", "http://localhost:8080/employee/search?" + params.toString(), true);
 
         xhr.onreadystatechange = function () {

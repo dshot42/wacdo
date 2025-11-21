@@ -20,7 +20,7 @@
                         <label>Employee</label><br>
 
                         <input type="text" style="width:90%" class="form-control" placeholder="Rechercher..."
-                            id="searchEmployeeInput" data-bs-toggle="dropdown" aria-expanded="false">
+                            id="searchEmployeeInput" data-bs-toggle="dropdown" aria-expanded="false" autocomplete="off">
 
                         <ul class="dropdown-menu" id="searchEmployeeDropdown">
                             <li th:each="e : ${employee}" th:attr="data-id=${e.id}"
@@ -32,7 +32,7 @@
                         <label>Restaurant</label><br>
 
                         <input type="text" style="width:90%" class="form-control" placeholder="Rechercher..."
-                            id="searchRestaurantInput" data-bs-toggle="dropdown" aria-expanded="false">
+                            id="searchRestaurantInput" data-bs-toggle="dropdown" aria-expanded="false" autocomplete="off">
 
                         <ul class="dropdown-menu" id="searchRestaurantDropdown">
                             <li th:each="e : ${restaurant}" th:attr="data-id=${e.id}" th:text="${e.name}"

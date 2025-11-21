@@ -7,7 +7,6 @@ import com.gdu.wacdo.model.Assignement;
 import com.gdu.wacdo.model.Restaurant;
 import com.gdu.wacdo.model.RestaurantAddress;
 import com.gdu.wacdo.repository.AssignementRepository;
-import com.gdu.wacdo.repository.EmployeeRepository;
 import com.gdu.wacdo.repository.RestaurantRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -18,10 +17,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

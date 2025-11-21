@@ -147,8 +147,8 @@ public class InsertTest {
 
         employees.forEach(e -> {
             Employee empl = new Employee();
-            empl.setName((String) e.get(0));
-            empl.setSurname((String) e.get(1));
+            empl.setSurname((String) e.get(0));
+            empl.setName((String) e.get(1));
             empl.setHireDate((LocalDate) e.get(2));
             empl.setMail((String) e.get(3));
             empl.setPhone((String) e.get(4));

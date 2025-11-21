@@ -4,27 +4,42 @@ let selectRestaurantId = 0;
 function searchEmployee() {
     const filter = document.getElementById("filterWrapperModalDetails").value;
     const query = document.getElementById("searchInputModalDetails").value;
+    const order = "asc"; // todo
     const xhr = new XMLHttpRequest();
-    const params = new URLSearchParams({ filter: filter, query: query });
-    xhr.open("GET", "http://localhost:8080/assignement/search/employee/restaurant-id/" +selectRestaurantId + "?" + params.toString(), true);
+    const params = new URLSearchParams({ filter: filter, query: query,order: order });
+    xhr.open("GET", "http://localhost:8080/employee/search/restaurant-id/" +selectRestaurantId + "?" + params.toString(), true);
 
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) { // 4 = DONE
             if (xhr.status === 200) {
                 result = JSON.parse(xhr.responseText);
                 document.getElementById("modal-details-assignement-content").innerHTML = `
-                           <h4>Employees:</h4>
-                                <ul>
-                                    ${result.assignements.map(a => `<li>${a.employee.name} ${a.employee.surname} -> ${a.responsability.role}
-                                     , date de début de contrat : ${displayDate(a.startDate)}</li>`).join('')}
-                                </ul>
-                           <h4>Ancien Employees:</h4>
-                           <ul>
-                               ${!result.oldAssignements.length ? "Aucun" : ""}
-                               ${result.oldAssignements.map(a => `<li>${a.employee.name} ${a.employee.surname} -> ${a.responsability.role}
-                               , date de début de contrat : ${displayDate(a.startDate)}, date de fin de contrat : ${displayDate(a.startDate)}</li>`).join('')}
-                           </ul>
-                         `;
+                     <table id="tableEntityDetails">
+                      <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Responsabilite</th>
+                                <th>Date de début contrat</th>
+                                <th>Fin de contrat</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableRowDetails">
+                                ${result.assignements.map(a => `<tr>
+                                    <td>${a.employee.name} ${a.employee.surname} </td>
+                                    <td>${a.responsability.role}</td>
+                                    <td> ${displayDate(a.startDate)}</td>
+                                    <td class="bi bi-check-circle-fill text-success"><span style="margin-left: 10px; white-space: nowrap;">En cours</span> </td>
+                                </tr>`).join('')}
+
+                               ${result.oldAssignements.map(a => `<tr>
+                                  <td>${a.employee.name} ${a.employee.surname} </td>
+                                  <td>${a.responsability.role}</td>
+                                  <td> ${displayDate(a.startDate)}</td>
+                                    <td class="bi bi-x-circle-fill text-danger"><span style="margin-left: 10px; white-space: nowrap;">${displayDate(a.endDate)}</span></td>
+                              </tr>`).join('')}
+                       </tbody>
+                   </table>
+                 `;
             } else {
                 console.error("Request failed with status:", xhr.status);
             }
@@ -134,10 +149,11 @@ document.addEventListener("DOMContentLoaded", function () {
         reader.readAsDataURL(file);
     });
 
-    document.querySelector('input[name="restaurantAddress.address"]').addEventListener('input', (event) => {
+    document.getElementById('searchWrapperEdit').addEventListener('click', (event) => {
+        document.getElementById('spinnerSearch').style.display = 'block';
         const modal = document.getElementById("myModal-edit")
-        const address = event.target.value + ', ' +
-            modal.querySelector('input[name="restaurantAddress.postalCode"]').value + ' ' +
+        const address = modal.querySelector('input[name="restaurantAddress.address"]').value + ' , ' +
+            parseInt(modal.querySelector('input[name="restaurantAddress.postalCode"]').value) + ' ' +
             modal.querySelector('input[name="restaurantAddress.city"]').value;
         fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
             .then(response => response.json())
@@ -145,11 +161,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (data.length > 0) {
                     modal.querySelector('input[name="restaurantAddress.cordX"]').value = data[0].lat;
                     modal.querySelector('input[name="restaurantAddress.cordY"]').value = data[0].lon;
-                    console.log(`Latitude: ${lat}, Longitude: ${lon}`);
+                     alert("[SUCCESS] Adresse trouvé ! Latitude: "+data[0].lat+", Longitude: "+data[0].lon);
                 } else {
                     console.log("Address not found");
-                    alert("Adresse non trouvée. Veuillez vérifier l'adresse saisie.");
+                    alert("[ERROR] Adresse non trouvée. Veuillez vérifier l'adresse saisie.");
                 }
+                document.getElementById('spinnerSearch').style.display = 'none';
             })
             .catch(error => console.error(error));
     });

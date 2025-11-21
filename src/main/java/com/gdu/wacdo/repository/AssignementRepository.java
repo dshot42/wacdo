@@ -14,6 +14,8 @@ public interface AssignementRepository extends JpaRepository<Assignement, Long> 
 
     List<Assignement> findByEmployeeId(Long employeeId);
 
+    List<Assignement> findByRestaurantIdAndEmployeeId(Long restaurantId, Long employeeId);
+
     List<Assignement> findByRestaurantIdAndEndDateBefore(
             Long restaurantId,
             LocalDate date
@@ -23,5 +25,4 @@ public interface AssignementRepository extends JpaRepository<Assignement, Long> 
             Long employeeId,
             LocalDate date
     );
-
 }
