@@ -34,7 +34,9 @@ public class routeController {
         model.addAttribute("filter", Map.of("name","nom",
                 "surname","prenom",
                 "name+surname","nom et prenom",
-                "mail","email"));
+                "mail","email",
+                "responsability","reponsabilité"));
+
         model.addAttribute("modalDetailsFilter",
                 Map.of("name","nom du restaurant",
                         "city","ville",
@@ -57,7 +59,6 @@ public class routeController {
                 "endDate","Date de fin",
                 "role","Reponsabilité"));
 
-
         return "assignement"; // correspond à home.html
     }
 
@@ -65,6 +66,8 @@ public class routeController {
     public String responsabilityView(Model model) {
         Responsability r = new Responsability();
         model.addAttribute("responsability", r);  // <-- nécessaire pour th:object
+        model.addAttribute("filter", Map.of(
+                "responsability_role","reponsabilité"));
         return "responsability"; // correspond à home.html
     }
 
@@ -129,6 +132,15 @@ public class routeController {
         model.addAttribute("employee", employee);
         return "fragments/modals/modalEmployeeEdit :: modalEmployeeEdit";
     }
+
+
+    @GetMapping("/modalResponsabilityEdit")
+    public String modalResponsabilityEdit(Model model) {
+        Responsability responsability = new Responsability();
+        model.addAttribute("responsability", responsability);
+        return "fragments/modals/modalResponsabilityEdit :: modalResponsabilityEdit";
+    }
+
     @GetMapping("/navbar")
     public String navbar() {
         return "fragments/navbar :: navbar";

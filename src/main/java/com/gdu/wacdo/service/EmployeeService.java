@@ -41,7 +41,6 @@ public class EmployeeService {
     @Autowired
     public EmployeeRepository repository;
 
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -61,23 +60,24 @@ public class EmployeeService {
     }
 
 
-    public List<Object> findByRestaurant(String filter, String query, int limit, int offset, String order) {
-        TypedQuery<Employee> typedQuery = getEmployeeTypedQuery(filter, query, order,null);
+    public List<Object> find(String filter, String query, boolean withoutAssignement, int limit, int offset, String order) {
+        TypedQuery<Long> typedQuery = getEmployeeTypedQuery(filter, query, order, null, withoutAssignement);
         typedQuery.setFirstResult(offset * limit);
         typedQuery.setMaxResults(limit);
-        return mapEmployee(typedQuery.getResultList());
+        List<Employee> employees = repository.findAllById(typedQuery.getResultList());
+        return mapEmployee(employees);
     }
 
     public Map<String, Object> findByRestaurant(String filter, String query, String order, Long idRestaurant) {
-        TypedQuery<Employee> typedQuery = getEmployeeTypedQuery(filter, query, order, idRestaurant);
-        List<Employee> employees = typedQuery.getResultList();
+        TypedQuery<Long> typedQuery = getEmployeeTypedQuery(filter, query, order, idRestaurant, false);
+        List<Employee> employees = repository.findAllById(typedQuery.getResultList());
         return mapEmployeeByRestaurant(employees, idRestaurant);
     }
 
-    private TypedQuery<Employee> getEmployeeTypedQuery(String filter, String query, String order, Long idRestaurant) {
+    private TypedQuery<Long> getEmployeeTypedQuery(String filter, String query, String order, Long idRestaurant, boolean withoutAssignement) {
         String orderType = order == null ? "asc" : order;
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Employee> req = cb.createQuery(Employee.class);
+        CriteriaQuery<Long> req = cb.createQuery(Long.class);
         Root<Employee> employee = req.from(Employee.class);
         Join<Employee, Assignement> assignement = employee.join("assignements", JoinType.LEFT);
         Join<Assignement, Responsability> responsability = assignement.join("responsability", JoinType.LEFT);
@@ -100,7 +100,7 @@ public class EmployeeService {
 
         Predicate queryPredicate;
 
-        req.select(employee).distinct(true);
+        req.select(employee.get("id"));
 
         switch (filter) {
             case "name" -> {
@@ -125,8 +125,9 @@ public class EmployeeService {
             }
             case "responsability" -> {
                 queryPredicate = responsabilityPredicate;
-                req.orderBy(orderType.equals("asc") ? cb.asc(responsability.get("role")) :
-                        cb.desc(responsability.get("role")));
+                req.orderBy(orderType.equals("asc")
+                        ? cb.asc(cb.min(responsability.get("role")))
+                        : cb.desc(cb.min(responsability.get("role"))));
             }
             default -> {
                 queryPredicate = cb.or(namePredicate1, namePredicate2, mailPredicate, restaurantPredicate, responsabilityPredicate);
@@ -135,19 +136,28 @@ public class EmployeeService {
             }
         }
 
-        if (idRestaurant != null)
-            req.where(cb.and(cb.equal(restaurant.get("id"), idRestaurant), queryPredicate));
-        else
-            req.where(queryPredicate);
+        Predicate andPredicate = null;
+        if (withoutAssignement) {
+            andPredicate = cb.and(cb.isNull(assignement.get("id")), queryPredicate); // employee sans affectation
+            queryPredicate = andPredicate;
+        }
+        if (idRestaurant != null) {
+            andPredicate = cb.and(cb.equal(restaurant.get("id"), idRestaurant), queryPredicate);
+            queryPredicate = andPredicate;
+        }
+
+        req.groupBy(employee.get("id"));
+        req.where(queryPredicate);
         return entityManager.createQuery(req);
     }
 
-    public Long count(String filter, String query) {
+    public Long count(String filter, String query, boolean withoutAssignement) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> req = cb.createQuery(Long.class);
         Root<Employee> employee = req.from(Employee.class);
-        Join<Employee, Responsability> responsability = employee.join("assignements").join("responsability");
-        Join<Employee, Restaurant> restaurant = employee.join("assignements").join("restaurant");
+        Join<Employee, Assignement> assignement = employee.join("assignements", JoinType.LEFT);
+        Join<Assignement, Responsability> responsability = assignement.join("responsability", JoinType.LEFT);
+        Join<Assignement, Restaurant> restaurant = assignement.join("restaurant", JoinType.LEFT);
         String pattern = "%" + query.toLowerCase() + "%";
 
         req.select(cb.countDistinct(employee));
@@ -163,14 +173,29 @@ public class EmployeeService {
         Predicate responsabilityPredicate = cb.like(cb.lower(responsability.get("role")), pattern);
         Predicate restaurantPredicate = cb.like(cb.lower(restaurant.get("name")), pattern);
         //  Predicate hireDatePredicate = cb.equal(cb.lower(employee.get("hireDate")), pattern);
+        Predicate queryPredicate;
 
         switch (filter) {
-            case "name" -> req.where(cb.like(cb.lower(employee.get("name")), pattern));
-            case "surname" -> req.where(cb.like(cb.lower(employee.get("surname")), pattern));
-            case "name+surname" -> req.where(cb.or(namePredicate1, namePredicate2));
-            case "mail" -> req.where(cb.like(cb.lower(employee.get("mail")), pattern));
-            default -> req.where(cb.or(namePredicate1, namePredicate2, restaurantPredicate, responsabilityPredicate));
+            case "name" -> queryPredicate = cb.like(cb.lower(employee.get("name")), pattern);
+            case "surname" -> queryPredicate = cb.like(cb.lower(employee.get("surname")), pattern);
+            case "name+surname" -> queryPredicate = cb.or(namePredicate1, namePredicate2);
+            case "mail" -> queryPredicate = cb.like(cb.lower(employee.get("mail")), pattern);
+            default ->
+                    queryPredicate = cb.or(namePredicate1, namePredicate2, restaurantPredicate, responsabilityPredicate);
         }
+
+        Predicate andPredicate = null;
+        if (withoutAssignement) {
+            andPredicate = cb.and(cb.isNull(assignement.get("id")), queryPredicate); // employee sans affectation
+            queryPredicate = andPredicate;
+        }
+        Long idRestaurant = null;
+        if (idRestaurant != null) {
+            andPredicate = cb.and(cb.equal(restaurant.get("id"), idRestaurant), queryPredicate);
+            queryPredicate = andPredicate;
+        }
+
+        req.where(queryPredicate);
         TypedQuery<Long> typedQuery = entityManager.createQuery(req);
         return typedQuery.getSingleResult();
     }
@@ -211,7 +236,9 @@ public class EmployeeService {
         List<Assignement> resOldAssignements = new LinkedList<>();
 
         employees.forEach(empl -> {
-            Assignement ass = empl.getAssignements().stream().findFirst().orElse(null);
+            Assignement ass = empl.getAssignements().stream().filter(a -> a.getRestaurant().getId().equals(idRestaurant))
+                    .findFirst()
+                    .orElse(null);
             if (ass.getEndDate() == null || ass.getEndDate().isAfter(LocalDate.now())) {
                 resAssignements.add(ass);
             } else {

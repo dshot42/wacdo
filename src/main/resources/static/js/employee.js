@@ -23,14 +23,19 @@ document.addEventListener("DOMContentLoaded", function () {
         searchEmployees()
     });
 
+    document.getElementById("withoutAssignement").addEventListener("change", (event) => {
+        pageNumber = 1; // Reset to first page on new search
+        searchEmployees()
+    });
+
     function searchEmployees() {
         const filter = document.getElementById("filterWrapper").value;
         const query = document.getElementById("searchInput").value;
         const order ="asc";
-        countEmployees(filter, query)
-        console.log("Searching employees with query:", query);
+        const withoutAssignement = document.getElementById("withoutAssignement").checked;
+        countEmployees(filter, query, withoutAssignement)
         const xhr = new XMLHttpRequest();
-        const params = new URLSearchParams({ filter, filter, query: query, order:order, limit: limit, offset: pageNumber - 1 });
+        const params = new URLSearchParams({ filter, filter, query: query, order:order, withoutAssignement: withoutAssignement, limit: limit, offset: pageNumber - 1 });
         xhr.open("GET", "http://localhost:8080/employee/search?" + params.toString(), true);
 
         xhr.onreadystatechange = function () {
@@ -84,9 +89,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     /* Count employees for pagination */
-    function countEmployees(filter, query) {
+    function countEmployees(filter, query, withoutAssignement) {
         const xhr = new XMLHttpRequest();
-        const params = new URLSearchParams({ filter, filter, query: query });
+        const params = new URLSearchParams({ filter, filter, query: query, withoutAssignement: withoutAssignement });
         xhr.open("GET", "http://localhost:8080/employee/count?" + params.toString(), true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) { // 4 = DONE

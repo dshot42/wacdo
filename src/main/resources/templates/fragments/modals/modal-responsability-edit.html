@@ -1,7 +1,18 @@
-<select id="choix" name="choix"  th:field="*{responsability.name}" >
-    <option value="*">-- Sélectionnez --</option>
-    <option th:each="res : ${responsability}"
-            th:value="${res.id}"
-            th:text="${res.role}">
-    </option>
-</select>
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="modalResponsabilityEdit">
+    <div id="myModal-edit" class="modal">
+        <div class="modal-content">
+            <span class="close modal-close">&times;</span>
+            <div id="edit-modal-content">
+                <h2>Ajouter une responsabilité </h2>
+
+                <form id="formAddEntity" th:action="@{/responsability/save}" th:object="${responsability}" method="post"
+                      enctype="multipart/form-data">
+                    <input type="text" style="display:none" th:field="*{id}">
+                    <label>Responsabilité :</label>
+                    <input type="text" th:field="*{role}" placeholder="role"><br><br>
+                    <button type="submit">Enregistrer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

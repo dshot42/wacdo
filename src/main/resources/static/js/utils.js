@@ -7,13 +7,18 @@ const navHandler = () => {
 
     if (ref == "/restaurant") {
         elements[0].classList.add("nav-item-selected");
+        document.getElementById("withoutAssignementBlock").style.display = "flex"
     } else if (ref == "/employee") {
         elements[1].classList.add("nav-item-selected");
+        document.getElementById("withoutAssignementBlock").style.display = "flex"
     } else if (ref == "/responsability") {
         elements[2].classList.add("nav-item-selected");
+        document.getElementById("withoutAssignementBlock").style.display = "none"
     }
     else if (ref == "/assignement") {
         elements[3].classList.add("nav-item-selected");
+        document.getElementById("withoutAssignementBlock").style.display = "none"
+
     }
 }
 navHandler();

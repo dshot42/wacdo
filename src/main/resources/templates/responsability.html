@@ -5,20 +5,22 @@
 <head>
     <!-- JS Leaflet (sans integrity) -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/modal.css}">
 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title> Assignements - Page</title>
+    <title> Responsabilité - Page</title>
 </head>
 
 <body id="body">
     <div id="navbar-container" th:replace="fragments/navbar :: navbar"></div>
-    <div id="modalContainer-details" th:replace="fragments/modals/modal-details :: modalDetails"></div>
-    <div id="modalContainer-edit" th:replace="fragments/modals/modal-assignement-edit :: modalAssignementEdit"></div>
+    <div id="modalContainer-edit" th:replace="fragments/modals/modal-responsability-edit :: modalResponsabilityEdit"></div>
 
     <div id="container">
         <div id="search-container" th:replace="fragments/searchbar :: searchbar">
@@ -28,11 +30,7 @@
             <table id="tableEntity">
                 <thead>
                     <tr>
-                        <th>Responsabilité</th>
-                        <th>Employée</th>
-                        <th>Restaurant</th>
-                        <th>Date de début</th>
-                        <th>Date de fin</th>
+                        <th>Reponsabilité</th>
                         <th>Options</th>
                     </tr>
                 </thead>
@@ -41,6 +39,8 @@
             </table>
             <div id="pagination"></div>
         </div>
+
+        <div id="map"></div>
     </div>
 </body>
 
@@ -53,20 +53,13 @@
         justify-content: space-around;
     }
 
-    #searchAssignementBlock {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        justify-content: space-around;
-    }
-
     #tableWrapper {}
 
 
     /* Buttons */
 
-    .assignementDetails,
-    .assignementEdit,
-    .assignementRemove {
+    .responsabilityEdit,
+    .responsabilityRemove {
         color: white;
         border: none;
         padding: 10px;
@@ -78,12 +71,12 @@
         display: inline-block;
     }
 
-    .assignementDetails {
+    .responsabilityDetails {
         background-color: #4CAF50;
         /* Green */
     }
 
-    .assignementEdit {
+    .responsabilityEdit {
         background-color: #008CBA;
         /* Blue */
         background-image: url('https://example.com/image.png');
@@ -91,12 +84,12 @@
         background-position: center;
     }
 
-    .assignementRemove {
+    .responsabilityRemove {
         background-color: #f44336;
         /* Red */
     }
 </style>
 
+<script src="/js/modal_responsability.js"></script>
+<script src="/js/responsability.js"></script>
 <script src="/js/utils.js"></script>
-<script src="/js/modal_assignement.js"></script>
-<script src="/js/assignement.js"></script>

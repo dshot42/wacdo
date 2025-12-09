@@ -25,20 +25,14 @@ public class EmployeeController {
 
     @GetMapping("/search")
     @ResponseBody
-    public List<Object> search(@RequestParam String filter, @RequestParam String query, @RequestParam String order, @RequestParam int limit, @RequestParam int offset) {
-        if (query == null || query.trim().isEmpty()) {
-            return employeeService.getAll(limit, offset);
-        }
-        return employeeService.findByRestaurant(filter, query, limit, offset, order);
+    public List<Object> search(@RequestParam String filter, @RequestParam String query, @RequestParam boolean withoutAssignement, @RequestParam String order, @RequestParam int limit, @RequestParam int offset) {
+        return employeeService.find(filter, query,withoutAssignement, limit, offset, order);
     }
 
     @GetMapping("/count")
     @ResponseBody
-    public Long count(@RequestParam String filter, @RequestParam String query) {
-        if (query == null || query.trim().isEmpty()) {
-            return employeeService.countAll();
-        }
-        return employeeService.count(filter, query);
+    public Long count(@RequestParam String filter, @RequestParam String query, @RequestParam boolean withoutAssignement) {
+        return employeeService.count(filter, query,withoutAssignement);
     }
 
     @PostMapping("/save")
