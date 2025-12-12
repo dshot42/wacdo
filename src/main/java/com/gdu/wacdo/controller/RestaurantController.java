@@ -16,6 +16,7 @@ public class RestaurantController {
 
     @Autowired
     private RestaurantService restaurantService;
+    private String query;
 
 
     @GetMapping("/getAll")
@@ -26,12 +27,9 @@ public class RestaurantController {
 
     @GetMapping("/search")
     @ResponseBody
-    public ResponseEntity<?> search(@RequestParam String filter, @RequestParam String query, @RequestParam int limit, @RequestParam int offset) {
+    public ResponseEntity<?> search(@RequestParam String filter, @RequestParam String query, @RequestParam boolean withoutAssignement,  @RequestParam int limit, @RequestParam int offset) {
         try {
-            if (query == null || query.trim().isEmpty()) {
-                return ResponseEntity.ok(restaurantService.getAll(limit, offset));
-            }
-            return ResponseEntity.ok(restaurantService.find(filter, query, limit, offset));
+            return ResponseEntity.ok(restaurantService.find(filter, query, withoutAssignement, limit, offset,"asc"));
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -40,11 +38,8 @@ public class RestaurantController {
 
     @GetMapping("/count")
     @ResponseBody
-    public Long count(@RequestParam String filter, @RequestParam String query) {
-        if (query == null || query.trim().isEmpty()) {
-            return restaurantService.countAll();
-        }
-        return restaurantService.count(filter, query);
+    public Long count(@RequestParam String filter, @RequestParam String query,@RequestParam boolean withoutAssignement ) {
+        return restaurantService.count(filter, query,withoutAssignement);
     }
 
     @PostMapping("/save")
@@ -52,6 +47,17 @@ public class RestaurantController {
         restaurantService.save(restaurant);
         model.addAttribute("restaurant", restaurant);
         return "home :: restaurant"; // <-- Thymeleaf fragment
+    }
+
+    @GetMapping("/search/employee-id/{idEmployee}")
+    @ResponseBody
+    public ResponseEntity<?> findEmployeeByRestaurant(@RequestParam String filter, @RequestParam String query, @RequestParam String order, @PathVariable Long idEmployee) {
+        this.query = query;
+        try {
+            return ResponseEntity.ok(restaurantService.findByEmployee(filter, query, order, idEmployee));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
 }

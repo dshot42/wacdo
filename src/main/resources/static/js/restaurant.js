@@ -27,13 +27,19 @@ document.addEventListener("DOMContentLoaded", function () {
         searchRestaurants();
     });
 
+    document.getElementById("withoutAssignement").addEventListener("change", (event) => {
+        pageNumber = 1; // Reset to first page on new search
+        searchRestaurants()
+    });
+
     function searchRestaurants() {
         const filter = document.getElementById("filterWrapper").value;
         const query = document.getElementById("searchInput").value;
-        countRestaurants(filter, query)
+        const withoutAssignement = document.getElementById("withoutAssignement").checked;
+        countRestaurants(filter, query, withoutAssignement)
         console.log("Searching restaurants with query:", query, " and filter:", filter);
         const xhr = new XMLHttpRequest();
-        const params = new URLSearchParams({ filter: filter, query: query, limit: limit, offset: pageNumber - 1 });
+        const params = new URLSearchParams({ filter: filter, query: query, withoutAssignement: withoutAssignement, limit: limit, offset: pageNumber - 1 });
         xhr.open("GET", "http://localhost:8080/restaurant/search?" + params.toString(), true);
 
 
@@ -109,10 +115,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     /* Count restaurants for pagination */
-    function countRestaurants(filter, query) {
+    function countRestaurants(filter, query,withoutAssignement) {
 
         const xhr = new XMLHttpRequest();
-        const params = new URLSearchParams({ filter: filter, query: query });
+        const params = new URLSearchParams({ filter: filter, query: query , withoutAssignement: withoutAssignement});
         xhr.open("GET", "http://localhost:8080/restaurant/count?" + params.toString(), true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) { // 4 = DONE

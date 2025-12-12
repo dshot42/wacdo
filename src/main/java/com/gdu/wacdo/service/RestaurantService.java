@@ -3,9 +3,7 @@ package com.gdu.wacdo.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gdu.wacdo.model.Assignement;
-import com.gdu.wacdo.model.Restaurant;
-import com.gdu.wacdo.model.RestaurantAddress;
+import com.gdu.wacdo.model.*;
 import com.gdu.wacdo.repository.AssignementRepository;
 import com.gdu.wacdo.repository.RestaurantRepository;
 import jakarta.persistence.EntityManager;
@@ -17,6 +15,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -53,67 +53,121 @@ public class RestaurantService {
         return mapRestaurants(page.getContent());
     }
 
-
     public Long countAll() {
         return repository.count();
     }
 
-
-    public List<Object> find(String filter, String query, int limit, int offset) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Restaurant> req = cb.createQuery(Restaurant.class);
-        Root<Restaurant> restaurant = req.from(Restaurant.class);
-        Join<Restaurant, RestaurantAddress> address = restaurant.join("restaurantAddress");
-        String pattern = "%" + query.toLowerCase() + "%";
-
-        req.select(restaurant).distinct(true);
-
-        Predicate postalPredicate = cb.like(cb.lower(address.get("postalCode")), pattern);
-        Predicate namePredicate = cb.like(cb.lower(restaurant.get("name")), pattern);
-        Predicate addrPredicate = cb.like(cb.lower(address.get("address")), pattern);
-        Predicate cityPredicate = cb.like(cb.lower(address.get("city")), pattern);
-
-        switch (filter) {
-            case "name" -> {
-                req.where(namePredicate);
-                req.orderBy(cb.asc(restaurant.get("name")));
-            }
-            case "city" -> {
-                req.where(cityPredicate);
-                req.orderBy(cb.asc(address.get("city")));
-            }
-            case "postalCode" -> req.where(postalPredicate);
-            default -> req.where(cb.or(namePredicate, addrPredicate, cityPredicate, postalPredicate));
-        }
-
-        req.orderBy(cb.asc(restaurant.get("name")));
-        TypedQuery<Restaurant> typedQuery = entityManager.createQuery(req);
-        typedQuery.setFirstResult(offset * limit);  // OFFSET
-        typedQuery.setMaxResults(limit);    // LIMIT
-        return mapRestaurants(typedQuery.getResultList());
+    public List<Object> find(String filter, String query, boolean withoutAssignement, int limit, int offset, String order) {
+        TypedQuery<Long> typedQuery = getRestaurantTypedQuery(filter, query, order, null, withoutAssignement);
+        typedQuery.setFirstResult(offset * limit);
+        typedQuery.setMaxResults(limit);
+        List<Restaurant> employees = repository.findAllById(typedQuery.getResultList());
+        return mapRestaurants(employees);
     }
 
-    public Long count(String filter, String query) {
+    public Map<String, Object> findByEmployee(String filter, String query, String order, Long idEmployee) {
+        TypedQuery<Long> typedQuery = getRestaurantTypedQuery(filter, query, order, idEmployee, false);
+        List<Restaurant> restaurants = repository.findAllById(typedQuery.getResultList());
+        return mapRestaurantByEmployee(restaurants, idEmployee);
+    }
+
+    public TypedQuery<Long> getRestaurantTypedQuery(String filter, String query, String order, Long idEmployee, boolean withoutAssignement) {
+        String orderType = order == null ? "asc" : order;
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> req = cb.createQuery(Long.class);
         Root<Restaurant> restaurant = req.from(Restaurant.class);
         Join<Restaurant, RestaurantAddress> address = restaurant.join("restaurantAddress");
+        Join<Restaurant, Assignement> assignement = restaurant.join("assignements", JoinType.LEFT);
+        Join<Assignement, Responsability> responsability = assignement.join("responsability", JoinType.LEFT);
+        Join<Assignement, Employee> employee = assignement.join("employee", JoinType.LEFT);
+
         String pattern = "%" + query.toLowerCase() + "%";
 
-        req.select(cb.countDistinct(restaurant));
+        req.select(restaurant.get("id"));
 
+        Predicate responsabilityPredicate = cb.like(cb.lower(responsability.get("role")), pattern);
         Predicate postalPredicate = cb.like(cb.lower(address.get("postalCode")), pattern);
         Predicate namePredicate = cb.like(cb.lower(restaurant.get("name")), pattern);
         Predicate addrPredicate = cb.like(cb.lower(address.get("address")), pattern);
         Predicate cityPredicate = cb.like(cb.lower(address.get("city")), pattern);
 
+        Predicate queryPredicate;
         switch (filter) {
-            case "name" -> req.where(namePredicate);
-            case "city" -> req.where(cityPredicate);
-            case "postalCode" -> req.where(postalPredicate);
-            default -> req.where(cb.or(namePredicate, addrPredicate, cityPredicate, postalPredicate));
+            case "name" -> {
+                queryPredicate = namePredicate;
+                req.orderBy(cb.asc(cb.min(restaurant.get("name"))));
+            }
+            case "city" -> {
+                queryPredicate = cityPredicate;
+                req.orderBy(cb.asc(cb.min(address.get("city"))));
+            }
+            case "responsability" -> {
+                queryPredicate = responsabilityPredicate;
+                req.orderBy(orderType.equals("asc")
+                        ? cb.asc(cb.min(responsability.get("role")))
+                        : cb.desc(cb.min(responsability.get("role"))));
+            }
+            case "postalCode" -> queryPredicate = postalPredicate;
+            default ->
+                    queryPredicate = cb.or(namePredicate, addrPredicate, cityPredicate, postalPredicate, responsabilityPredicate);
         }
 
+        Predicate andPredicate = null;
+        if (withoutAssignement) {
+            andPredicate = cb.and(cb.isNull(assignement.get("id")), queryPredicate); // employee sans affectation
+            queryPredicate = andPredicate;
+        }
+        if (idEmployee != null) {
+            andPredicate = cb.and(cb.equal(employee.get("id"), idEmployee), queryPredicate);
+            queryPredicate = andPredicate;
+        }
+
+        req.groupBy(restaurant.get("id"));
+        req.where(queryPredicate);
+        return entityManager.createQuery(req);
+    }
+
+    public Long count(String filter, String query, boolean withoutAssignement) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> req = cb.createQuery(Long.class);
+        Root<Restaurant> restaurant = req.from(Restaurant.class);
+        Join<Restaurant, RestaurantAddress> address = restaurant.join("restaurantAddress");
+        Join<Restaurant, Assignement> assignement = restaurant.join("assignements", JoinType.LEFT);
+        Join<Assignement, Responsability> responsability = assignement.join("responsability", JoinType.LEFT);
+        Join<Assignement, Employee> employee = assignement.join("employee", JoinType.LEFT);
+
+        String pattern = "%" + query.toLowerCase() + "%";
+
+        req.select(cb.countDistinct(restaurant));
+
+        Predicate responsabilityPredicate = cb.like(cb.lower(responsability.get("role")), pattern);
+        Predicate postalPredicate = cb.like(cb.lower(address.get("postalCode")), pattern);
+        Predicate namePredicate = cb.like(cb.lower(restaurant.get("name")), pattern);
+        Predicate addrPredicate = cb.like(cb.lower(address.get("address")), pattern);
+        Predicate cityPredicate = cb.like(cb.lower(address.get("city")), pattern);
+
+        Predicate queryPredicate;
+        switch (filter) {
+            case "name" -> {
+                queryPredicate = namePredicate;
+            }
+            case "city" -> {
+                queryPredicate = cityPredicate;
+            }
+            case "responsability" -> {
+                queryPredicate = responsabilityPredicate;
+
+            }
+            case "postalCode" -> queryPredicate = postalPredicate;
+            default ->
+                    queryPredicate = cb.or(namePredicate, addrPredicate, cityPredicate, postalPredicate, responsabilityPredicate);
+        }
+
+        if (withoutAssignement) {
+            queryPredicate = cb.and(cb.isNull(assignement.get("id")), queryPredicate); // employee sans affectation
+        }
+
+        req.where(queryPredicate);
         TypedQuery<Long> typedQuery = entityManager.createQuery(req);
         return typedQuery.getSingleResult();
     }
@@ -142,6 +196,28 @@ public class RestaurantService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+    public Map<String, Object> mapRestaurantByEmployee(List<Restaurant> restaurants, Long idEmployee) {
+        Map<String, Object> map = new HashMap<>();
+        List<Assignement> resAssignements = new LinkedList<>();
+        List<Assignement> resOldAssignements = new LinkedList<>();
+
+        restaurants.forEach(res -> {
+            Assignement ass = res.getAssignements().stream().filter(a -> a.getEmployee().getId().equals(idEmployee))
+                    .findFirst()
+                    .orElse(null);
+            if (ass.getEndDate() == null || ass.getEndDate().isAfter(LocalDate.now())) {
+                resAssignements.add(ass);
+            } else {
+                resOldAssignements.add(ass);
+            }
+        });
+        map.put("assignements", resAssignements);
+        map.put("oldAssignements", resOldAssignements);
+
+        return map;
     }
 
 }

@@ -39,6 +39,7 @@ public class routeController {
 
         model.addAttribute("modalDetailsFilter",
                 Map.of("name","nom du restaurant",
+                        "responsability","responsabilité",
                         "city","ville",
                         "postalCode","code postal"));
         return "employee"; // correspond à home.html

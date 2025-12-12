@@ -7,28 +7,30 @@
 
                 <form id="formAddEntity" th:action="@{/employee/save}" th:object="${employee}" method="post"
                     enctype="multipart/form-data">
-                    <input type="text" style="display:none" th:field="*{id}">
-                    <label>Nom :</label>
-                    <input type="text" th:field="*{name}" placeholder="Nom"><br><br>
-                    <label>Prénom :</label>
-                    <input type="text" th:field="*{surname}" placeholder="Prénom"><br><br>
-                    <label>Mail :</label>
-                    <input type="email" th:field="*{mail}"> <br><br>
-                    <label>Téléphone :</label>
-                    <input type="tel" th:field="*{phone}"> <br><br>
-                    <label>Date embauche :</label>
-                    <input type="date" th:field="*{hireDate}"> <br><br>
-                    <label>Admin :</label>
-                    <input type="checkbox" th:field="*{admin}" /><br><br>
-                    <label>Mot de passe :</label>
-                    <input type="text" th:field="*{password}" /><br><br>
-
-                    <label>Photo :</label>
-                    <input type="file" id="imageInput" accept="image/*">
-                    <img id="image_details"
-                        style="width: 200px; height: 200px; display:block; object-fit: contain; margin-top:10px;">
-                    <input type="text" style="display:none" th:field="*{image}" id="imageBase64">
-
+                    <div  class="grid2">
+                        <input type="text" style="display:none" th:field="*{id}">
+                        <label>Nom :</label>
+                        <input type="text" th:field="*{name}" placeholder="Nom">
+                        <label>Prénom :</label>
+                        <input type="text" th:field="*{surname}" placeholder="Prénom">
+                        <label>Mail :</label>
+                        <input type="email" th:field="*{mail}">
+                        <label>Téléphone :</label>
+                        <input type="tel" th:field="*{phone}">
+                        <label>Date embauche :</label>
+                        <input type="date" th:field="*{hireDate}">
+                        <label>Admin :</label>
+                        <input type="checkbox" th:field="*{admin}" />
+                        <label>Mot de passe :</label>
+                        <input type="text" th:field="*{password}" />
+                    </div>
+                    <div>
+                        <label>Photo :</label>
+                        <input type="file" id="imageInput" accept="image/*">
+                        <img id="image_details"
+                             style="width: 200px; height: 200px; display:block; object-fit: contain; margin-top:10px;">
+                        <input type="text" style="display:none" th:field="*{image}" id="imageBase64">
+                    </div>
                     <button type="submit">Enregistrer</button>
                 </form>
             </div>

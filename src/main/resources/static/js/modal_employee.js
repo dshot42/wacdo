@@ -1,14 +1,73 @@
+let selectEmployeeId = 0;
+
+function searchRestaurant() {
+    const filter = document.getElementById("filterWrapperModalDetails").value;
+    const query = document.getElementById("searchInputModalDetails").value;
+    const order = "asc"; // todo
+    const xhr = new XMLHttpRequest();
+    const params = new URLSearchParams({ filter: filter, query: query,order: order });
+    xhr.open("GET", "http://localhost:8080/restaurant/search/employee-id/" + selectEmployeeId + "?" + params.toString(), true);
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) { // 4 = DONE
+            if (xhr.status === 200) {
+                result = JSON.parse(xhr.responseText);
+                document.getElementById("modal-details-assignement-content").innerHTML = `
+                     <table id="tableEntityDetails">
+                      <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Responsabilité</th>
+                                <th>Date de début contrat</th>
+                                <th>Fin de contrat</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableRowDetails">
+                                ${result.assignements.map(a => `<tr>
+                                    <td>${a.restaurant.name}  </td>
+                                    <td>${a.responsability.role}</td>
+                                    <td> ${displayDate(a.startDate)}</td>
+                                    <td class="bi bi-check-circle-fill text-success"><span style="margin-left: 10px; white-space: nowrap;">En cours</span> </td>
+                                </tr>`).join('')}
+
+                               ${result.oldAssignements.map(a => `<tr>
+                                  <td>${a.employee.name} ${a.employee.surname} </td>
+                                  <td>${a.responsability.role}</td>
+                                  <td> ${displayDate(a.startDate)}</td>
+                                    <td class="bi bi-x-circle-fill text-danger"><span style="margin-left: 10px; white-space: nowrap;">${displayDate(a.endDate)}</span></td>
+                              </tr>`).join('')}
+                       </tbody>
+                   </table>
+                 `;
+            } else {
+                console.error("Request failed with status:", xhr.status);
+            }
+        }
+    }
+    xhr.send();
+}
+
+function searchEmployeeEvent() {
+    document.getElementById("searchInputModalDetails").addEventListener("input", (event) => {
+        searchRestaurant()
+    })
+    document.getElementById("filterWrapperModalDetails").addEventListener("change", (event) => {
+        searchRestaurant();
+    });
+}
+searchEmployeeEvent()
+
 function employeeDetails(event, restaurants) {
     const id = parseInt(event.target.getAttribute("attr-id"));
+    selectEmployeeId = id
     const modal = document.getElementById("myModal-details")
     modal.style.display = "block";
-    console.log(id)
     const result = restaurants.find(item => {
         return item.id === id
     });
 
-    document.querySelector("#modal-search-assignements h4").innerHTML = `Rechercher un salarié`;
-
+    document.querySelector("#modal-details-header h2").textContent = "Détails du restaurant";
+    document.querySelector("#modal-details-search-title").innerHTML = `Rechercher un restaurant`;
     document.querySelector("#myModal-details #modal-details-content").innerHTML = `
        <h3>Détails de l'employé</h3>
       ${result.image
@@ -18,14 +77,10 @@ function employeeDetails(event, restaurants) {
        <p><strong>Nom:</strong> ${result.name}  ${result.surname}</p>
        <p><strong>Téléphone:</strong> ${result.phone}  </p>
        <p><strong>Mail:</strong> ${result.mail} </p>
-       <p><strong>Date Embauche:</strong> ${result.hireDate}  </p>
-
-       <h3>Restaurant :</h3>
-       <ul>
-           ${result.assignements.map(a => `<li>${a.restaurant.name} - ${a.responsability.role}</li>`).join('')}
-       </ul>
+       <p><strong>Date Embauche:</strong> ${displayDate(result.hireDate)}  </p>
    `;
 
+    searchRestaurant()
 }
 
 function employeeEdit(event, restaurants) {

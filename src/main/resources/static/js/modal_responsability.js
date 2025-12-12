@@ -7,7 +7,7 @@ function responsabilityDetails(event, restaurants) {
         return item.id === id
     });
 
-    document.querySelector("#modal-search-assignements h4").innerHTML = `Rechercher un salarié`;
+    document.querySelector("#modal-search-assignement h4").innerHTML = `Rechercher un salarié`;
 
     document.querySelector("#myModal-details #modal-details-content").innerHTML = `
        <h3>responsabilité</h3>

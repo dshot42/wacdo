@@ -55,7 +55,6 @@
 }
 
 .modal-content label,.modal-content input,.modal-content label  {
-    width:45%;
     display:inline-block;
 }
 
@@ -86,4 +85,11 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
+  margin-bottom: 40px;
 }

@@ -79,9 +79,7 @@ function restaurantDetails(event, restaurants) {
        <p><strong>Adresse:</strong> ${result.restaurantAddress.address}, ${result.restaurantAddress.postalCode} ${result.restaurantAddress.city}</p>
    `;
 
-    document.getElementById("modal-details-search-title").innerHTML = `Rechercher un salarié`;
-
-
+    document.getElementById("modal-details-search-title").innerHTML = `Rechercher un salarié`
     searchEmployee()
 }
 

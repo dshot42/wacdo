@@ -105,23 +105,23 @@ public class EmployeeService {
         switch (filter) {
             case "name" -> {
                 queryPredicate = cb.like(cb.lower(employee.get("name")), pattern);
-                req.orderBy(orderType.equals("asc") ? cb.asc(employee.get("name")) :
-                        cb.desc(employee.get("name")));
+                req.orderBy(orderType.equals("asc") ? cb.asc(cb.min(employee.get("name"))) :
+                        cb.desc(cb.min(employee.get("name"))));
             }
             case "surname" -> {
                 queryPredicate = cb.like(cb.lower(employee.get("surname")), pattern);
-                req.orderBy(orderType.equals("asc") ? cb.asc(employee.get("surname")) :
-                        cb.desc(employee.get("surname")));
+                req.orderBy(orderType.equals("asc") ? cb.asc(cb.min(employee.get("surname"))) :
+                        cb.desc(cb.min(employee.get("surname"))));
             }
             case "name+surname" -> {
                 queryPredicate = cb.or(namePredicate1, namePredicate2);
-                req.orderBy(orderType.equals("asc") ? cb.asc(employee.get("name")) :
-                        cb.desc(employee.get("name")));
+                req.orderBy(orderType.equals("asc") ? cb.asc(cb.min(employee.get("name"))) :
+                        cb.desc(cb.min(employee.get("name"))));
             }
             case "mail" -> {
                 queryPredicate = mailPredicate;
-                req.orderBy(orderType.equals("asc") ? cb.asc(employee.get("mail")) :
-                        cb.desc(employee.get("mail")));
+                req.orderBy(orderType.equals("asc") ? cb.asc(cb.min(employee.get("mail"))) :
+                        cb.desc(cb.min(employee.get("mail"))));
             }
             case "responsability" -> {
                 queryPredicate = responsabilityPredicate;
@@ -131,8 +131,8 @@ public class EmployeeService {
             }
             default -> {
                 queryPredicate = cb.or(namePredicate1, namePredicate2, mailPredicate, restaurantPredicate, responsabilityPredicate);
-                req.orderBy(orderType.equals("asc") ? cb.asc(employee.get("name")) :
-                        cb.desc(employee.get("name")));
+                req.orderBy(orderType.equals("asc") ? cb.asc(cb.min(employee.get("name"))) :
+                        cb.desc(cb.min(employee.get("name"))));
             }
         }
 

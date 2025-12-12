@@ -164,13 +164,14 @@ public class InsertTest {
     public void assignementEmployeeRestaurant() throws Exception {
         List<Employee> employees = employeeRepository.findAll();
         List<Restaurant> restaurants = restaurantService.getAll();
+        restaurants.remove(5); // pour avoir des restaurant without asssignements
+        restaurants.remove(8);
         List<Responsability> responsabilitys = responsabilityRepository.findAll();
         Random rand = new Random();
 
         int i = 0;
         for (Restaurant r : restaurants) {
-            for (int j = 0; j < 4; j++) { // 4 empl par restau
-
+            for (int j = 0; j <= 4; j++) { // 4 empl par restau
                 try {
                     Assignement assignement = new Assignement();
                     Employee randomEmployee = employees.get(rand.nextInt(employees.size() - 1));
@@ -178,33 +179,17 @@ public class InsertTest {
                     assignement.setRestaurant(restaurants.get(i));
                     assignement.setStartDate(LocalDate.now());
 
-                    Responsability responsability = getResponsability(j, responsabilitys);
+                    Responsability responsability = responsabilitys.get(j);
                     assignement.setId(new AssignementId(randomEmployee.getId(), r.getId()));
                     assignement.setResponsability(responsability);
                     assignementRepository.save(assignement);
                 } catch (Exception ex) {
                     throw new Exception("No more restaurant available ", ex);
                 }
-
             }
             i++;
 
         }
-    }
-
-    private static Responsability getResponsability(int i, List<Responsability> responsabilitys) {
-        Responsability responsability;
-        // todo tous les 5 employees on change de restaurant
-
-        if (i == 0)
-            responsability = responsabilitys.get(0);
-        else if (i == 1)
-            responsability = responsabilitys.get(1);
-        else if (i == 2)
-            responsability = responsabilitys.get(2);
-        else
-            responsability = responsabilitys.get(3);
-        return responsability;
     }
 
 }
