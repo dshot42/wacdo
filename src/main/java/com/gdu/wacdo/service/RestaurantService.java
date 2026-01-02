@@ -107,6 +107,14 @@ public class RestaurantService {
                         ? cb.asc(cb.min(responsability.get("role")))
                         : cb.desc(cb.min(responsability.get("role"))));
             }
+            case "startedAt:Date" -> {
+               // todo recive yyyy-mm-dd in string
+                try {
+                    queryPredicate = cb.equal(assignement.get("startDate"), LocalDate.parse(query));;
+                } catch (Exception e) {
+                    throw new RuntimeException("[ERROR] startDate invalide format ",e);
+                }
+            }
             case "postalCode" -> queryPredicate = postalPredicate;
             default ->
                     queryPredicate = cb.or(namePredicate, addrPredicate, cityPredicate, postalPredicate, responsabilityPredicate);
@@ -205,9 +213,12 @@ public class RestaurantService {
         List<Assignement> resOldAssignements = new LinkedList<>();
 
         restaurants.forEach(res -> {
-            Assignement ass = res.getAssignements().stream().filter(a -> a.getEmployee().getId().equals(idEmployee))
+            Assignement ass = res.getAssignements().stream()
+                    .filter(a -> a.getEmployee().getId().equals(idEmployee))
                     .findFirst()
                     .orElse(null);
+
+            if (ass == null) return;
             if (ass.getEndDate() == null || ass.getEndDate().isAfter(LocalDate.now())) {
                 resAssignements.add(ass);
             } else {

@@ -5,6 +5,7 @@ import com.gdu.wacdo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +36,7 @@ public class EmployeeController {
         return employeeService.count(filter, query,withoutAssignement);
     }
 
+    @Transactional
     @PostMapping("/save")
     public String saveEmployee(@ModelAttribute Employee employee, Model model) {
         employeeService.saveEmployee(employee);

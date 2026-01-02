@@ -4,7 +4,7 @@ let selectRestaurantId = 0;
 function searchEmployee() {
     const filter = document.getElementById("filterWrapperModalDetails").value;
     const query = document.getElementById("searchInputModalDetails").value;
-    const order = "asc"; // todo
+    const order = "asc";
     const xhr = new XMLHttpRequest();
     const params = new URLSearchParams({ filter: filter, query: query,order: order });
     xhr.open("GET", "http://localhost:8080/employee/search/restaurant-id/" +selectRestaurantId + "?" + params.toString(), true);
@@ -52,12 +52,27 @@ function searchEmployeeEvent() {
     document.getElementById("searchInputModalDetails").addEventListener("input", (event) => {
         searchEmployee()
     })
+    document.getElementById("searchInputDateModalDetails").addEventListener("input", (event) => {
+    document.getElementById("searchInputModalDetails").value=document.getElementById("searchInputDateModalDetails").value
+        searchEmployee()
+    })
     document.getElementById("filterWrapperModalDetails").addEventListener("change", (event) => {
-            searchEmployee();
+
+    if (event.target.value.includes(":Date")) {
+        console.log(event.target.value)
+        document.getElementById("searchInputModalDetails").style.display = "none";
+        document.getElementById("searchInputDateModalDetails").style.display =  "block";
+        document.getElementById("searchInputModalDetails").value=""
+       document.getElementById("searchInputDateModalDetails").value=""
+    } else {
+        document.getElementById("searchInputModalDetails").style.display =  "block";
+        document.getElementById("searchInputDateModalDetails").style.display = "none";
+        document.getElementById("searchInputDateModalDetails").value=""
+    }
+        searchEmployee();
     });
 }
-
-searchEmployeeEvent();
+searchEmployeeEvent()
 
 function restaurantDetails(event, restaurants) {
     const id = parseInt(event.target.getAttribute("attr-id"));
@@ -123,9 +138,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     /* Modal handling */
-    document.getElementById("addButton").addEventListener("click", () => {
-        document.getElementById("myModal-edit").style.display = "block";
-    });
+      document.getElementById("addButton").addEventListener("click", () => {
+            const modal = document.getElementById("myModal-edit");
+            modal.style.display = "block";
+            modal.querySelector('input[name="id"]').value =null;
+        });
 
 
     // Convertir image en base64 pour hidden input

@@ -3,6 +3,7 @@ package com.gdu.wacdo.controller;
 import com.gdu.wacdo.model.Responsability;
 import com.gdu.wacdo.service.ResponsabilityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +34,7 @@ public class ResponsabilityController {
         return responsabilityService.count(filter, query);
     }
 
+    @Transactional
     @PostMapping("/save")
     public String saveResponsability(@ModelAttribute Responsability responsability, Model model) {
         responsabilityService.repository.save(responsability);

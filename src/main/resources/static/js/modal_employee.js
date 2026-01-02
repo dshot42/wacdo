@@ -31,7 +31,7 @@ function searchRestaurant() {
                                 </tr>`).join('')}
 
                                ${result.oldAssignements.map(a => `<tr>
-                                  <td>${a.employee.name} ${a.employee.surname} </td>
+                                  <td>${a.restaurant.name}  </td>
                                   <td>${a.responsability.role}</td>
                                   <td> ${displayDate(a.startDate)}</td>
                                     <td class="bi bi-x-circle-fill text-danger"><span style="margin-left: 10px; white-space: nowrap;">${displayDate(a.endDate)}</span></td>
@@ -47,15 +47,31 @@ function searchRestaurant() {
     xhr.send();
 }
 
-function searchEmployeeEvent() {
+function searchRestaurantEvent() {
     document.getElementById("searchInputModalDetails").addEventListener("input", (event) => {
         searchRestaurant()
     })
+    document.getElementById("searchInputDateModalDetails").addEventListener("input", (event) => {
+    document.getElementById("searchInputModalDetails").value=document.getElementById("searchInputDateModalDetails").value
+        searchRestaurant()
+    })
     document.getElementById("filterWrapperModalDetails").addEventListener("change", (event) => {
+
+    if (event.target.value.includes(":Date")) {
+        console.log(event.target.value)
+        document.getElementById("searchInputModalDetails").style.display = "none";
+        document.getElementById("searchInputDateModalDetails").style.display =  "block";
+        document.getElementById("searchInputModalDetails").value=""
+        document.getElementById("searchInputDateModalDetails").value=""
+    } else {
+        document.getElementById("searchInputModalDetails").style.display =  "block";
+        document.getElementById("searchInputDateModalDetails").style.display = "none";
+        document.getElementById("searchInputDateModalDetails").value=""
+    }
         searchRestaurant();
     });
 }
-searchEmployeeEvent()
+searchRestaurantEvent()
 
 function employeeDetails(event, restaurants) {
     const id = parseInt(event.target.getAttribute("attr-id"));
@@ -125,7 +141,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /* Modal handling */
     document.getElementById("addButton").addEventListener("click", () => {
-        document.getElementById("myModal-edit").style.display = "block";
+        const modal = document.getElementById("myModal-edit");
+        modal.style.display = "block";
+        modal.querySelector('input[name="id"]').value =null;
     });
 
 

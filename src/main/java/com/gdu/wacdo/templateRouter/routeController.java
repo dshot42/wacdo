@@ -40,6 +40,7 @@ public class routeController {
         model.addAttribute("modalDetailsFilter",
                 Map.of("name","nom du restaurant",
                         "responsability","responsabilité",
+                        "startedAt:Date","date de debut",
                         "city","ville",
                         "postalCode","code postal"));
         return "employee"; // correspond à home.html
@@ -55,9 +56,9 @@ public class routeController {
 
         model.addAttribute("filter", Map.of("restaurant_name","Nom du restaurant",
                 "employee_name","Nom de l'employé",
-                "city","Vile",
-                "startDate","Date de début",
-                "endDate","Date de fin",
+                "city","Ville",
+                "startDate:Date","Date de début",
+                "endDate:Date","Date de fin",
                 "role","Reponsabilité"));
 
         return "assignement"; // correspond à home.html
@@ -94,6 +95,7 @@ public class routeController {
                         "surname","prenom",
                         "name+surname","nom et prénom",
                         "responsability","reponsabilité",
+                        "startedAt:Date","date de debut",
                         "mail","email"));
         //poste, par nom, par date de début d'affectation.
         return "restaurant"; // correspond à home.html

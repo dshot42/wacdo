@@ -5,6 +5,7 @@ import com.gdu.wacdo.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +28,10 @@ public class RestaurantController {
 
     @GetMapping("/search")
     @ResponseBody
-    public ResponseEntity<?> search(@RequestParam String filter, @RequestParam String query, @RequestParam boolean withoutAssignement,  @RequestParam int limit, @RequestParam int offset) {
+    public ResponseEntity<?> search(@RequestParam String filter, @RequestParam String query,
+                                    @RequestParam boolean withoutAssignement, @RequestParam int limit, @RequestParam int offset) {
         try {
-            return ResponseEntity.ok(restaurantService.find(filter, query, withoutAssignement, limit, offset,"asc"));
+            return ResponseEntity.ok(restaurantService.find(filter, query, withoutAssignement, limit, offset, "asc"));
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -38,10 +40,11 @@ public class RestaurantController {
 
     @GetMapping("/count")
     @ResponseBody
-    public Long count(@RequestParam String filter, @RequestParam String query,@RequestParam boolean withoutAssignement ) {
-        return restaurantService.count(filter, query,withoutAssignement);
+    public Long count(@RequestParam String filter, @RequestParam String query, @RequestParam boolean withoutAssignement) {
+        return restaurantService.count(filter, query, withoutAssignement);
     }
 
+    @Transactional
     @PostMapping("/save")
     public String saveRestaurant(@ModelAttribute Restaurant restaurant, Model model) {
         restaurantService.save(restaurant);

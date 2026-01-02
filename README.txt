@@ -22,3 +22,20 @@ afficher liste des employees sans assignement
 employee left join asignement where assignement is null
 
 todo les search avec date // cacher input et remplacer
+
+
+//////////// point du 12/12/25 ////////////
+
+2 listes distinctes pour les assignement et les old  assignement
+
+tester securité et update isAdmin
+
+quand on a deja ouvert le update , le add fait un update
+
+details => employee filtrer par poste et / date de debut
+
+details => restaurant  poste/nom /date de debut
+
+affectation un input date dans la recherche pour filtrer sur poste / ville/  date de debut / et de fin si existante
+
+test jacoco / coverage / surefire

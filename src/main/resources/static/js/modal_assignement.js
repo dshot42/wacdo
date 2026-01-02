@@ -43,9 +43,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     /* Modal handling */
-    document.getElementById("addButton").addEventListener("click", () => {
-        document.getElementById("myModal-edit").style.display = "block";
-    });
+     document.getElementById("addButton").addEventListener("click", () => {
+           const modal = document.getElementById("myModal-edit");
+           modal.style.display = "block";
+           modal.querySelector('input[name="id"]').value =null;
+       });
 
 
     document.getElementById("formAddEntity").addEventListener("submit", function (e) {

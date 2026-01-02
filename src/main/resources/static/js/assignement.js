@@ -12,16 +12,33 @@ document.addEventListener("DOMContentLoaded", function () {
 
     / * function Handle assignement  */
 
+    function searchEvents() {
+        document.getElementById("searchInput").addEventListener("input", (event) => {
+            pageNumber = 1; // Reset to first page on new search
+            searchAssignements()
+        });
+        document.getElementById("searchInputDate").addEventListener("input", (event) => {
+            document.getElementById("searchInput").value=document.getElementById("searchInputDate").value
+            searchAssignements()
+        })
 
-    document.getElementById("searchInput").addEventListener("input", (event) => {
-        pageNumber = 1; // Reset to first page on new search
-        searchAssignements()
-    });
+        document.getElementById("filterWrapper").addEventListener("change", (event) => {
+             if (event.target.value.includes(":Date")) {
+                    document.getElementById("searchInput").style.display = "none";
+                    document.getElementById("searchInputDate").style.display =  "block";
+                    document.getElementById("searchInput").value=""
+                    document.getElementById("searchInputDate").value=""
+                } else {
+                    document.getElementById("searchInput").style.display =  "block";
+                    document.getElementById("searchInputDate").style.display = "none";
+                    document.getElementById("searchInputDate").value=""
+                }
+            pageNumber = 1; // Reset to first page on new search
+            searchAssignements()
+        });
+    }
 
-    document.getElementById("filterWrapper").addEventListener("change", (event) => {
-        pageNumber = 1; // Reset to first page on new search
-        searchAssignements()
-    });
+    searchEvents()
 
     function searchAssignements() {
         const filter = document.getElementById("filterWrapper").value;
@@ -46,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <td>${a.responsability.role}</td>
                     <td>${a.restaurant.name}</td>
                     <td>${displayDate(a.startDate)}</td>
-                    <td>${displayDate(a.startDate) == undefined ? "X" : displayDate(a.startDate)}</td>
+                    <td>${a.endDate == undefined ? "X" : displayDate(a.endDate)}</td>
                     <td>
                         <button attr-id="${a.id}" class="assignementDetails fas fa-eye" onclick="assignementDetails(event,assignements)"></button>
                         <button attr-id="${a.id}" class="assignementEdit edit-btn fas fa-pen" onclick="assignementEdit(event,assignements)"></button>

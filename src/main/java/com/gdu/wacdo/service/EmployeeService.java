@@ -83,7 +83,11 @@ public class EmployeeService {
         Join<Assignement, Responsability> responsability = assignement.join("responsability", JoinType.LEFT);
         Join<Assignement, Restaurant> restaurant = assignement.join("restaurant", JoinType.LEFT);
 
+
+        req.select(employee.get("id"));
+
         String pattern = "%" + query.toLowerCase() + "%";
+        Predicate queryPredicate;
 
         Predicate namePredicate1 = cb.like(cb.concat(
                 cb.concat(cb.lower(employee.get("name")), " "),
@@ -98,9 +102,6 @@ public class EmployeeService {
         Predicate restaurantPredicate = cb.like(cb.lower(restaurant.get("name")), pattern);
         Predicate mailPredicate = cb.like(cb.lower(employee.get("mail")), pattern);
 
-        Predicate queryPredicate;
-
-        req.select(employee.get("id"));
 
         switch (filter) {
             case "name" -> {
@@ -128,6 +129,13 @@ public class EmployeeService {
                 req.orderBy(orderType.equals("asc")
                         ? cb.asc(cb.min(responsability.get("role")))
                         : cb.desc(cb.min(responsability.get("role"))));
+            }
+            case "startedAt:Date" -> {
+                try {
+                    queryPredicate = cb.equal(assignement.get("startDate"), LocalDate.parse(query));;
+                } catch (Exception e) {
+                    throw new RuntimeException("[ERROR] startDate invalide format ",e);
+                }
             }
             default -> {
                 queryPredicate = cb.or(namePredicate1, namePredicate2, mailPredicate, restaurantPredicate, responsabilityPredicate);

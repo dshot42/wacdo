@@ -7,11 +7,7 @@ let restaurants = [];
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    /*********************************/
 
-    document.getElementById("addButton").addEventListener("input", (event) => {
-        const modal = document.getElementById("myModal-edit").style.display = "block";
-    });
 
     / * function Handle restaurant  */
 

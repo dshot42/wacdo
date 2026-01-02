@@ -15,10 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class AssignementService {
@@ -90,7 +87,6 @@ public class AssignementService {
                 cb.lower(employee.get("name"))
         ), pattern);
 
-        req.select(assignement).distinct(true);
 
         switch (filter) {
             case "restaurant_name" -> {
@@ -105,11 +101,16 @@ public class AssignementService {
             case "city" -> {
                 req.where(restaurantAddressPredicate);
             }
-            case "startDate" -> req.where(cb.equal(assignement.get("startDate"), LocalDate.parse(query)));
-            case "endDate" -> req.where(cb.equal(assignement.get("endDate"), LocalDate.parse(query)));
+            case "startDate:Date" -> req.where(cb.equal(assignement.get("startDate"), LocalDate.parse(query)));
+            case "endDate:Date" -> req.where(cb.and(
+                    cb.isNotNull(assignement.get("endDate")),
+                    cb.equal(assignement.get("endDate"), LocalDate.parse(query))
+            ));
             default ->
                     req.where(cb.or(employeePredicate1, employeePredicate2, restaurantPredicate, responsabilityPredicate, restaurantAddressPredicate));
         }
+
+        req.select(assignement).distinct(true);
         return req;
     }
 
@@ -124,7 +125,6 @@ public class AssignementService {
 
         String pattern = "%" + query.toLowerCase() + "%";
 
-        req.select(cb.countDistinct(assignement));
 
         Predicate responsabilityPredicate = cb.like(cb.lower(responsability.get("role")), pattern);
         Predicate restaurantPredicate = cb.like(cb.lower(restaurant.get("name")), pattern);
@@ -143,11 +143,16 @@ public class AssignementService {
             case "employee_name" -> req.where(cb.or(employeePredicate1, employeePredicate2));
             case "role" -> req.where(responsabilityPredicate);
             case "city" -> req.where(restaurantAddressPredicate);
-            case "startDate" -> req.where(cb.equal(assignement.get("startDate"), LocalDate.parse(query)));
-            case "endDate" -> req.where(cb.equal(assignement.get("endDate"), LocalDate.parse(query)));
+            case "startDate:Date" -> req.where(cb.equal(assignement.get("startDate"), LocalDate.parse(query)));
+            case "endDate:Date" -> req.where(cb.and(
+                    cb.isNotNull(assignement.get("endDate")),
+                    cb.equal(assignement.get("endDate"), LocalDate.parse(query))
+            ));
             default ->
                     req.where(cb.or(employeePredicate1, employeePredicate2, restaurantPredicate, responsabilityPredicate, restaurantAddressPredicate));
         }
+        req.select(cb.countDistinct(assignement));
+
         TypedQuery<Long> typedQuery = entityManager.createQuery(req);
         return typedQuery.getSingleResult();
     }
