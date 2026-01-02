@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'jacoco'
     id 'org.springframework.boot' version '3.5.7'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'application'
@@ -34,10 +35,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate6:2.19.1'
-    // la 5 pose probleme lors des jointures complexe
+
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 }
 
 
-tasks.named('test') {
-      // useJUnitPlatform()
+test {
+    useJUnitPlatform()
 }
