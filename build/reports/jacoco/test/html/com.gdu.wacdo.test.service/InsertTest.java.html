@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InsertTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">wacdo</a> &gt; <a href="index.source.html" class="el_package">com.gdu.wacdo.test.service</a> &gt; <span class="el_source">InsertTest.java</span></div><h1>InsertTest.java</h1><pre class="source lang-java linenums">package com.gdu.wacdo.test.service;
+
+import com.gdu.wacdo.model.*;
+import com.gdu.wacdo.repository.AssignementRepository;
+import com.gdu.wacdo.repository.EmployeeRepository;
+import com.gdu.wacdo.repository.ResponsabilityRepository;
+import com.gdu.wacdo.repository.RoleRepository;
+import com.gdu.wacdo.service.RestaurantService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+@Service
+<span class="fc" id="L19">public class InsertTest {</span>
+
+    @Autowired
+    private RestaurantService restaurantService;
+
+    @Autowired
+    private ResponsabilityRepository responsabilityRepository;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private AssignementRepository assignementRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public void deleteAll() {
+<span class="nc" id="L40">        employeeRepository.deleteAll();</span>
+<span class="nc" id="L41">        restaurantService.repository.deleteAll();</span>
+<span class="nc" id="L42">    }</span>
+
+    public void insertRestaurant() {
+<span class="fc" id="L45">        List&lt;List&lt;Object&gt;&gt; restaurants = List.of(</span>
+                // Paris
+<span class="fc" id="L47">                List.of(&quot;Le Meurice Alain Ducasse&quot;, &quot;228 Rue de Rivoli&quot;, &quot;75001&quot;, &quot;Paris&quot;, 48.8656, 2.3286),</span>
+<span class="fc" id="L48">                List.of(&quot;Septime&quot;, &quot;80 Rue de Charonne&quot;, &quot;75011&quot;, &quot;Paris&quot;, 48.8532, 2.3807),</span>
+<span class="fc" id="L49">                List.of(&quot;Le Chateaubriand&quot;, &quot;129 Avenue Parmentier&quot;, &quot;75011&quot;, &quot;Paris&quot;, 48.8660, 2.3768),</span>
+<span class="fc" id="L50">                List.of(&quot;Pierre Gagnaire&quot;, &quot;6 Rue Balzac&quot;, &quot;75008&quot;, &quot;Paris&quot;, 48.8715, 2.3018),</span>
+<span class="fc" id="L51">                List.of(&quot;Lâ€™Ambroisie&quot;, &quot;9 Place des Vosges&quot;, &quot;75004&quot;, &quot;Paris&quot;, 48.8555, 2.3658),</span>
+<span class="fc" id="L52">                List.of(&quot;Le Cinq (Four Seasons George V)&quot;, &quot;31 Avenue George V&quot;, &quot;75008&quot;, &quot;Paris&quot;, 48.8688, 2.3003),</span>
+<span class="fc" id="L53">                List.of(&quot;Frenchie&quot;, &quot;5 Rue du Nil&quot;, &quot;75002&quot;, &quot;Paris&quot;, 48.8681, 2.3491),</span>
+<span class="fc" id="L54">                List.of(&quot;Lâ€™ArpÃ¨ge&quot;, &quot;84 Rue de Varenne&quot;, &quot;75007&quot;, &quot;Paris&quot;, 48.8534, 2.3176),</span>
+<span class="fc" id="L55">                List.of(&quot;Guy Savoy&quot;, &quot;Monnaie de Paris, 11 Quai de Conti&quot;, &quot;75006&quot;, &quot;Paris&quot;, 48.8561, 2.3422),</span>
+                //   List.of(&quot;Le Comptoir du Relais&quot;, &quot;9 Carrefour de lâ€™OdÃ©on&quot;, &quot;75006&quot;, &quot;Paris&quot;, 48.8515, 2.3396),
+                // Lyon
+<span class="fc" id="L58">                List.of(&quot;La MÃ¨re Brazier&quot;, &quot;12 Rue Royale&quot;, &quot;69001&quot;, &quot;Lyon&quot;, 45.7686, 4.8352),</span>
+<span class="fc" id="L59">                List.of(&quot;Le Cintra&quot;, &quot;43 Rue de la Bourse&quot;, &quot;69002&quot;, &quot;Lyon&quot;, 45.7614, 4.8359),</span>
+<span class="fc" id="L60">                List.of(&quot;Jour de MarchÃ© (Krak)&quot;, &quot;14 Rue MoliÃ¨re&quot;, &quot;69006&quot;, &quot;Lyon&quot;, 45.7660, 4.8491),</span>
+<span class="fc" id="L61">                List.of(&quot;Addis Abeba&quot;, &quot;264 Rue Duguesclin&quot;, &quot;69003&quot;, &quot;Lyon&quot;, 45.7559, 4.8547),</span>
+<span class="fc" id="L62">                List.of(&quot;Le Kitchen CafÃ©&quot;, &quot;34 Rue Chevreul&quot;, &quot;69007&quot;, &quot;Lyon&quot;, 45.7472, 4.8416),</span>
+<span class="fc" id="L63">                List.of(&quot;Le Bouchon des Filles&quot;, &quot;20 Rue Sergent Blandan&quot;, &quot;69001&quot;, &quot;Lyon&quot;, 45.7672, 4.8331),</span>
+<span class="fc" id="L64">                List.of(&quot;Le Bouchon Tupin&quot;, &quot;15 Rue Tupin&quot;, &quot;69002&quot;, &quot;Lyon&quot;, 45.7596, 4.8324),</span>
+<span class="fc" id="L65">                List.of(&quot;Le Bistrot du Potager&quot;, &quot;3 Rue de la MartiniÃ¨re&quot;, &quot;69001&quot;, &quot;Lyon&quot;, 45.7679, 4.8294),</span>
+<span class="fc" id="L66">                List.of(&quot;Le CafÃ© du Peintre&quot;, &quot;50 Rue de SÃ¨ze&quot;, &quot;69006&quot;, &quot;Lyon&quot;, 45.7683, 4.8502)</span>
+                //  List.of(&quot;Le Gourmet de SÃ¨ze&quot;, &quot;129 Rue de SÃ¨ze&quot;, &quot;69006&quot;, &quot;Lyon&quot;, 45.7701, 4.8527)
+        );
+
+<span class="fc" id="L70">        restaurants.forEach(e -&gt; {</span>
+<span class="fc" id="L71">            Restaurant restaurant = new Restaurant();</span>
+<span class="fc" id="L72">            restaurant.setName(e.get(0).toString());</span>
+<span class="fc" id="L73">            RestaurantAddress address = new RestaurantAddress();</span>
+<span class="fc" id="L74">            address.setAddress(e.get(1).toString());</span>
+<span class="fc" id="L75">            address.setPostalCode(e.get(2).toString());</span>
+<span class="fc" id="L76">            address.setCity(e.get(3).toString());</span>
+<span class="fc" id="L77">            address.setCordX(Float.parseFloat(e.get(4).toString()));</span>
+<span class="fc" id="L78">            address.setCordY(Float.parseFloat(e.get(5).toString()));</span>
+
+<span class="fc" id="L80">            restaurant.setRestaurantAddress(address);</span>
+<span class="fc" id="L81">            restaurantService.save(restaurant);</span>
+<span class="fc" id="L82">        });</span>
+
+<span class="fc" id="L84">    }</span>
+
+    public void insertResponsability() {
+<span class="fc" id="L87">        List&lt;String&gt; metiers = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L88">        metiers.add(&quot;GÃ©rant de restaurant&quot;);</span>
+<span class="fc" id="L89">        metiers.add(&quot;Chef cuisinier&quot;);</span>
+<span class="fc" id="L90">        metiers.add(&quot;Serveur&quot;);</span>
+<span class="fc" id="L91">        metiers.add(&quot;Barman&quot;);</span>
+<span class="fc" id="L92">        metiers.add(&quot;Plongeur&quot;);</span>
+
+<span class="fc" id="L94">        metiers.forEach(e -&gt; {</span>
+<span class="fc" id="L95">            Responsability res = new Responsability();</span>
+<span class="fc" id="L96">            res.setRole(e);</span>
+<span class="fc" id="L97">            responsabilityRepository.save(res);</span>
+<span class="fc" id="L98">        });</span>
+<span class="fc" id="L99">    }</span>
+
+    public void insertRole() {
+<span class="fc" id="L102">        List&lt;String&gt; roles = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L104">        roles.add(&quot;ADMINISTRATOR&quot;);</span>
+<span class="fc" id="L105">        roles.add(&quot;RESPONSABLE&quot;);</span>
+<span class="fc" id="L106">        roles.add(&quot;EMPLOYEE&quot;);</span>
+
+<span class="fc" id="L108">        roles.forEach(e -&gt; {</span>
+<span class="fc" id="L109">            Role role = new Role();</span>
+<span class="fc" id="L110">            role.setRoleName(e);</span>
+<span class="fc" id="L111">            roleRepository.save(role);</span>
+<span class="fc" id="L112">        });</span>
+<span class="fc" id="L113">    }</span>
+
+    public void insertEmployee() {
+<span class="fc" id="L116">        List&lt;Role&gt; roles = roleRepository.findAll();</span>
+<span class="fc" id="L117">        List&lt;Responsability&gt; responsabilities = responsabilityRepository.findAll();</span>
+
+<span class="fc" id="L119">        List&lt;List&lt;Object&gt;&gt; employees = List.of(</span>
+<span class="fc" id="L120">                List.of(&quot;Jean&quot;, &quot;Dupont&quot;, LocalDate.of(2021, 3, 12), &quot;jean.dupont@mail.com&quot;, &quot;0600000001&quot;, roles.get(0), responsabilities.get(4)),</span>
+<span class="fc" id="L121">                List.of(&quot;Marie&quot;, &quot;Durand&quot;, LocalDate.of(2020, 7, 22), &quot;marie.durand@mail.com&quot;, &quot;0600000002&quot;, roles.get(1), responsabilities.get(4)),</span>
+<span class="fc" id="L122">                List.of(&quot;Paul&quot;, &quot;Martin&quot;, LocalDate.of(2019, 5, 18), &quot;paul.martin@mail.com&quot;, &quot;0600000003&quot;, roles.get(2), responsabilities.get(0)),</span>
+<span class="fc" id="L123">                List.of(&quot;Sophie&quot;, &quot;Bernard&quot;, LocalDate.of(2022, 1, 9), &quot;sophie.bernard@mail.com&quot;, &quot;0600000004&quot;, roles.get(2), responsabilities.get(0)),</span>
+<span class="fc" id="L124">                List.of(&quot;Luc&quot;, &quot;Petit&quot;, LocalDate.of(2023, 2, 14), &quot;luc.petit@mail.com&quot;, &quot;0600000005&quot;, roles.get(2), responsabilities.get(0)),</span>
+<span class="fc" id="L125">                List.of(&quot;Emma&quot;, &quot;Robert&quot;, LocalDate.of(2020, 11, 3), &quot;emma.robert@mail.com&quot;, &quot;0600000006&quot;, roles.get(1), responsabilities.get(4)),</span>
+<span class="fc" id="L126">                List.of(&quot;Antoine&quot;, &quot;Moreau&quot;, LocalDate.of(2021, 6, 10), &quot;antoine.moreau@mail.com&quot;, &quot;0600000007&quot;, roles.get(2), responsabilities.get(0)),</span>
+<span class="fc" id="L127">                List.of(&quot;Camille&quot;, &quot;Laurent&quot;, LocalDate.of(2019, 9, 25), &quot;camille.laurent@mail.com&quot;, &quot;0600000008&quot;, roles.get(2), responsabilities.get(0)),</span>
+<span class="fc" id="L128">                List.of(&quot;Nicolas&quot;, &quot;Garcia&quot;, LocalDate.of(2022, 12, 4), &quot;nicolas.garcia@mail.com&quot;, &quot;0600000009&quot;, roles.get(2), responsabilities.get(0)),</span>
+<span class="fc" id="L129">                List.of(&quot;Laura&quot;, &quot;Fournier&quot;, LocalDate.of(2023, 3, 30), &quot;laura.fournier@mail.com&quot;, &quot;0600000010&quot;, roles.get(2), responsabilities.get(0)),</span>
+<span class="fc" id="L130">                List.of(&quot;Alexandre&quot;, &quot;Girard&quot;, LocalDate.of(2021, 8, 21), &quot;alexandre.girard@mail.com&quot;, &quot;0600000011&quot;, roles.get(2), responsabilities.get(0)),</span>
+<span class="fc" id="L131">                List.of(&quot;Julie&quot;, &quot;Roux&quot;, LocalDate.of(2020, 4, 6), &quot;julie.roux@mail.com&quot;, &quot;0600000012&quot;, roles.get(1), responsabilities.get(4)),</span>
+<span class="fc" id="L132">                List.of(&quot;Hugo&quot;, &quot;Fontaine&quot;, LocalDate.of(2022, 10, 11), &quot;hugo.fontaine@mail.com&quot;, &quot;0600000013&quot;, roles.get(2), responsabilities.get(0)),</span>
+<span class="fc" id="L133">                List.of(&quot;Clara&quot;, &quot;Chevalier&quot;, LocalDate.of(2021, 1, 28), &quot;clara.chevalier@mail.com&quot;, &quot;0600000014&quot;, roles.get(2), responsabilities.get(0)),</span>
+<span class="fc" id="L134">                List.of(&quot;Maxime&quot;, &quot;Lopez&quot;, LocalDate.of(2019, 11, 7), &quot;maxime.lopez@mail.com&quot;, &quot;0600000015&quot;, roles.get(2), responsabilities.get(0)),</span>
+<span class="fc" id="L135">                List.of(&quot;Alice&quot;, &quot;Renard&quot;, LocalDate.of(2020, 5, 13), &quot;alice.renard@mail.com&quot;, &quot;0600000016&quot;, roles.get(1), responsabilities.get(4)),</span>
+<span class="fc" id="L136">                List.of(&quot;Thomas&quot;, &quot;Dupuis&quot;, LocalDate.of(2023, 7, 19), &quot;thomas.dupuis@mail.com&quot;, &quot;0600000017&quot;, roles.get(2), responsabilities.get(0)),</span>
+<span class="fc" id="L137">                List.of(&quot;InÃ¨s&quot;, &quot;Blanc&quot;, LocalDate.of(2021, 9, 23), &quot;ines.blanc@mail.com&quot;, &quot;0600000018&quot;, roles.get(2), responsabilities.get(0)),</span>
+<span class="fc" id="L138">                List.of(&quot;Adrien&quot;, &quot;Legrand&quot;, LocalDate.of(2022, 2, 8), &quot;adrien.legrand@mail.com&quot;, &quot;0600000019&quot;, roles.get(2), responsabilities.get(0)),</span>
+<span class="fc" id="L139">                List.of(&quot;Manon&quot;, &quot;Perrin&quot;, LocalDate.of(2020, 6, 2), &quot;manon.perrin@mail.com&quot;, &quot;0600000020&quot;, roles.get(2), responsabilities.get(0)),</span>
+<span class="fc" id="L140">                List.of(&quot;Romain&quot;, &quot;Meyer&quot;, LocalDate.of(2019, 8, 5), &quot;romain.meyer@mail.com&quot;, &quot;0600000021&quot;, roles.get(2), responsabilities.get(0)),</span>
+<span class="fc" id="L141">                List.of(&quot;ChloÃ©&quot;, &quot;Marchand&quot;, LocalDate.of(2021, 12, 17), &quot;chloe.marchand@mail.com&quot;, &quot;0600000022&quot;, roles.get(1), responsabilities.get(4)),</span>
+<span class="fc" id="L142">                List.of(&quot;Benjamin&quot;, &quot;Baron&quot;, LocalDate.of(2022, 4, 1), &quot;benjamin.baron@mail.com&quot;, &quot;0600000023&quot;, roles.get(2), responsabilities.get(0)),</span>
+<span class="fc" id="L143">                List.of(&quot;Eva&quot;, &quot;Lemoine&quot;, LocalDate.of(2023, 10, 12), &quot;eva.lemoine@mail.com&quot;, &quot;0600000024&quot;, roles.get(2), responsabilities.get(0)),</span>
+<span class="fc" id="L144">                List.of(&quot;Lucas&quot;, &quot;Gaillard&quot;, LocalDate.of(2020, 1, 26), &quot;lucas.gaillard@mail.com&quot;, &quot;0600000025&quot;, roles.get(2), responsabilities.get(0))</span>
+        );
+
+
+<span class="fc" id="L148">        employees.forEach(e -&gt; {</span>
+<span class="fc" id="L149">            Employee empl = new Employee();</span>
+<span class="fc" id="L150">            empl.setSurname((String) e.get(0));</span>
+<span class="fc" id="L151">            empl.setName((String) e.get(1));</span>
+<span class="fc" id="L152">            empl.setHireDate((LocalDate) e.get(2));</span>
+<span class="fc" id="L153">            empl.setMail((String) e.get(3));</span>
+<span class="fc" id="L154">            empl.setPhone((String) e.get(4));</span>
+<span class="fc" id="L155">            empl.setRole((Role) e.get(5));</span>
+<span class="fc" id="L156">            String encodedPassword = passwordEncoder.encode(&quot;123&quot;);</span>
+<span class="fc" id="L157">            empl.setPassword(encodedPassword);</span>
+<span class="fc" id="L158">            employeeRepository.save(empl);</span>
+<span class="fc" id="L159">        });</span>
+<span class="fc" id="L160">    }</span>
+
+    // assignement employee restau  + drag drop
+
+    public void assignementEmployeeRestaurant() throws Exception {
+<span class="fc" id="L165">        List&lt;Employee&gt; employees = employeeRepository.findAll();</span>
+<span class="fc" id="L166">        List&lt;Restaurant&gt; restaurants = restaurantService.getAll();</span>
+<span class="fc" id="L167">        restaurants.remove(5); // pour avoir des restaurant without asssignements</span>
+<span class="fc" id="L168">        restaurants.remove(8);</span>
+<span class="fc" id="L169">        List&lt;Responsability&gt; responsabilitys = responsabilityRepository.findAll();</span>
+<span class="fc" id="L170">        Random rand = new Random();</span>
+
+<span class="fc" id="L172">        int i = 0;</span>
+<span class="fc bfc" id="L173" title="All 2 branches covered.">        for (Restaurant r : restaurants) {</span>
+<span class="fc bfc" id="L174" title="All 2 branches covered.">            for (int j = 0; j &lt;= 4; j++) { // 4 empl par restau</span>
+                try {
+<span class="fc" id="L176">                    Assignement assignement = new Assignement();</span>
+<span class="fc" id="L177">                    Employee randomEmployee = employees.get(rand.nextInt(employees.size() - 1));</span>
+<span class="fc" id="L178">                    assignement.setEmployee(randomEmployee);</span>
+<span class="fc" id="L179">                    assignement.setRestaurant(restaurants.get(i));</span>
+<span class="fc" id="L180">                    assignement.setStartDate(LocalDate.now());</span>
+
+<span class="fc" id="L182">                    Responsability responsability = responsabilitys.get(j);</span>
+<span class="fc" id="L183">                    assignement.setId(new AssignementId(randomEmployee.getId(), r.getId()));</span>
+<span class="fc" id="L184">                    assignement.setResponsability(responsability);</span>
+<span class="fc" id="L185">                    assignementRepository.save(assignement);</span>
+<span class="nc" id="L186">                } catch (Exception ex) {</span>
+<span class="nc" id="L187">                    throw new Exception(&quot;No more restaurant available &quot;, ex);</span>
+<span class="fc" id="L188">                }</span>
+            }
+<span class="fc" id="L190">            i++;</span>
+
+<span class="fc" id="L192">        }</span>
+<span class="fc" id="L193">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

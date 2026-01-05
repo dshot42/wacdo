@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResponsabilityController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">wacdo</a> &gt; <a href="index.source.html" class="el_package">com.gdu.wacdo.controller</a> &gt; <span class="el_source">ResponsabilityController.java</span></div><h1>ResponsabilityController.java</h1><pre class="source lang-java linenums">package com.gdu.wacdo.controller;
+
+import com.gdu.wacdo.model.Responsability;
+import com.gdu.wacdo.service.ResponsabilityService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping(&quot;/responsability&quot;)
+<span class="fc" id="L14">public class ResponsabilityController {</span>
+
+    @Autowired
+    private ResponsabilityService responsabilityService;
+
+    @GetMapping(&quot;/getAll&quot;)
+    @ResponseBody
+    public List&lt;Responsability&gt; listResponsabilitys(Model model) {
+<span class="fc" id="L22">        return responsabilityService.repository.findAll();</span>
+    }
+
+    @GetMapping(&quot;/search&quot;)
+    @ResponseBody
+    public List&lt;Object&gt; search(@RequestParam String filter, @RequestParam String query, @RequestParam String order, @RequestParam int limit, @RequestParam int offset) {
+<span class="nc" id="L28">        return responsabilityService.find(filter, query, limit, offset, order);</span>
+    }
+
+    @GetMapping(&quot;/count&quot;)
+    @ResponseBody
+    public Long count(@RequestParam String filter, @RequestParam String query) {
+<span class="nc" id="L34">        return responsabilityService.count(filter, query);</span>
+    }
+
+    @Transactional
+    @PostMapping(&quot;/save&quot;)
+    public String saveResponsability(@ModelAttribute Responsability responsability, Model model) {
+<span class="nc" id="L40">        responsabilityService.repository.save(responsability);</span>
+<span class="nc" id="L41">        model.addAttribute(&quot;responsability&quot;, responsability);</span>
+<span class="nc" id="L42">        return &quot;home :: responsability&quot;; // &lt;-- Thymeleaf fragment</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

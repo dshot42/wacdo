@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Employee.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">wacdo</a> &gt; <a href="index.source.html" class="el_package">com.gdu.wacdo.model</a> &gt; <span class="el_source">Employee.java</span></div><h1>Employee.java</h1><pre class="source lang-java linenums">package com.gdu.wacdo.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+
+import java.time.LocalDate;
+import java.util.List;
+
+
+@Entity
+@Table(name = &quot;employee&quot;) // nom de la table
+<span class="fc" id="L13">public class Employee {</span>
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto-incrÃ©ment
+    private Long id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String surname;
+
+    @Column(nullable = false)
+    private LocalDate hireDate;
+
+    @Column(nullable = false, unique = true)
+    private String mail;
+
+    @Column(nullable = false)
+    private String phone;
+
+    @Column(nullable = false)
+    private String password;
+
+
+    @OneToMany(mappedBy = &quot;employee&quot;)
+    @JsonIgnore
+    private List&lt;Assignement&gt; assignements;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = &quot;role_id&quot;)
+    private Role role;
+
+    @Column(columnDefinition = &quot;text&quot;, nullable = true)
+    private String image;
+
+    @Column(nullable = false, columnDefinition = &quot;boolean default false&quot;)
+    private boolean admin;
+
+    // getters/setters
+    public Long getId() {
+<span class="fc" id="L54">        return id;</span>
+    }
+
+    public void setId(Long id) {
+<span class="nc" id="L58">        this.id = id;</span>
+<span class="nc" id="L59">    }</span>
+
+    public String getName() {
+<span class="fc" id="L62">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="fc" id="L66">        this.name = name;</span>
+<span class="fc" id="L67">    }</span>
+
+    public String getSurname() {
+<span class="fc" id="L70">        return surname;</span>
+    }
+
+    public void setSurname(String surname) {
+<span class="fc" id="L74">        this.surname = surname;</span>
+<span class="fc" id="L75">    }</span>
+
+    public LocalDate getHireDate() {
+<span class="fc" id="L78">        return hireDate;</span>
+    }
+
+    public void setHireDate(LocalDate hireDate) {
+<span class="fc" id="L82">        this.hireDate = hireDate;</span>
+<span class="fc" id="L83">    }</span>
+
+    public String getMail() {
+<span class="fc" id="L86">        return mail;</span>
+    }
+
+    public void setMail(String mail) {
+<span class="fc" id="L90">        this.mail = mail;</span>
+<span class="fc" id="L91">    }</span>
+
+    public String getPhone() {
+<span class="fc" id="L94">        return phone;</span>
+    }
+
+    public void setPhone(String phone) {
+<span class="fc" id="L98">        this.phone = phone;</span>
+<span class="fc" id="L99">    }</span>
+
+    public List&lt;Assignement&gt; getAssignements() {
+<span class="nc" id="L102">        return assignements;</span>
+    }
+
+    public void setAssignements(List&lt;Assignement&gt; assignements) {
+<span class="nc" id="L106">        this.assignements = assignements;</span>
+<span class="nc" id="L107">    }</span>
+
+    public Role getRole() {
+<span class="fc" id="L110">        return role;</span>
+    }
+
+    public void setRole(Role role) {
+<span class="fc" id="L114">        this.role = role;</span>
+<span class="fc" id="L115">    }</span>
+
+    public String getImage() {
+<span class="fc" id="L118">        return image;</span>
+    }
+
+    public void setImage(String image) {
+<span class="nc" id="L122">        this.image = image;</span>
+<span class="nc" id="L123">    }</span>
+
+    public boolean isAdmin() {
+<span class="fc" id="L126">        return admin;</span>
+    }
+
+    public void setAdmin(boolean admin) {
+<span class="nc" id="L130">        this.admin = admin;</span>
+<span class="nc" id="L131">    }</span>
+
+    public String getPassword() {
+<span class="fc" id="L134">        return password;</span>
+    }
+    public void setPassword(String password) {
+<span class="fc" id="L137">        this.password = password;</span>
+<span class="fc" id="L138">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

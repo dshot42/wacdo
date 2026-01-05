@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>wacdoController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">wacdo</a> &gt; <a href="index.source.html" class="el_package">com.gdu.wacdo.test.controller</a> &gt; <span class="el_source">wacdoController.java</span></div><h1>wacdoController.java</h1><pre class="source lang-java linenums">package com.gdu.wacdo.test.controller;
+
+
+import com.gdu.wacdo.repository.EmployeeRepository;
+import com.gdu.wacdo.repository.RestaurantRepository;
+import com.gdu.wacdo.test.service.InsertTest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping(&quot;/test&quot;)
+<span class="fc" id="L14">public class wacdoController {</span>
+
+    @Autowired
+    private InsertTest insertTest;
+
+    @Autowired
+    private RestaurantRepository restaurantRepository;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+
+    @GetMapping(&quot;/insertRequired&quot;)
+    public String insertRequired() {
+<span class="fc" id="L28">        insertTest.insertResponsability();</span>
+<span class="fc" id="L29">        insertTest.insertRole();</span>
+        // access
+        // permission
+<span class="fc" id="L32">        return &quot;[SUCCESS] insert 3 role roles in db!&quot;;</span>
+    }
+
+    @GetMapping(&quot;/insertRestaurant&quot;)
+    public String insertRestaurant() {
+<span class="fc" id="L37">        insertTest.insertRestaurant();</span>
+<span class="fc" id="L38">        return &quot;[SUCCESS] insert 20 restaurants in db!&quot;;</span>
+    }
+
+    @GetMapping(&quot;/insertEmployee&quot;)
+    public String insertEmployee() {
+<span class="fc" id="L43">        insertTest.insertEmployee();</span>
+<span class="fc" id="L44">        return &quot;[SUCCESS] insert 25 employees in db!&quot;;</span>
+    }
+
+    @GetMapping(&quot;/insertAssignement&quot;)
+    public String insertAssignement() throws Exception {
+<span class="fc" id="L49">        insertTest.assignementEmployeeRestaurant();</span>
+<span class="fc" id="L50">        return &quot;[SUCCESS] insert Assignement in db!&quot;;</span>
+    }
+
+    // clean db
+    @GetMapping(&quot;/deleteAll&quot;)
+    public String deleteAll() {
+<span class="nc" id="L56">        insertTest.deleteAll();</span>
+<span class="nc" id="L57">        return &quot;[SUCCESS] clear all restaurant in db!&quot;;</span>
+    }
+
+    @GetMapping(&quot;/insertResponsability&quot;)
+    public String insertResponsability() {
+<span class="fc" id="L62">        insertTest.insertResponsability();</span>
+<span class="fc" id="L63">        return &quot;[SUCCESS] insert 5 responsabilities role in db!&quot;;</span>
+    }
+
+    @GetMapping(&quot;/insertRole&quot;)
+    public String insertRole() {
+<span class="fc" id="L68">        insertTest.insertRole();</span>
+<span class="fc" id="L69">        return &quot;[SUCCESS] insert 3 roles role in db!&quot;;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

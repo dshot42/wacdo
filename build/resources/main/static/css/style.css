@@ -1,0 +1,134 @@
+  .nav-item-selected, .nav-item:hover {
+        border-bottom: 2px solid #3b5998;
+    }
+
+/* search */
+
+   .search-container, #modal-search-assignement{
+        display: flex;
+        margin-top: 50px;
+    }
+
+    #searchInput {
+        padding: 10px;
+        font-size: 12px;
+        width: 400px;
+    }
+
+    #searchInput:focus {
+        outline: none;
+        border: 2px solid #3b5998;
+        background-color: #f2f2f2;
+    }
+
+    #withoutAssignementBlock {
+        margin-left: 20px;
+        display: flex;
+    }
+
+    /* Modal */
+
+    #searchWrapper, #searchWrapperModal {
+        display: flex;
+        align-items: center;
+        background-color: #3b5998;
+    }
+
+    #searchWrapper img, #searchWrapperModal img, #searchWrapperEdit img {
+        width: 30px;
+        height: 30px;
+        margin: auto;
+    }
+
+    #addButton {
+        width: 35px;
+        font-size: 25px;
+        border: none;
+        font-weight: bold;
+        color : white;
+        margin-left: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #3b5998;
+        float:right;
+    }
+
+    .btn-color-blue {
+        background-color: #3b5998;
+        color : white;
+        border : none;
+    }
+
+   .btn-color-blue:hover {
+       background-color: white;
+       color : #3b5998;
+       border : solid 2px #3b5998;
+    }
+
+    select{
+       padding: 10px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    #filterWrapper {
+        margin-left: 30px;
+    }
+
+/* Pagination */
+
+    #pagination button{
+        margin: 10px;
+        font-size: 20px;
+        border-radius: 2px;
+        border: 1px solid black;
+    }
+
+    #pagination .page-active{
+        color : white;
+        background-color: #3b5998;
+        font-size: 20px;
+        border-radius: 2px;
+        border: 2px solid #3b5998;
+    }
+
+
+    /* Array */
+
+        #tableEntity, #tableEntityDetails {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+            margin-top: 20px;
+        }
+
+
+        /* Array */
+
+        td,
+        th {
+            text-align: left;
+            padding: 10px;
+        }
+
+        th {
+            background-color: #3b5998;
+            color: white;
+        }
+
+        tr {
+            border: 1px solid #ddd;
+            padding: 8px;
+            padding: 10px;
+            grid-row: 1;
+        }
+
+        #tableEntity tr:nth-child(even),  #tableEntityDetails tr:nth-child(even){
+            background-color: #f2f2f2;
+        }
+
+        #tableEntity tr:hover, #tableEntityDetails {
+            background-color: #ddd;
+        }

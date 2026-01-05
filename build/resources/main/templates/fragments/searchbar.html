@@ -1,0 +1,25 @@
+<div class="search-container" xmlns:th="http://www.thymeleaf.org" th:fragment="searchbar">
+    <input type="text" id="searchInput" placeholder="Rechercher ...">
+    <input type="date" id="searchInputDate" style="display: none;">
+
+    <div id="searchWrapper">
+        <img src="https://img.icons8.com/sf-black/100/ffffff/search.png">
+    </div>
+
+    <select id="filterWrapper" name="choix">
+        <option value="*" selected>-- Toutes catégories --</option>
+        <option th:each="f : ${filter}" th:value="${f.key}" th:text="${f.value}">
+        </option>
+    </select>
+    <div id="withoutAssignementBlock">
+        <span style="width: 150px;">Sans affectation uniquement</span>
+        <input type="checkbox" id="withoutAssignement" style="width: 20px;">
+    </div>
+
+    <button id="addButton" title="Ajouter">
+        +
+    </button>
+
+
+
+</div>

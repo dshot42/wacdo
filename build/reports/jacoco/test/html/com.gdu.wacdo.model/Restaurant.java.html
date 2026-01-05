@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Restaurant.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">wacdo</a> &gt; <a href="index.source.html" class="el_package">com.gdu.wacdo.model</a> &gt; <span class="el_source">Restaurant.java</span></div><h1>Restaurant.java</h1><pre class="source lang-java linenums">package com.gdu.wacdo.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+
+import java.util.List;
+
+@Entity
+@Table(name = &quot;restaurant&quot;)
+<span class="fc" id="L10">public class Restaurant {</span>
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
+    @JoinColumn(name = &quot;address_id&quot;)
+    public RestaurantAddress restaurantAddress;
+
+    @OneToMany(mappedBy = &quot;restaurant&quot;)
+    @JsonIgnore
+    private List&lt;Assignement&gt; assignements;
+
+    @Column(columnDefinition = &quot;text&quot;, nullable = true)
+    private String image;
+
+    // getters/setters
+    public Long getId() {
+<span class="fc" id="L32">        return id;</span>
+    }
+
+    public void setId(Long id) {
+<span class="nc" id="L36">        this.id = id;</span>
+<span class="nc" id="L37">    }</span>
+
+    public String getName() {
+<span class="fc" id="L40">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="fc" id="L44">        this.name = name;</span>
+<span class="fc" id="L45">    }</span>
+
+    public RestaurantAddress getRestaurantAddress() {
+<span class="fc" id="L48">        return restaurantAddress;</span>
+    }
+
+    public void setRestaurantAddress(RestaurantAddress restaurantAddress) {
+<span class="fc" id="L52">        this.restaurantAddress = restaurantAddress;</span>
+<span class="fc" id="L53">    }</span>
+
+    public List&lt;Assignement&gt; getAssignements() {
+<span class="nc" id="L56">        return assignements;</span>
+    }
+
+    public void setAssignements(List&lt;Assignement&gt; assignements) {
+<span class="nc" id="L60">        this.assignements = assignements;</span>
+<span class="nc" id="L61">    }</span>
+
+    public String getImage() {
+<span class="fc" id="L64">        return image;</span>
+    }
+
+    public void setImage(String image) {
+<span class="nc" id="L68">        this.image = image;</span>
+<span class="nc" id="L69">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

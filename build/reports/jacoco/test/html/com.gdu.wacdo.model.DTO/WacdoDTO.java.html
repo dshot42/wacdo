@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WacdoDTO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">wacdo</a> &gt; <a href="index.source.html" class="el_package">com.gdu.wacdo.model.DTO</a> &gt; <span class="el_source">WacdoDTO.java</span></div><h1>WacdoDTO.java</h1><pre class="source lang-java linenums">package com.gdu.wacdo.model.DTO;
+
+import java.time.LocalDate;
+import java.util.List;
+
+<span class="nc" id="L6">public class WacdoDTO {</span>
+
+<span class="nc" id="L8">    public record ResponsabilityDto(Long id, String role) {</span>
+    }
+
+<span class="nc" id="L11">    public record EmployeeDto(Long id, String name, String surName, String email, List&lt;AssignementDto&gt; assignements) {</span>
+    }
+
+<span class="nc" id="L14">    public record AssignementDto(Long id, LocalDate startDate, LocalDate endDate, EmployeeDto employee,</span>
+                                 RestaurantDto restaurant,
+                                 ResponsabilityDto responsability) {
+    }
+
+<span class="nc" id="L19">    public record RestaurantDto(Long id, String name, String image, RestaurantAddressDto restaurantAddress,</span>
+                                List&lt;AssignementDto&gt; assignements) {
+    }
+
+<span class="nc" id="L23">    public record RestaurantAddressDto(Long id, String city, String postalCode, String address, float cordX,</span>
+                                       float cordY) {
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

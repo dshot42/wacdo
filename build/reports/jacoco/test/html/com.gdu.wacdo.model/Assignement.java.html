@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Assignement.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">wacdo</a> &gt; <a href="index.source.html" class="el_package">com.gdu.wacdo.model</a> &gt; <span class="el_source">Assignement.java</span></div><h1>Assignement.java</h1><pre class="source lang-java linenums">package com.gdu.wacdo.model;
+import jakarta.persistence.*;
+import java.time.LocalDate;
+
+@Entity
+@Table(name = &quot;assignement&quot;)
+<span class="fc" id="L7">public class Assignement {</span>
+
+
+    @EmbeddedId
+    private AssignementId id;
+
+    @ManyToOne
+    @MapsId(&quot;employeeId&quot;) // lie l'EmbeddedId.employeeId
+    @JoinColumn(name = &quot;employee_id&quot;)
+    private Employee employee;
+
+    @ManyToOne
+    @MapsId(&quot;restaurantId&quot;) // lie l'EmbeddedId.restaurantId
+    @JoinColumn(name = &quot;restaurant_id&quot;)
+    private Restaurant restaurant;
+
+    @Column(nullable = false)
+    public LocalDate startDate;
+
+    @Column(nullable = true)
+    public LocalDate endDate;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = &quot;responsability_id&quot;)
+    public Responsability responsability;
+
+
+    public AssignementId getId() {
+<span class="fc" id="L35">        return id;</span>
+    }
+
+    public void setId(AssignementId id) {
+<span class="fc" id="L39">        this.id = id;</span>
+<span class="fc" id="L40">    }</span>
+
+    public Restaurant getRestaurant() {
+<span class="fc" id="L43">        return restaurant;</span>
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+<span class="fc" id="L47">        this.restaurant = restaurant;</span>
+<span class="fc" id="L48">    }</span>
+
+    public Employee getEmployee() {
+<span class="fc" id="L51">        return employee;</span>
+    }
+
+    public void setEmployee(Employee employee) {
+<span class="fc" id="L55">        this.employee = employee;</span>
+<span class="fc" id="L56">    }</span>
+
+    public Responsability getResponsability() {
+<span class="fc" id="L59">        return responsability;</span>
+    }
+
+    public void setResponsability(Responsability responsability) {
+<span class="fc" id="L63">        this.responsability = responsability;</span>
+<span class="fc" id="L64">    }</span>
+
+    public LocalDate getStartDate() {
+<span class="fc" id="L67">        return startDate;</span>
+    }
+
+    public void setStartDate(LocalDate startDate) {
+<span class="fc" id="L71">        this.startDate = startDate;</span>
+<span class="fc" id="L72">    }</span>
+
+    public LocalDate getEndDate() {
+<span class="fc" id="L75">        return endDate;</span>
+    }
+
+    public void setEndDate(LocalDate endDate) {
+<span class="nc" id="L79">        this.endDate = endDate;</span>
+<span class="nc" id="L80">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

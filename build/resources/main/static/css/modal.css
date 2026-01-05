@@ -1,0 +1,95 @@
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1001;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; /* scroll si contenu trop grand */
+  background-color: rgba(0,0,0,0.5); /* fond semi-transparent */
+}
+
+/* Contenu de la modale */
+.modal-content {
+  max-width: 800px! important;
+  background-color: #fefefe;
+  margin: 10% auto; /* centrer verticalement et horizontalement */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;       /* largeur de la modale */
+  max-width: 500px;
+  border-radius: 8px;
+  position: relative;
+}
+
+/* Bouton fermer */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: right;
+  display:inline-block;
+
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+}
+
+
+.modal-content  h2 {
+    margin-bottom: 20px;
+}
+
+.modal-content  button[type="submit"], .modal-content  input[type="file"] {
+     background-color :  #3b5998;
+     color : white;
+     float : right;
+     border: none;
+     border-radius: 5px;
+     padding: 5px;
+}
+
+.modal-content label,.modal-content input,.modal-content label  {
+    display:inline-block;
+}
+
+.image_list {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+ .image_details{
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+}
+
+
+#spinnerSearch{
+  display: none;
+  border: 6px solid #f3f3f3; /* fond gris clair */
+  border-top: 6px solid #3b5998; /* couleur du spinner */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 20px auto; /* centrer */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
+  margin-bottom: 40px;
+}

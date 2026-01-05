@@ -1,0 +1,25 @@
+<nav xmlns:th="http://www.thymeleaf.org" th:fragment="navbar"
+    class="navbar navbar-expand-lg bg-white border-bottom shadow-sm fixed-top p-3">
+    <div class="container-fluid">
+        <i class="ri-database-2-line fs-5"></i>
+        <img th:src="@{/images/logo-wacdo.png}" alt="Logo Wacdo" style=" width: 95px;" />
+
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto d-flex align-items-center">
+                <li class="nav-item nav-item-selected"><a class="nav-link " href="/restaurant">Restaurant</a></li>
+                <li class="nav-item"><a class="nav-link " href="/employee">Employee</a></li>
+                <li class="nav-item"><a class="nav-link " href="/responsability">Responsabilité</a></li>
+                <li class="nav-item"><a class="nav-link " href="/assignement">Affectation</a></li>
+                <li class="nav-item mx-3">
+                    <a class="btn" href="/logout">Déconnection</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
