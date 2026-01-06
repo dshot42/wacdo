@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Searching restaurants with query:", query, " and filter:", filter);
         const xhr = new XMLHttpRequest();
         const params = new URLSearchParams({ filter: filter, query: query, withoutAssignement: withoutAssignement, limit: limit, offset: pageNumber - 1 });
-        xhr.open("GET", /restaurant/search?" + params.toString(), true);
+        xhr.open("GET", "/restaurant/search?" + params.toString(), true);
 
 
         xhr.onreadystatechange = function () {
@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const xhr = new XMLHttpRequest();
         const params = new URLSearchParams({ filter: filter, query: query , withoutAssignement: withoutAssignement});
-        xhr.open("GET", /restaurant/count?" + params.toString(), true);
+        xhr.open("GET", "/restaurant/count?" + params.toString(), true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) { // 4 = DONE
                 if (xhr.status === 200) {

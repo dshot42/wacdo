@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Searching assignements with query:", query);
         const xhr = new XMLHttpRequest();
         const params = new URLSearchParams({ filter, filter, query: query, limit: limit, offset: pageNumber - 1 });
-        xhr.open("GET", "http://localhost:8080/assignement/search?" + params.toString(), true);
+        xhr.open("GET", "/assignement/search?" + params.toString(), true);
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) { // 4 = DONE
@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function countAssignements(filter, query) {
         const xhr = new XMLHttpRequest();
         const params = new URLSearchParams({ filter, filter, query: query });
-        xhr.open("GET", "http://localhost:8080/assignement/count?" + params.toString(), true);
+        xhr.open("GET", "/assignement/count?" + params.toString(), true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) { // 4 = DONE
                 if (xhr.status === 200) {

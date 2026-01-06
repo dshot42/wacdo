@@ -6,7 +6,7 @@ function searchRestaurant() {
     const order = "asc"; // todo
     const xhr = new XMLHttpRequest();
     const params = new URLSearchParams({ filter: filter, query: query,order: order });
-    xhr.open("GET", /restaurant/search/employee-id/" + selectEmployeeId + "?" + params.toString(), true);
+    xhr.open("GET", "/restaurant/search/employee-id/" + selectEmployeeId + "?" + params.toString(), true);
 
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) { // 4 = DONE

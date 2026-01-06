@@ -7,7 +7,7 @@ function searchEmployee() {
     const order = "asc";
     const xhr = new XMLHttpRequest();
     const params = new URLSearchParams({ filter: filter, query: query,order: order });
-    xhr.open("GET", /employee/search/restaurant-id/" +selectRestaurantId + "?" + params.toString(), true);
+    xhr.open("GET", "/employee/search/restaurant-id/" +selectRestaurantId + "?" + params.toString(), true);
 
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) { // 4 = DONE

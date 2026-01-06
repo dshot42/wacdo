@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Searching responsabilitys with query:", query);
         const xhr = new XMLHttpRequest();
         const params = new URLSearchParams({ filter, filter, query: query, order:order, limit: limit, offset: pageNumber - 1 });
-        xhr.open("GET", /responsability/search?" + params.toString(), true);
+        xhr.open("GET", "/responsability/search?" + params.toString(), true);
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) { // 4 = DONE
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function countResponsabilitys(filter, query) {
         const xhr = new XMLHttpRequest();
         const params = new URLSearchParams({ filter, filter, query: query });
-        xhr.open("GET", /responsability/count?" + params.toString(), true);
+        xhr.open("GET", "/responsability/count?" + params.toString(), true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) { // 4 = DONE
                 if (xhr.status === 200) {
