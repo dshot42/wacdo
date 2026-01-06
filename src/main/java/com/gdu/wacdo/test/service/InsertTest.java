@@ -37,6 +37,8 @@ public class InsertTest {
     private PasswordEncoder passwordEncoder;
 
     public void deleteAll() {
+        roleRepository.deleteAll();
+        responsabilityRepository.deleteAll();
         employeeRepository.deleteAll();
         restaurantService.repository.deleteAll();
     }
