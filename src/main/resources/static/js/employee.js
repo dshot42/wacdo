@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
         countEmployees(filter, query, withoutAssignement)
         const xhr = new XMLHttpRequest();
         const params = new URLSearchParams({ filter, filter, query: query, order:order, withoutAssignement: withoutAssignement, limit: limit, offset: pageNumber - 1 });
-        xhr.open("GET", "http://localhost:8080/employee/search?" + params.toString(), true);
+        xhr.open("GET", /employee/search?" + params.toString(), true);
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) { // 4 = DONE
@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function countEmployees(filter, query, withoutAssignement) {
         const xhr = new XMLHttpRequest();
         const params = new URLSearchParams({ filter, filter, query: query, withoutAssignement: withoutAssignement });
-        xhr.open("GET", "http://localhost:8080/employee/count?" + params.toString(), true);
+        xhr.open("GET", /employee/count?" + params.toString(), true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) { // 4 = DONE
                 if (xhr.status === 200) {

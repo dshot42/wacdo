@@ -21,26 +21,21 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
-                )
-                .csrf(AbstractHttpConfigurer::disable)
-                .headers(AbstractHttpConfigurer::disable);
 
-//        http
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/login", "/register", "/test/*", "/css/**", "/js/**").permitAll()
-//                        .anyRequest().authenticated()
-//                ) // todo remove "/test/*",  for security test only
-//                .formLogin(form -> form // <-- uses default login page
-//                        .defaultSuccessUrl("/restaurant", true)
-//                )
-//                .logout(logout -> logout
-//                        .logoutUrl("/logout")
-//                        .logoutSuccessUrl("/login?logout")
-//                );
+
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/login", "/register", "/test/*", "/css/**", "/js/**").permitAll()
+                        .anyRequest().authenticated()
+                ) // todo remove "/test/*",  for security test only
+                .formLogin(form -> form // <-- uses default login page
+                        .defaultSuccessUrl("/restaurant", true)
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                );
         return http.build();
     }
 
