@@ -1,9 +1,11 @@
 package com.gdu.wacdo;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.env.Environment;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -15,6 +17,13 @@ public class WacdoApplication implements CommandLineRunner {
     @Autowired
     private DataSource dataSource;
 
+    @Autowired
+    private Environment env;
+
+    @PostConstruct
+    public void checkDbUrl() {
+        System.out.println("DB URL = " + env.getProperty("spring.datasource.url"));
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(WacdoApplication.class, args);

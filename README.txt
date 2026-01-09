@@ -53,3 +53,8 @@ pas de reset de l'input lors d'un input date ! dans formulaire view
 
 test unitaire checker acces route et route bien cablé !
 coverage de mes repository
+
+
+variable env pour la db  pour koyeb  ( rien en dur ! )
+
+spring.datasource.url=jdbc:postgresql://ep-calm-resonance-agtaewc5.c-2.eu-central-1.pg.koyeb.app/koyebdb?user=koyeb-adm&password=npg_Hg8LqRmNpn6t
