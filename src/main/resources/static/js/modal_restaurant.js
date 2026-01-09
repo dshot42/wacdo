@@ -142,6 +142,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const modal = document.getElementById("myModal-edit");
             modal.style.display = "block";
             modal.querySelector('input[name="id"]').value =null;
+            console.log(" modal.querySelector('input[name="id"]').value "+ modal.querySelector('input[name="id"]').value)
         });
 
 

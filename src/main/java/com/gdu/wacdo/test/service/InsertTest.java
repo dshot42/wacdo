@@ -37,10 +37,11 @@ public class InsertTest {
     private PasswordEncoder passwordEncoder;
 
     public void deleteAll() {
-        roleRepository.deleteAll();
-        responsabilityRepository.deleteAll();
+        assignementRepository.deleteAll();
         employeeRepository.deleteAll();
         restaurantService.repository.deleteAll();
+        roleRepository.deleteAll();
+        responsabilityRepository.deleteAll();
     }
 
     public void insertRestaurant() {
@@ -55,7 +56,6 @@ public class InsertTest {
                 List.of("Frenchie", "5 Rue du Nil", "75002", "Paris", 48.8681, 2.3491),
                 List.of("L’Arpège", "84 Rue de Varenne", "75007", "Paris", 48.8534, 2.3176),
                 List.of("Guy Savoy", "Monnaie de Paris, 11 Quai de Conti", "75006", "Paris", 48.8561, 2.3422),
-                //   List.of("Le Comptoir du Relais", "9 Carrefour de l’Odéon", "75006", "Paris", 48.8515, 2.3396),
                 // Lyon
                 List.of("La Mère Brazier", "12 Rue Royale", "69001", "Lyon", 45.7686, 4.8352),
                 List.of("Le Cintra", "43 Rue de la Bourse", "69002", "Lyon", 45.7614, 4.8359),
@@ -66,7 +66,6 @@ public class InsertTest {
                 List.of("Le Bouchon Tupin", "15 Rue Tupin", "69002", "Lyon", 45.7596, 4.8324),
                 List.of("Le Bistrot du Potager", "3 Rue de la Martinière", "69001", "Lyon", 45.7679, 4.8294),
                 List.of("Le Café du Peintre", "50 Rue de Sèze", "69006", "Lyon", 45.7683, 4.8502)
-                //  List.of("Le Gourmet de Sèze", "129 Rue de Sèze", "69006", "Lyon", 45.7701, 4.8527)
         );
 
         restaurants.forEach(e -> {

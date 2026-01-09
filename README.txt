@@ -32,10 +32,24 @@ tester securité et update isAdmin
 
 quand on a deja ouvert le update , le add fait un update
 
-details => employee filtrer par poste et / date de debut
+details => employee filtrer par poste et / date de debut : ok
 
-details => restaurant  poste/nom /date de debut
+details => restaurant  poste/nom /date de debut ok
 
 affectation un input date dans la recherche pour filtrer sur poste / ville/  date de debut / et de fin si existante
 
 test jacoco / coverage / surefire
+
+
+//  todo 09/01/2026 //
+
+date fin de contrat a faire !!!!!!!
+
+mdp qui apparait pas
+
+tjrs le pb d'ajout apres update
+
+pas de reset de l'input lors d'un input date ! dans formulaire view
+
+test unitaire checker acces route et route bien cablé !
+coverage de mes repository
