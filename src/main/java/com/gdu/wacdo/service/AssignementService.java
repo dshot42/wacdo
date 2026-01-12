@@ -28,7 +28,7 @@ public class AssignementService {
 
 
     @Autowired
-    AssignementRepository repository;
+    public AssignementRepository repository;
 
     @Autowired
     EmployeeService employeeService;

@@ -53,16 +53,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     let container = document.getElementById('tableRow');
                     container.innerHTML = "";
                     container.innerHTML = assignements.map(a => `
-                    <tr attr-id="${a.id}">
+                    <tr attr-id="${a.employee.id}_${a.restaurant.id}">
                     <td>${a.employee.name} ${a.employee.surname}</td>
                     <td>${a.responsability.role}</td>
                     <td>${a.restaurant.name}</td>
                     <td>${displayDate(a.startDate)}</td>
                     <td>${a.endDate == undefined ? "X" : displayDate(a.endDate)}</td>
                     <td>
-                        <button attr-id="${a.id}" class="assignementDetails fas fa-eye" onclick="assignementDetails(event,assignements)"></button>
-                        <button attr-id="${a.id}" class="assignementEdit edit-btn fas fa-pen" onclick="assignementEdit(event,assignements)"></button>
-                        <button attr-id="${a.id}" class="assignementRemove remove-btn fas fa-trash" onclick="assignementRemove(event)"></button>
+                        <button  attr-id="${a.employee.id}_${a.restaurant.id}" class="assignementDetails fas fa-eye" onclick="assignementDetails(event,assignements)"></button>
+                        <button attr-id="${a.employee.id}_${a.restaurant.id}" class="assignementEdit edit-btn fas fa-pen" onclick="assignementEdit(event,assignements)"></button>
+                        <button  attr-id="${a.employee.id}_${a.restaurant.id}" class="assignementRemove remove-btn fas fa-trash" onclick="assignementRemove(event,assignements)"></button>
                     </td>
                     </tr>
                     `).join('');

@@ -7,17 +7,17 @@
             <h2>Ajouter un Assignement</h2>
 
             <form id="formAddEntity" th:action="@{/assignement/save}" th:object="${assignement}" method="post"
-                enctype="multipart/form-data">
+                enctype="multipart/form-data" >
 
                 <!-- champs hidden pour stocker les IDs -->
-                <input type="hidden" th:field="*{id.restaurantId}" required>
-                <input type="hidden" th:field="*{id.employeeId}" required>
+                <input type="hidden" th:field="*{id.restaurantId}" name="restaurant_id" required>
+                <input type="hidden" th:field="*{id.employeeId}" name="employee_id"  required>
 
                 <div id="searchAssignementBlock">
 
                     <!-- RESTAURANT DROPDOWN -->
                     <div class="dropdown">
-                        <label>Employee</label><br>
+                        <label>Employee</label>
 
                         <input type="text" style="width:90%" class="form-control" placeholder="Rechercher..."
                             id="searchEmployeeInput" data-bs-toggle="dropdown" aria-expanded="false" autocomplete="off">
@@ -29,7 +29,7 @@
                         </ul>
                     </div>
                     <div class="dropdown">
-                        <label>Restaurant</label><br>
+                        <label>Restaurant</label>
 
                         <input type="text" style="width:90%" class="form-control" placeholder="Rechercher..."
                             id="searchRestaurantInput" data-bs-toggle="dropdown" aria-expanded="false" autocomplete="off">
@@ -41,14 +41,18 @@
                         </ul>
                     </div>
                 </div>
+                <div class="grid2" style="margin-top:20px">
+                    <label>Date début du contrat :</label>
+                    <input type="date" class="searchInputDateModalDetails" th:field="*{startDate}">
+                    <label>Date de fin du contrat :</label>
+                    <input type="date" class="searchInputDateModalDetails" th:field="*{endDate}">
 
-                <span>Reponsabilité</span><br>
-                <select class="selectItem" th:field="*{responsability.id}">
-                    <option th:each="f : ${responsability}" th:value="${f.id}" th:text="${f.role}">
-                    </option>
-                </select>
-                <label>Date début du contrat :</label>
-                <input type="date" th:field="*{startDate}"> <br><br>
+                    <span>Reponsabilité</span>
+                    <select class="selectItem" th:field="*{responsability.id}">
+                        <option th:each="f : ${responsability}" th:value="${f.id}" th:text="${f.role}">
+                        </option>
+                    </select>
+                </div>
 
                 <button type="submit">Enregistrer</button>
             </form>

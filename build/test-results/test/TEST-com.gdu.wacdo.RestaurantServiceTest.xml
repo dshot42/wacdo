@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.gdu.wacdo.RestaurantServiceTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-01-12T22:42:10.156Z" hostname="COMEDBT" time="1.55">
+  <properties/>
+  <testcase name="countRestaurant()" classname="com.gdu.wacdo.RestaurantServiceTest" time="1.157"/>
+  <testcase name="insertRestaurant()" classname="com.gdu.wacdo.RestaurantServiceTest" time="0.109"/>
+  <testcase name="checkDb()" classname="com.gdu.wacdo.RestaurantServiceTest" time="0.008"/>
+  <testcase name="updateRestaurant()" classname="com.gdu.wacdo.RestaurantServiceTest" time="0.027"/>
+  <testcase name="findRestaurant()" classname="com.gdu.wacdo.RestaurantServiceTest" time="0.245"/>
+  <system-out><![CDATA[23:42:02.062 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.gdu.wacdo.RestaurantServiceTest]: RestaurantServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+23:42:02.297 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.gdu.wacdo.WacdoApplication for test class com.gdu.wacdo.RestaurantServiceTest
+DB URL = jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+[SUCCESS] Database connection established...
+jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

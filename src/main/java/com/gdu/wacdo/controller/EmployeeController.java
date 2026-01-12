@@ -5,6 +5,7 @@ import com.gdu.wacdo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,10 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     @GetMapping("/getAll")
     @ResponseBody
@@ -39,9 +44,25 @@ public class EmployeeController {
     @Transactional
     @PostMapping("/save")
     public String saveEmployee(@ModelAttribute Employee employee, Model model) {
-        employeeService.saveEmployee(employee);
+        Employee dbEmployee = employeeService.repository.findById(employee.getId())
+                .orElse(null);
+
+        if (dbEmployee == null ) {
+            employeeService.saveEmployee(employee);
+            return "[SUCCESS] new Employee saved"; // <-- Thymeleaf fragment
+        }
+
+        // 🔐 password non fourni → on garde l'ancien
+        if (employee.getPassword() == null) {
+            employee.setPassword(dbEmployee.getPassword());
+        } else {
+            employee.setPassword(
+                    passwordEncoder.encode(employee.getPassword())
+            );
+        }
+
         model.addAttribute("employee", employee);
-        return "home :: employee"; // <-- Thymeleaf fragment
+        return "[SUCCESS] update Employee saved";
     }
 
 

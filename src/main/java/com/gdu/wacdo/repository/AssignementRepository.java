@@ -6,6 +6,7 @@ import org.springframework.data.repository.RepositoryDefinition;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RepositoryDefinition(domainClass = Assignement.class, idClass = Long.class)
 public interface AssignementRepository extends JpaRepository<Assignement, Long> {
@@ -14,7 +15,7 @@ public interface AssignementRepository extends JpaRepository<Assignement, Long> 
 
     List<Assignement> findByEmployeeId(Long employeeId);
 
-    List<Assignement> findByRestaurantIdAndEmployeeId(Long restaurantId, Long employeeId);
+    Optional<Assignement> findByRestaurantIdAndEmployeeId(Long restaurantId, Long employeeId);
 
     List<Assignement> findByRestaurantIdAndEndDateBefore(
             Long restaurantId,

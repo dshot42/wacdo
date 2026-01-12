@@ -76,7 +76,7 @@ public class RestaurantService {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> req = cb.createQuery(Long.class);
         Root<Restaurant> restaurant = req.from(Restaurant.class);
-        Join<Restaurant, RestaurantAddress> address = restaurant.join("restaurantAddress");
+        Join<Restaurant, RestaurantAddress> address = restaurant.join("restaurantAddress", JoinType.LEFT);
         Join<Restaurant, Assignement> assignement = restaurant.join("assignements", JoinType.LEFT);
         Join<Assignement, Responsability> responsability = assignement.join("responsability", JoinType.LEFT);
         Join<Assignement, Employee> employee = assignement.join("employee", JoinType.LEFT);
@@ -139,7 +139,7 @@ public class RestaurantService {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> req = cb.createQuery(Long.class);
         Root<Restaurant> restaurant = req.from(Restaurant.class);
-        Join<Restaurant, RestaurantAddress> address = restaurant.join("restaurantAddress");
+        Join<Restaurant, RestaurantAddress> address = restaurant.join("restaurantAddress", JoinType.LEFT);
         Join<Restaurant, Assignement> assignement = restaurant.join("assignements", JoinType.LEFT);
         Join<Assignement, Responsability> responsability = assignement.join("responsability", JoinType.LEFT);
         Join<Assignement, Employee> employee = assignement.join("employee", JoinType.LEFT);

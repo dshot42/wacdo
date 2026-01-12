@@ -43,7 +43,7 @@ test jacoco / coverage / surefire
 
 //  todo 09/01/2026 //
 
-date fin de contrat a faire !!!!!!!  ?????? cest a dire ?
+date fin de contrat a faire  !!!!!!!   dans update ! pouvoir setter date fin de contrat
 
 mdp qui apparait pas ?
 

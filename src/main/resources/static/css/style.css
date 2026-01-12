@@ -15,7 +15,7 @@
         width: 400px;
     }
 
-     #searchInputModalDetails , #searchInputDateModalDetails {
+     #searchInputModalDetails , #searchInputDateModalDetails , .searchInputDateModalDetails {
         padding: 10px;
         font-size: 12px;
         width: 250px;

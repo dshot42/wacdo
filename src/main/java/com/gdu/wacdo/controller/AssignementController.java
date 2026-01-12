@@ -3,8 +3,6 @@ package com.gdu.wacdo.controller;
 import com.gdu.wacdo.model.Assignement;
 import com.gdu.wacdo.service.AssignementService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -57,5 +55,25 @@ public class AssignementController {
             throw new RuntimeException(e);
         }
     }
+
+    @Transactional
+    @PostMapping("/delete")
+    public String deleteAssignement(
+            @RequestParam Long employeeId,
+            @RequestParam Long restaurantId
+    ) {
+
+        Assignement ass = assignementService.repository
+                .findByRestaurantIdAndEmployeeId(restaurantId, employeeId)
+                .orElse(null);
+
+        if (ass == null) {
+            return "[ERROR] assignement not found";
+        }
+
+        assignementService.repository.delete(ass);
+        return "[SUCCESS] remove assignement";
+    }
+
 
 }

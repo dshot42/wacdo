@@ -60,7 +60,6 @@ public class InsertTest {
                 List.of("La Mère Brazier", "12 Rue Royale", "69001", "Lyon", 45.7686, 4.8352),
                 List.of("Le Cintra", "43 Rue de la Bourse", "69002", "Lyon", 45.7614, 4.8359),
                 List.of("Jour de Marché (Krak)", "14 Rue Molière", "69006", "Lyon", 45.7660, 4.8491),
-                List.of("Addis Abeba", "264 Rue Duguesclin", "69003", "Lyon", 45.7559, 4.8547),
                 List.of("Le Kitchen Café", "34 Rue Chevreul", "69007", "Lyon", 45.7472, 4.8416),
                 List.of("Le Bouchon des Filles", "20 Rue Sergent Blandan", "69001", "Lyon", 45.7672, 4.8331),
                 List.of("Le Bouchon Tupin", "15 Rue Tupin", "69002", "Lyon", 45.7596, 4.8324),
@@ -178,7 +177,14 @@ public class InsertTest {
                     Employee randomEmployee = employees.get(rand.nextInt(employees.size() - 1));
                     assignement.setEmployee(randomEmployee);
                     assignement.setRestaurant(restaurants.get(i));
-                    assignement.setStartDate(LocalDate.now());
+                    assignement.setStartDate(LocalDate.now()
+                            .minusDays(50).minusDays(rand.nextInt(1000)));
+
+                    int randomNbEnd = rand.nextInt(50);
+                    if (randomNbEnd >= 40) { // => 1/5 a une date de fin
+                        assignement.setEndDate(LocalDate.now().minusDays(randomNbEnd));
+                    }
+
 
                     Responsability responsability = responsabilitys.get(j);
                     assignement.setId(new AssignementId(randomEmployee.getId(), r.getId()));

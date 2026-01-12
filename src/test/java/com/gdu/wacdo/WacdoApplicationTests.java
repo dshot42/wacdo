@@ -16,11 +16,13 @@ import java.util.Set;
 @AutoConfigureMockMvc
 class WacdoApplicationTests {
 
+
     @Autowired
     MockMvc mockMvc;
 
     @Autowired
     RequestMappingHandlerMapping mapping;
+
 
     @Test
     void contextLoads() {

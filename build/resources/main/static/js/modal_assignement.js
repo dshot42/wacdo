@@ -21,11 +21,48 @@ function assignementDetails(event, restaurants) {
    `;
 }
 
+function assignementEdit(event, assignements) {
+    console.log("Edit assignement called");
+    const id = event.target.getAttribute("attr-id");
+    console.log(id)
+    const modal = document.getElementById("myModal-edit")
+    modal.style.display = "block";
+    const result = assignements.find(item => {
+        return item.employee.id+"_"+item.restaurant.id === id
+    });
+    console.log(result)
+    modal.querySelector('#searchEmployeeInput').value  =   result.restaurant.name;
+    modal.querySelector('#searchRestaurantInput').value  =   result.employee.name +" "+ result.employee.surname
 
-
-function assignementRemove() {
-    // todo
+    modal.querySelector('input[name="id.restaurantId"]').value = result.restaurant.id;
+    modal.querySelector('input[name="id.employeeId"]').value = result.employee.id;
+    modal.querySelector('select[name="responsability.id"]').value = result.responsability.id;
+    modal.querySelector('input[name="startDate"]').value = result.startDate;
+   modal.querySelector('input[name="endDate"]').value = result.endDate == undefined ? '' :  result.endDate ;
 }
+
+
+function assignementRemove (event, assignements) {
+   const id = event.target.getAttribute("attr-id");
+   const result = assignements.find(item => {
+       return item.employee.id+"_"+item.restaurant.id === id
+   });
+
+    const formData = new FormData();
+    formData.append("employeeId", result.employee.id);
+    formData.append("restaurantId", result.restaurant.id);
+
+
+    fetch("/assignement/delete", {
+       method: "POST",
+       body: formData
+    })
+   .then(res => res.text())
+   .then(html => {
+       document.getElementById("searchInput").dispatchEvent(new Event("input", { bubbles: true }));
+   });
+}
+
 
 document.addEventListener("DOMContentLoaded", function () {
 
