@@ -13,6 +13,11 @@ function searchRestaurant() {
             if (xhr.status === 200) {
                 result = JSON.parse(xhr.responseText);
                 document.getElementById("modal-details-assignement-content").innerHTML = `
+                    <div class= "tableAssignementSwitch">
+                         <button class="switcherSelected switchTable" onclick="getAssignement(this,'all')">Tous les assignements</button>
+                          <button class=" switchTable"onclick="getAssignement(this,'current')">Assignement en cours</button>
+                          <button class=" switchTable" onclick="getAssignement(this, 'old')">Assignements terminés</button>
+                     </div>
                      <table id="tableEntityDetails">
                       <thead>
                             <tr>
@@ -23,14 +28,14 @@ function searchRestaurant() {
                             </tr>
                         </thead>
                         <tbody id="tableRowDetails">
-                                ${result.assignements.map(a => `<tr>
+                                ${result.assignements.map(a => `<tr class="arrayCurrentAssignement" style="display:inline-masonry">
                                     <td>${a.restaurant.name}  </td>
                                     <td>${a.responsability.role}</td>
                                     <td> ${displayDate(a.startDate)}</td>
                                     <td class="bi bi-check-circle-fill text-success"><span style="margin-left: 10px; white-space: nowrap;">En cours</span> </td>
                                 </tr>`).join('')}
 
-                               ${result.oldAssignements.map(a => `<tr>
+                               ${result.oldAssignements.map(a => `<tr class="arrayOldAssignement" style="display:inline-masonry">
                                   <td>${a.restaurant.name}  </td>
                                   <td>${a.responsability.role}</td>
                                   <td> ${displayDate(a.startDate)}</td>
@@ -61,13 +66,13 @@ function searchRestaurantEvent() {
         console.log(event.target.value)
         document.getElementById("searchInputModalDetails").style.display = "none";
         document.getElementById("searchInputDateModalDetails").style.display =  "block";
-        document.getElementById("searchInputModalDetails").value=""
-        document.getElementById("searchInputDateModalDetails").value=""
+
     } else {
         document.getElementById("searchInputModalDetails").style.display =  "block";
         document.getElementById("searchInputDateModalDetails").style.display = "none";
-        document.getElementById("searchInputDateModalDetails").value=""
     }
+        document.getElementById("searchInputModalDetails").value=""
+        document.getElementById("searchInputDateModalDetails").value=""
         searchRestaurant();
     });
 }
@@ -143,7 +148,9 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("addButton").addEventListener("click", () => {
         const modal = document.getElementById("myModal-edit");
         modal.style.display = "block";
-        modal.querySelector('input[name="id"]').value =null;
+         modal.querySelectorAll('input').forEach(input => {
+                     input.value = ''
+                   })
     });
 
 

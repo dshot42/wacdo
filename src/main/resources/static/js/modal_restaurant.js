@@ -1,6 +1,7 @@
 
 let selectRestaurantId = 0;
 
+
 function searchEmployee() {
     const filter = document.getElementById("filterWrapperModalDetails").value;
     const query = document.getElementById("searchInputModalDetails").value;
@@ -14,7 +15,12 @@ function searchEmployee() {
             if (xhr.status === 200) {
                 result = JSON.parse(xhr.responseText);
                 document.getElementById("modal-details-assignement-content").innerHTML = `
-                     <table id="tableEntityDetails">
+                    <div class= "tableAssignementSwitch">
+                         <button class="switcherSelected switchTable" onclick="getAssignement(this,'all')">Tous les assignements</button>
+                          <button class=" switchTable"onclick="getAssignement(this,'current')">Assignement en cours</button>
+                          <button class=" switchTable" onclick="getAssignement(this, 'old')">Assignements terminés</button>
+                     </div>
+                  <table id="tableEntityDetails">
                       <thead>
                             <tr>
                                 <th>Nom</th>
@@ -24,14 +30,14 @@ function searchEmployee() {
                             </tr>
                         </thead>
                         <tbody id="tableRowDetails">
-                                ${result.assignements.map(a => `<tr>
+                                ${result.assignements.map(a => `<tr class="arrayCurrentAssignement" style="display:inline-masonry">
                                     <td>${a.employee.name} ${a.employee.surname} </td>
                                     <td>${a.responsability.role}</td>
                                     <td> ${displayDate(a.startDate)}</td>
                                     <td class="bi bi-check-circle-fill text-success"><span style="margin-left: 10px; white-space: nowrap;">En cours</span> </td>
                                 </tr>`).join('')}
 
-                               ${result.oldAssignements.map(a => `<tr>
+                               ${result.oldAssignements.map(a => `<tr  class="arrayOldAssignement" style="display:inline-masonry">
                                   <td>${a.employee.name} ${a.employee.surname} </td>
                                   <td>${a.responsability.role}</td>
                                   <td> ${displayDate(a.startDate)}</td>
@@ -49,28 +55,28 @@ function searchEmployee() {
 }
 
 function searchEmployeeEvent() {
-    document.getElementById("searchInputModalDetails").addEventListener("input", (event) => {
-        searchEmployee()
-    })
-    document.getElementById("searchInputDateModalDetails").addEventListener("input", (event) => {
-    document.getElementById("searchInputModalDetails").value=document.getElementById("searchInputDateModalDetails").value
-        searchEmployee()
-    })
-    document.getElementById("filterWrapperModalDetails").addEventListener("change", (event) => {
+        document.getElementById("searchInputModalDetails").addEventListener("input", (event) => {
+            searchEmployee()
+        })
+        document.getElementById("searchInputDateModalDetails").addEventListener("input", (event) => {
+        document.getElementById("searchInputModalDetails").value=document.getElementById("searchInputDateModalDetails").value
+            searchEmployee()
+        })
+        document.getElementById("filterWrapperModalDetails").addEventListener("change", (event) => {
 
-    if (event.target.value.includes(":Date")) {
-        console.log(event.target.value)
-        document.getElementById("searchInputModalDetails").style.display = "none";
-        document.getElementById("searchInputDateModalDetails").style.display =  "block";
-        document.getElementById("searchInputModalDetails").value=""
-       document.getElementById("searchInputDateModalDetails").value=""
-    } else {
-        document.getElementById("searchInputModalDetails").style.display =  "block";
-        document.getElementById("searchInputDateModalDetails").style.display = "none";
-        document.getElementById("searchInputDateModalDetails").value=""
-    }
-        searchEmployee();
-    });
+            if (event.target.value.includes(":Date")) {
+                console.log(event.target.value)
+                document.getElementById("searchInputModalDetails").style.display = "none";
+                document.getElementById("searchInputDateModalDetails").style.display =  "block";
+
+            } else {
+                document.getElementById("searchInputModalDetails").style.display =  "block";
+                document.getElementById("searchInputDateModalDetails").style.display = "none";
+            }
+            document.getElementById("searchInputModalDetails").value=""
+           document.getElementById("searchInputDateModalDetails").value=""
+            searchEmployee();
+        });
 }
 searchEmployeeEvent()
 
@@ -141,8 +147,9 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("addButton").addEventListener("click", () => {
             const modal = document.getElementById("myModal-edit");
             modal.style.display = "block";
-            modal.querySelector('input[name="id"]').value =null;
-            console.log(" modal.querySelector('input[name="id"]').value "+ modal.querySelector('input[name="id"]').value)
+           modal.querySelectorAll('input').forEach(input => {
+             input.value = ''
+           })
         });
 
 

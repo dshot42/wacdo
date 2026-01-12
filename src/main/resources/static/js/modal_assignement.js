@@ -46,7 +46,9 @@ document.addEventListener("DOMContentLoaded", function () {
      document.getElementById("addButton").addEventListener("click", () => {
            const modal = document.getElementById("myModal-edit");
            modal.style.display = "block";
-           modal.querySelector('input[name="id"]').value =null;
+            modal.querySelectorAll('input').forEach(input => {
+                        input.value = ''
+                      })
        });
 
 

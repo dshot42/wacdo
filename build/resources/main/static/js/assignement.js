@@ -4,9 +4,6 @@ let pageNumber = 1;
 let assignement = [];
 
 document.addEventListener("DOMContentLoaded", function () {
-    /*********************************/
-
-
 
     / * function Handle assignement  */
 
@@ -24,13 +21,13 @@ document.addEventListener("DOMContentLoaded", function () {
              if (event.target.value.includes(":Date")) {
                     document.getElementById("searchInput").style.display = "none";
                     document.getElementById("searchInputDate").style.display =  "block";
-                    document.getElementById("searchInput").value=""
-                    document.getElementById("searchInputDate").value=""
+
                 } else {
                     document.getElementById("searchInput").style.display =  "block";
                     document.getElementById("searchInputDate").style.display = "none";
-                    document.getElementById("searchInputDate").value=""
                 }
+            document.getElementById("searchInput").value=""
+            document.getElementById("searchInputDate").value=""
             pageNumber = 1; // Reset to first page on new search
             searchAssignements()
         });

@@ -26,9 +26,9 @@ todo les search avec date // cacher input et remplacer
 
 //////////// point du 12/12/25 ////////////
 
-2 listes distinctes pour les assignement et les old  assignement
+2 listes distinctes pour les assignement et les old  assignement  => OK
 
-tester securité et update isAdmin
+tester securité et update isAdmin  =>
 
 quand on a deja ouvert le update , le add fait un update
 
@@ -43,18 +43,21 @@ test jacoco / coverage / surefire
 
 //  todo 09/01/2026 //
 
-date fin de contrat a faire !!!!!!!
+date fin de contrat a faire !!!!!!!  ?????? cest a dire ?
 
-mdp qui apparait pas
+mdp qui apparait pas ?
 
-tjrs le pb d'ajout apres update
+tjrs le pb d'ajout apres update => OK
 
 pas de reset de l'input lors d'un input date ! dans formulaire view
 
 test unitaire checker acces route et route bien cablé !
 coverage de mes repository
 
-
 variable env pour la db  pour koyeb  ( rien en dur ! )
 
 spring.datasource.url=jdbc:postgresql://ep-calm-resonance-agtaewc5.c-2.eu-central-1.pg.koyeb.app/koyebdb?user=koyeb-adm&password=npg_Hg8LqRmNpn6t
+
+
+mon truc de recherche d'adresse cas les couille !
+en update il faut trigger le boutton

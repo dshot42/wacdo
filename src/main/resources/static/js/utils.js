@@ -92,3 +92,36 @@ function dropDownHandler() {
 }
 
 dropDownHandler();
+
+
+
+function getAssignement (evt, type) {
+
+    switch (type)  {
+        case "all" :
+            document.querySelectorAll('.arrayOldAssignement')
+                         .forEach(el => el.style.display='table-row')
+            document.querySelectorAll('.arrayCurrentAssignement')
+                         .forEach(el => el.style.display='table-row')
+
+            break;
+        case 'current' :
+             document.querySelectorAll('.arrayOldAssignement')
+                                    .forEach(el => el.style.display='none')
+            document.querySelectorAll('.arrayCurrentAssignement')
+                             .forEach(el => el.style.display='table-row')
+            break;
+        case 'old' :
+             document.querySelectorAll('.arrayOldAssignement')
+                                    .forEach(el => el.style.display='table-row')
+            document.querySelectorAll('.arrayCurrentAssignement')
+                             .forEach(el => el.style.display='none')
+            break;
+
+    }
+
+    document.querySelectorAll('.switchTable')
+    .forEach(el => el.classList.remove('switcherSelected'))
+
+    evt.classList.add('switcherSelected')
+}
