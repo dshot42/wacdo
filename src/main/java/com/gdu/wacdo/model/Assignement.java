@@ -1,7 +1,12 @@
 package com.gdu.wacdo.model;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "assignement")
 public class Assignement {
@@ -31,51 +36,4 @@ public class Assignement {
     public Responsability responsability;
 
 
-    public AssignementId getId() {
-        return id;
-    }
-
-    public void setId(AssignementId id) {
-        this.id = id;
-    }
-
-    public Restaurant getRestaurant() {
-        return restaurant;
-    }
-
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
-    }
-
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
-    }
-
-    public Responsability getResponsability() {
-        return responsability;
-    }
-
-    public void setResponsability(Responsability responsability) {
-        this.responsability = responsability;
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
 }

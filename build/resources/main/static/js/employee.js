@@ -72,7 +72,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     <td>
                         <button attr-id="${r.id}" class="employeeDetails fas fa-eye" onclick="employeeDetails(event,employees)"></button>
                         <button attr-id="${r.id}" class="employeeEdit edit-btn fas fa-pen" onclick="employeeEdit(event,employees)"></button>
-                        <button attr-id="${r.id}" class="employeeRemove remove-btn fas fa-trash" onclick="employeeRemove(event)"></button>
                     </td>
                     </tr>
                     `).join('');

@@ -226,15 +226,25 @@ public class EmployeeService {
         }
     }
 
-    public void saveEmployee(Employee employee) {
-        if (employee.getId() == null) {
-            repository.findByMail(employee.getMail())
-                    .ifPresent(
-                            e -> employee.setId(e.getId())
-                    );
+    public String saveEmployee(Employee employee) {
+        Employee dbEmployee = (employee.getId() == null) ? null :  repository.findById(employee.getId()).orElse(null);
+
+        if (dbEmployee == null ) {
+            employee.setPassword( passwordEncoder.encode(employee.getPassword()));
+            repository.save(employee);
+            return "[SUCCESS] new Employee saved"; // <-- Thymeleaf fragment
         }
-        employee.setPassword(passwordEncoder.encode(employee.getPassword()));
-        repository.save(employee);
+
+        // update => set hash pwd
+        if (employee.getPassword() == null) {
+            employee.setPassword(dbEmployee.getPassword());
+        } else {
+            employee.setPassword(
+                    passwordEncoder.encode(employee.getPassword())
+            );
+        }
+
+        return "[SUCCESS] update Employee saved";
     }
 
 

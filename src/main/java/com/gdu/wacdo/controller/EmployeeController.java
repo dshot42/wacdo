@@ -44,25 +44,7 @@ public class EmployeeController {
     @Transactional
     @PostMapping("/save")
     public String saveEmployee(@ModelAttribute Employee employee, Model model) {
-        Employee dbEmployee = employeeService.repository.findById(employee.getId())
-                .orElse(null);
-
-        if (dbEmployee == null ) {
-            employeeService.saveEmployee(employee);
-            return "[SUCCESS] new Employee saved"; // <-- Thymeleaf fragment
-        }
-
-        // 🔐 password non fourni → on garde l'ancien
-        if (employee.getPassword() == null) {
-            employee.setPassword(dbEmployee.getPassword());
-        } else {
-            employee.setPassword(
-                    passwordEncoder.encode(employee.getPassword())
-            );
-        }
-
-        model.addAttribute("employee", employee);
-        return "[SUCCESS] update Employee saved";
+        return employeeService.saveEmployee(employee);
     }
 
 

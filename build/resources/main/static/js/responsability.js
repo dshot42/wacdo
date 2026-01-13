@@ -43,7 +43,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     <td>${r.role}</td>
                     <td>
                         <button attr-id="${r.id}" class="responsabilityEdit edit-btn fas fa-pen" onclick="responsabilityEdit(event,responsabilitys)"></button>
-                        <button attr-id="${r.id}" class="responsabilityRemove remove-btn fas fa-trash" onclick="responsabilityRemove(event)"></button>
                     </td>
                     </tr>
                     `).join('');

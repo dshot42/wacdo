@@ -26,9 +26,9 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/test/*", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/login", "/register","/css/**", "/js/**").permitAll()
                         .anyRequest().authenticated()
-                ) // todo remove "/test/*",  for security test only
+                )
                 .formLogin(form -> form // <-- uses default login page
                         .defaultSuccessUrl("/restaurant", true)
                 )

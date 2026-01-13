@@ -46,6 +46,8 @@ public class InsertTest {
 
     public void insertRestaurant() {
         List<List<Object>> restaurants = List.of(
+                // Marseille
+                List.of("La Piraterie","118 Avenue des Peintres Roux","13012","Marseille",43.301964,5.475368),
                 // Paris
                 List.of("Le Meurice Alain Ducasse", "228 Rue de Rivoli", "75001", "Paris", 48.8656, 2.3286),
                 List.of("Septime", "80 Rue de Charonne", "75011", "Paris", 48.8532, 2.3807),
@@ -54,17 +56,15 @@ public class InsertTest {
                 List.of("L’Ambroisie", "9 Place des Vosges", "75004", "Paris", 48.8555, 2.3658),
                 List.of("Le Cinq (Four Seasons George V)", "31 Avenue George V", "75008", "Paris", 48.8688, 2.3003),
                 List.of("Frenchie", "5 Rue du Nil", "75002", "Paris", 48.8681, 2.3491),
-                List.of("L’Arpège", "84 Rue de Varenne", "75007", "Paris", 48.8534, 2.3176),
-                List.of("Guy Savoy", "Monnaie de Paris, 11 Quai de Conti", "75006", "Paris", 48.8561, 2.3422),
                 // Lyon
                 List.of("La Mère Brazier", "12 Rue Royale", "69001", "Lyon", 45.7686, 4.8352),
                 List.of("Le Cintra", "43 Rue de la Bourse", "69002", "Lyon", 45.7614, 4.8359),
                 List.of("Jour de Marché (Krak)", "14 Rue Molière", "69006", "Lyon", 45.7660, 4.8491),
                 List.of("Le Kitchen Café", "34 Rue Chevreul", "69007", "Lyon", 45.7472, 4.8416),
                 List.of("Le Bouchon des Filles", "20 Rue Sergent Blandan", "69001", "Lyon", 45.7672, 4.8331),
-                List.of("Le Bouchon Tupin", "15 Rue Tupin", "69002", "Lyon", 45.7596, 4.8324),
                 List.of("Le Bistrot du Potager", "3 Rue de la Martinière", "69001", "Lyon", 45.7679, 4.8294),
                 List.of("Le Café du Peintre", "50 Rue de Sèze", "69006", "Lyon", 45.7683, 4.8502)
+
         );
 
         restaurants.forEach(e -> {

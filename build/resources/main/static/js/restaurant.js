@@ -76,7 +76,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     <td style="display: flex; flex-wrap: nowrap">
                         <button attr-id="${r.id}" class="restaurantDetails fas fa-eye" onclick="restaurantDetails(event,restaurants)"></button>
                         <button attr-id="${r.id}" class="restaurantEdit edit-btn fas fa-pen" onclick="restaurantEdit(event,restaurants)"></button>
-                        <button attr-id="${r.id}" class="restaurantRemove remove-btn fas fa-trash" onclick="restaurantRemove(event)"></button>
                     </td>
                     </tr>
                     `).join('');

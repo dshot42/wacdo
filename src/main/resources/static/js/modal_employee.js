@@ -125,10 +125,6 @@ function employeeEdit(event, restaurants) {
 }
 
 
-function employeeRemove() {
-    // todo
-}
-
 document.addEventListener("DOMContentLoaded", function () {
 
     /* Modal handling */
@@ -178,6 +174,10 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault(); // empêche le submit classique
 
         const formData = new FormData(document.getElementById("formAddEntity"));
+        const adminCheckbox = document.getElementById("formAddEntity")
+        .querySelector('input[name="admin"]');
+
+        formData.set("admin", adminCheckbox.checked ? "true" : "false");
 
         fetch("/employee/save", {
             method: "POST",

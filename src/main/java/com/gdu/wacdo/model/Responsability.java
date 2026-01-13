@@ -2,10 +2,13 @@ package com.gdu.wacdo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-
+@Getter
+@Setter
 @Entity
 @Table(name = "responsability") // nom de la table
 public class Responsability {
@@ -25,19 +28,4 @@ public class Responsability {
     List<Assignement> assignements;
 
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 }

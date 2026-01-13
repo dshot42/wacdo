@@ -36,8 +36,8 @@ public class UserService implements UserDetailsService {
         }
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getName())
-                .password(user.getPassword()) // hashed password
-                .roles("ADMIN")       // Spring adds ROLE_ prefix automatically
+                .password(user.getPassword())
+                .roles("ADMIN")
                 .build();
     }
 

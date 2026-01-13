@@ -64,7 +64,6 @@ class RestaurantServiceTest {
         r.setName("Restaurant Test");
         restaurantService.save(r);
 
-        // 2️⃣ Appel HTTP (via controller)
         mockMvc.perform(
                         MockMvcRequestBuilders.get("/restaurant/search")
                                 .param("filter", "name")
