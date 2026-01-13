@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.gdu.wacdo.ResponsabilitySerivceTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-01-13T15:59:27.180Z" hostname="COMEDBT" time="1.279">
+  <properties/>
+  <testcase name="insertResponsability()" classname="com.gdu.wacdo.ResponsabilitySerivceTest" time="0.833"/>
+  <testcase name="checkDb()" classname="com.gdu.wacdo.ResponsabilitySerivceTest" time="0.004"/>
+  <testcase name="countResponsability()" classname="com.gdu.wacdo.ResponsabilitySerivceTest" time="0.269"/>
+  <testcase name="findResponsability()" classname="com.gdu.wacdo.ResponsabilitySerivceTest" time="0.169"/>
+  <system-out><![CDATA[16:59:19.604 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.gdu.wacdo.ResponsabilitySerivceTest]: ResponsabilitySerivceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+16:59:19.817 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.gdu.wacdo.WacdoApplication for test class com.gdu.wacdo.ResponsabilitySerivceTest
+DB URL = jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+[SUCCESS] Database connection established...
+jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

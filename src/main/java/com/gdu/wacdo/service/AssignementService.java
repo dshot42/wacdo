@@ -70,7 +70,7 @@ public class AssignementService {
         Root<Assignement> assignement = req.from(Assignement.class);
         Join<Assignement, Responsability> responsability = assignement.join("responsability");
         Join<Assignement, Restaurant> restaurant = assignement.join("restaurant");
-        Join<Restaurant, RestaurantAddress> restaurantAddress = assignement.join("restaurant").join("restaurantAddress");
+        Join<Restaurant, RestaurantAddress> restaurantAddress = assignement.join("restaurant").join("restaurantAddress", JoinType.LEFT);
         Join<Assignement, Employee> employee = assignement.join("employee");
 
         String pattern = "%" + query.toLowerCase() + "%";
@@ -120,7 +120,7 @@ public class AssignementService {
         Root<Assignement> assignement = req.from(Assignement.class);
         Join<Assignement, Responsability> responsability = assignement.join("responsability");
         Join<Assignement, Restaurant> restaurant = assignement.join("restaurant");
-        Join<Restaurant, RestaurantAddress> restaurantAddress = assignement.join("restaurant").join("restaurantAddress");
+        Join<Restaurant, RestaurantAddress> restaurantAddress = assignement.join("restaurant").join("restaurantAddress", JoinType.LEFT);
         Join<Assignement, Employee> employee = assignement.join("employee");
 
         String pattern = "%" + query.toLowerCase() + "%";
