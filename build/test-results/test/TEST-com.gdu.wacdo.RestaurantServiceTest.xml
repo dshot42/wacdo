@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.gdu.wacdo.RestaurantServiceTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-01-13T16:29:49.971Z" hostname="COMEDBT" time="0.094">
+  <properties/>
+  <testcase name="countRestaurant()" classname="com.gdu.wacdo.RestaurantServiceTest" time="0.015"/>
+  <testcase name="insertRestaurant()" classname="com.gdu.wacdo.RestaurantServiceTest" time="0.013"/>
+  <testcase name="checkDb()" classname="com.gdu.wacdo.RestaurantServiceTest" time="0.005"/>
+  <testcase name="updateRestaurant()" classname="com.gdu.wacdo.RestaurantServiceTest" time="0.015"/>
+  <testcase name="findRestaurant()" classname="com.gdu.wacdo.RestaurantServiceTest" time="0.04"/>
+  <system-out><![CDATA[jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
