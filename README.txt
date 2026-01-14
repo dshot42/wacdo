@@ -2,8 +2,11 @@ Développeur : DUBOST Côme
 Soutenance Date : 16/01/2026
 
 Projet Wacdo :
-Développement du logiciel de gestion des affectations
-des collaborateurs dans les différents restaurants de Wacdo
+Développement d’un logiciel de gestion des affectations
+des collaborateurs dans les différents restaurants de Wacdo.
+
+Diagramme de class :
+* Dossier : ./doc/diagramme/
 
 Stack technique :
 
@@ -24,9 +27,10 @@ Local :
 *   port 8000
 *   Variable d'envirronement : SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/wacdo
 
-Production:
-*   Distrubution via Koyeb.com : https://suspicious-hippopotamus-dubost-e083975d.koyeb.app/login
-*   Variable d'envirronement : SPRING_DATASOURCE_URL=jdbc:postgresql://ep-calm-resonance-agtaewc5.c-2.eu-central-1.pg.koyeb.app/koyebdb?user=koyeb-adm&password=npg_Hg8LqRmNpn6t
+Production :
+*   Distribution via Koyeb.com : https://suspicious-hippopotamus-dubost-e083975d.koyeb.app/login
+*   Variable d'envirronement : SPRING_DATASOURCE_URL=j
+    dbc:postgresql://ep-calm-resonance-agtaewc5.c-2.eu-central-1.pg.koyeb.app/koyebdb?user=****&password=****
 
 GitHub :
 *    Repository : https://github.com/dshot42/wacdo
@@ -38,6 +42,5 @@ Route utils:
 
 Command Launcher :
 *   Test: gradle :test
-*   Run Developpement : gradle run // ( $env:VAR="value"; gradle bootRun )
-)
+*   Run Developpement : gradle run // ( $env:VAR="value"; gradle run )
 *   Run Distribution : gradle bootRun // ( $env:VAR="value"; gradle bootRun )
