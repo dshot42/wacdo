@@ -7,7 +7,7 @@
 
                 <form id="formAddEntity" th:action="@{/responsability/save}" th:object="${responsability}" method="post"
                       enctype="multipart/form-data">
-                    <input type="text" style="display:none" th:field="*{id}">
+                    <input type="text" style="display:none" th:field="*{id}" required>
                     <label>Responsabilité :</label>
                     <input type="text" th:field="*{role}" placeholder="role"><br><br>
                     <button type="submit">Enregistrer</button>

@@ -10,15 +10,15 @@
                     <div  class="grid2">
                         <input type="text" style="display:none" th:field="*{id}">
                         <label>Nom :</label>
-                        <input type="text" th:field="*{name}" placeholder="Nom">
+                        <input type="text" th:field="*{name}" placeholder="Nom" required>
                         <label>Prénom :</label>
-                        <input type="text" th:field="*{surname}" placeholder="Prénom">
+                        <input type="text" th:field="*{surname}" placeholder="Prénom" required>
                         <label>Mail :</label>
-                        <input type="email" th:field="*{mail}">
+                        <input type="email" th:field="*{mail}" required>
                         <label>Téléphone :</label>
-                        <input type="tel" th:field="*{phone}">
+                        <input type="tel" th:field="*{phone}" required>
                         <label>Date embauche :</label>
-                        <input type="date" th:field="*{hireDate}">
+                        <input type="date" th:field="*{hireDate}" required>
                         <label>Admin :</label>
                         <input type="checkbox" th:field="*{admin}" />
                         <label>Mot de passe :</label>

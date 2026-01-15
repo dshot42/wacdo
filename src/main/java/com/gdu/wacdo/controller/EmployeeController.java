@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -31,20 +32,32 @@ public class EmployeeController {
 
     @GetMapping("/search")
     @ResponseBody
-    public List<Object> search(@RequestParam String filter, @RequestParam String query, @RequestParam boolean withoutAssignement, @RequestParam String order, @RequestParam int limit, @RequestParam int offset) {
-        return employeeService.find(filter, query,withoutAssignement, limit, offset, order);
+    public ResponseEntity<?> search(@RequestParam String filter, @RequestParam String query, @RequestParam boolean withoutAssignement, @RequestParam String order, @RequestParam int limit, @RequestParam int offset) {
+        try {
+            return ResponseEntity.ok(employeeService.find(filter, query, withoutAssignement, limit, offset, order));
+        } catch (SQLException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("[ERROR] invalid request find Employee, " + e.getMessage());
+        }
     }
 
     @GetMapping("/count")
     @ResponseBody
-    public Long count(@RequestParam String filter, @RequestParam String query, @RequestParam boolean withoutAssignement) {
-        return employeeService.count(filter, query,withoutAssignement);
+    public ResponseEntity<?> count(@RequestParam String filter, @RequestParam String query, @RequestParam boolean withoutAssignement) {
+        try {
+            return ResponseEntity.ok(employeeService.count(filter, query, withoutAssignement));
+        } catch (SQLException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("[ERROR] invalid request count Employee, " + e.getMessage());
+        }
     }
 
     @Transactional
     @PostMapping("/save")
-    public String saveEmployee(@ModelAttribute Employee employee, Model model) {
-        return employeeService.saveEmployee(employee);
+    public ResponseEntity<?> saveEmployee(@ModelAttribute Employee employee, Model model) {
+        try {
+            return ResponseEntity.ok(employeeService.saveEmployee(employee));
+        } catch (SQLException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("[ERROR] invalid request save Employee , " + e.getMessage());
+        }
     }
 
 
